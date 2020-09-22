@@ -1,5 +1,21 @@
 package main
 
+import (
+	"path/filepath"
+)
+
+type App struct {
+	Config Config
+}
+
+type Config struct {
+	GhrPkgRoot string
+}
+
+func (c *Config) PackageDir() string {
+	return filepath.Join(c.GhrPkgRoot, "pkg")
+}
+
 const usage = `ghrpkg manages GitHub Releases versioning.
 
 Usage:
