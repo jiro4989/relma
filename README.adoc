@@ -2,7 +2,8 @@
 :toc: left
 :sectnums:
 
-ghrpkgはGitHubReleaseでインストールするコマンドのバージョン管理をするためのコマンドです。
+`ghrpkg` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
+スでパッケージ・バージョン管理するためのコマンドです。
 
 WIP
 
