@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
 )
 
@@ -54,3 +55,7 @@ Options:
   -h, --help    print this help
       --version print version
 `
+
+func main() {
+	fmt.Println("hello world")
+}
