@@ -2,6 +2,9 @@
 :toc: left
 :sectnums:
 
+image::https://github.com/jiro4989/ghrpkg/workflows/test/badge.svg[test]
+image::https://codecov.io/gh/jiro4989/ghrpkg/branch/master/graph/badge.svg[codecov, link="https://codecov.io/gh/jiro4989/ghrpkg"]
+
 `ghrpkg` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
 スでパッケージ・バージョン管理するためのコマンドです。
 
