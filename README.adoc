@@ -106,11 +106,16 @@ ghrpkg list --upgradable
 ghrpkg remove itchyny/mmv
 ----
 
-削除の確認をしたい場合は、 `--dry` をつけます。
+この場合、 `y/n` の確認がされます。
+確認なしに削除を実施する場合は、 `--yes` を付与します。
 
 [source,bash]
 ----
-ghrpkg remove --dry itchyny/mmv
+ghrpkg remove --yes itchyny/mmv
+
+# または
+
+ghrpkg remove -y itchyny/mmv
 ----
 
 == インストール
