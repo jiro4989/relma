@@ -2,9 +2,12 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type Package struct {
@@ -69,8 +72,38 @@ func (a *App) CmdInstall(url string) error {
 	return nil
 }
 
-func parseURL(url string) (Package, error) {
-	return Package{}, nil
+func parseURL(s string) (*Package, error) {
+	u, err := url.Parse(s)
+	if err != nil {
+		return nil, err
+	}
+
+	if strings.ToLower(u.Host) != "github.com" {
+		return nil, errors.New("only use 'github.com' domain")
+	}
+
+	paths := strings.Split(u.Path, "/")
+	if len(paths) < 7 {
+		return nil, errors.New("illegal install URL")
+	}
+	owner := paths[1]
+	repo := paths[2]
+	version := paths[5]
+	file := paths[6]
+
+	if owner == "" || repo == "" || version == "" || file == "" {
+		return nil, errors.New("illegal install URL")
+	}
+
+	p := &Package{
+		URL:           s,
+		Owner:         owner,
+		Repo:          repo,
+		Version:       version,
+		AssetFileName: file,
+	}
+
+	return p, nil
 }
 
 func downloadFile(url, destDir string) (string, error) {
