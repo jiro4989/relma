@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -40,7 +42,7 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	assetFile, err := downloadFile(pkg.URL, pkgDir)
+	assetFile, err := downloadFile(pkg.URL, pkgDir, pkg.AssetFileName)
 	if err != nil {
 		return err
 	}
@@ -106,8 +108,26 @@ func parseURL(s string) (*Package, error) {
 	return p, nil
 }
 
-func downloadFile(url, destDir string) (string, error) {
-	return "", nil
+func downloadFile(url, destDir, destFile string) (string, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	destPath := filepath.Join(destDir, destFile)
+	file, err := os.Create(destPath)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(file, resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return destPath, nil
 }
 
 func unarchiveFile(path, destDir string) error {
