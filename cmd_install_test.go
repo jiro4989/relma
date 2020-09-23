@@ -154,21 +154,19 @@ func TestDownloadFile(t *testing.T) {
 }
 
 func TestIsExecutableFile(t *testing.T) {
-	dir := filepath.Join(testDir, "test_is_executable_file")
-
-	f1, err := os.Open(filepath.Join(dir, "script.sh"))
+	f1, err := os.Open(filepath.Join(testDir, "script.sh"))
 	assert.NoError(t, err)
 	defer f1.Close()
 	f1s, err := f1.Stat()
 	assert.NoError(t, err)
 
-	f2, err := os.Open(filepath.Join(dir, "text.txt"))
+	f2, err := os.Open(filepath.Join(testDir, "text.txt"))
 	assert.NoError(t, err)
 	defer f2.Close()
 	f2s, err := f2.Stat()
 	assert.NoError(t, err)
 
-	f3, err := os.Open(filepath.Join(dir, "dir"))
+	f3, err := os.Open(testDir)
 	assert.NoError(t, err)
 	defer f3.Close()
 	f3s, err := f3.Stat()
