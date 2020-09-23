@@ -76,6 +76,12 @@ func TestParseURL(t *testing.T) {
 			want:    nil,
 			wantErr: true,
 		},
+		{
+			desc:    "ng: illegal URL (empty)",
+			url:     "",
+			want:    nil,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
