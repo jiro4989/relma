@@ -153,6 +153,36 @@ func TestDownloadFile(t *testing.T) {
 	}
 }
 
+func TestInstallFiles(t *testing.T) {
+	tests := []struct {
+		desc    string
+		srcDir  string
+		destDir string
+		want    int
+		wantErr bool
+	}{
+		{
+			desc:    "ok: download file",
+			srcDir:  filepath.Join(testDir, "test_install_files"),
+			destDir: testOutputDir,
+			want:    2,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+			got, err := installFiles(tt.srcDir, tt.destDir)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.Len(got, tt.want)
+			assert.NoError(err)
+		})
+	}
+}
+
 func TestIsExecutableFile(t *testing.T) {
 	f1, err := os.Open(filepath.Join(testDir, "script.sh"))
 	assert.NoError(t, err)
