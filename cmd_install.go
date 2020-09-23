@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -137,6 +138,16 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 	files, err := ioutil.ReadDir(srcDir)
 	if err != nil {
 		return nil, err
+	}
+
+	df, err := os.Stat(destDir)
+	if os.IsNotExist(err) {
+		return nil, err
+	}
+
+	if !df.IsDir() {
+		msg := fmt.Sprintf("'%s' must be directory", destDir)
+		return nil, errors.New(msg)
 	}
 
 	var ifs InstalledFiles
