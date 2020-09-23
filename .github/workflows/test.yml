@@ -29,7 +29,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go build
-      - run: go test -cover
+      - run: go test -v -cover
 
   coverage:
     runs-on: ubuntu-latest
