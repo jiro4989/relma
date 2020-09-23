@@ -17,6 +17,10 @@ func (c *Config) PackageDir() string {
 	return filepath.Join(c.GhrPkgRoot, "pkg")
 }
 
+func (c *Config) BinDir() string {
+	return filepath.Join(c.GhrPkgRoot, "bin")
+}
+
 const usage = `ghrpkg manages GitHub Releases versioning.
 
 Usage:

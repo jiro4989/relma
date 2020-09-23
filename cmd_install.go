@@ -54,7 +54,8 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	installedFiles, err := installFiles(assetDir)
+	binDir := a.Config.BinDir()
+	installedFiles, err := installFiles(assetDir, binDir)
 	if err != nil {
 		return err
 	}
@@ -132,6 +133,39 @@ func downloadFile(url, destDir, destFile string) (string, error) {
 	return destPath, nil
 }
 
-func installFiles(dir string) (InstalledFiles, error) {
-	return InstalledFiles{}, nil
+func installFiles(srcDir, destDir string) (InstalledFiles, error) {
+	files, err := ioutil.ReadDir(srcDir)
+	if err != nil {
+		return nil, err
+	}
+
+	var ifs InstalledFiles
+	for _, f := range files {
+		if !isExecutableFile(f) {
+			continue
+		}
+		name := f.Name()
+		srcFullPath := filepath.Join(srcDir, name)
+		destFullPath := filepath.Join(destDir, name)
+		if err := os.Symlink(srcFullPath, destFullPath); err != nil {
+			return nil, err
+		}
+		ff := InstalledFile{
+			Src:  srcFullPath,
+			Dest: destFullPath,
+		}
+		ifs = append(ifs, ff)
+	}
+	return ifs, nil
+}
+
+func isExecutableFile(f os.FileInfo) bool {
+	if f.IsDir() {
+		return false
+	}
+	mode := f.Mode()
+	if mode&0111 != 0 {
+		return true
+	}
+	return false
 }

@@ -152,3 +152,54 @@ func TestDownloadFile(t *testing.T) {
 		})
 	}
 }
+
+func TestIsExecutableFile(t *testing.T) {
+	dir := filepath.Join(testDir, "test_is_executable_file")
+
+	f1, err := os.Open(filepath.Join(dir, "script.sh"))
+	assert.NoError(t, err)
+	defer f1.Close()
+	f1s, err := f1.Stat()
+	assert.NoError(t, err)
+
+	f2, err := os.Open(filepath.Join(dir, "text.txt"))
+	assert.NoError(t, err)
+	defer f2.Close()
+	f2s, err := f2.Stat()
+	assert.NoError(t, err)
+
+	f3, err := os.Open(filepath.Join(dir, "dir"))
+	assert.NoError(t, err)
+	defer f3.Close()
+	f3s, err := f3.Stat()
+	assert.NoError(t, err)
+
+	tests := []struct {
+		desc string
+		file os.FileInfo
+		want bool
+	}{
+		{
+			desc: "ok: executable shellscript",
+			file: f1s,
+			want: true,
+		},
+		{
+			desc: "ng: text file",
+			file: f2s,
+			want: false,
+		},
+		{
+			desc: "ng: directory",
+			file: f3s,
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+			got := isExecutableFile(tt.file)
+			assert.Equal(tt.want, got)
+		})
+	}
+}
