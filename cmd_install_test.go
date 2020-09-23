@@ -114,6 +114,22 @@ func TestDownloadFile(t *testing.T) {
 			want:     filepath.Join(testOutputDir, "out.html"),
 			wantErr:  false,
 		},
+		{
+			desc:     "ng: empty url",
+			url:      "",
+			destDir:  testOutputDir,
+			destFile: "out.html",
+			want:     "",
+			wantErr:  true,
+		},
+		{
+			desc:     "ng: not exist directory",
+			url:      "https://github.com/jiro4989",
+			destDir:  "foobar",
+			destFile: "out.html",
+			want:     "",
+			wantErr:  true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
