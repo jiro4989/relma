@@ -168,6 +168,13 @@ func TestInstallFiles(t *testing.T) {
 			want:    2,
 			wantErr: false,
 		},
+		{
+			desc:    "ng: not exist dir",
+			srcDir:  "not_exist",
+			destDir: testOutputDir,
+			want:    0,
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
