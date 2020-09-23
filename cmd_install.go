@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/mholt/archiver/v3"
 )
 
 type Package struct {
@@ -48,7 +50,7 @@ func (a *App) CmdInstall(url string) error {
 	}
 
 	assetDir := filepath.Join(pkgDir, "assets")
-	if err := unarchiveFile(assetFile, assetDir); err != nil {
+	if err := archiver.Unarchive(assetFile, assetDir); err != nil {
 		return err
 	}
 
@@ -128,10 +130,6 @@ func downloadFile(url, destDir, destFile string) (string, error) {
 	}
 
 	return destPath, nil
-}
-
-func unarchiveFile(path, destDir string) error {
-	return nil
 }
 
 func installFiles(dir string) (InstalledFiles, error) {
