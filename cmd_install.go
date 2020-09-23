@@ -171,10 +171,11 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 }
 
 func isExecutableFile(f os.FileInfo) bool {
-	if f.IsDir() {
+	mode := f.Mode()
+	if !mode.IsRegular() {
 		return false
 	}
-	mode := f.Mode()
+
 	if mode&0111 != 0 {
 		return true
 	}
