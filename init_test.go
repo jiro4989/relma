@@ -22,6 +22,12 @@ func testBefore() {
 	if err := os.Mkdir(testOutputDir, os.ModePerm); err != nil {
 		panic(err)
 	}
+	if err := os.Mkdir(filepath.Join(testOutputDir, "bin"), os.ModePerm); err != nil {
+		panic(err)
+	}
+	if err := os.Mkdir(filepath.Join(testOutputDir, "pkg"), os.ModePerm); err != nil {
+		panic(err)
+	}
 }
 
 func testAfter() {

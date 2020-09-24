@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/h2non/filetype"
 	"github.com/mholt/archiver/v3"
 )
 
@@ -29,7 +30,7 @@ type InstalledFile struct {
 }
 
 type PackageInfo struct {
-	URL            string
+	Package        Package
 	InstalledFiles InstalledFiles
 }
 
@@ -51,6 +52,9 @@ func (a *App) CmdInstall(url string) error {
 	}
 
 	assetDir := filepath.Join(pkgDir, "assets")
+	if err := os.MkdirAll(assetDir, os.ModePerm); err != nil {
+		return err
+	}
 	if err := archiver.Unarchive(assetFile, assetDir); err != nil {
 		return err
 	}
@@ -62,7 +66,7 @@ func (a *App) CmdInstall(url string) error {
 	}
 
 	p := PackageInfo{
-		URL:            pkg.URL,
+		Package:        *pkg,
 		InstalledFiles: installedFiles,
 	}
 	b, err := json.Marshal(&p)
@@ -150,14 +154,33 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 		return nil, errors.New(msg)
 	}
 
-	var ifs InstalledFiles
-	for _, f := range files {
-		if !isExecutableFile(f) {
-			continue
+	if len(files) == 1 && files[0].IsDir() {
+		srcDir = filepath.Join(srcDir, files[0].Name())
+		files, err = ioutil.ReadDir(srcDir)
+		if err != nil {
+			return nil, err
 		}
+	}
+
+	var ifs InstalledFiles
+	var binDir string
+	for _, f := range files {
 		name := f.Name()
 		srcFullPath := filepath.Join(srcDir, name)
 		destFullPath := filepath.Join(destDir, name)
+
+		if name == "bin" {
+			binDir = srcFullPath
+		}
+
+		isExec, err := isExecutableFile(f, srcFullPath)
+		if err != nil {
+			return nil, err
+		}
+		if !isExec {
+			continue
+		}
+
 		if err := os.Symlink(srcFullPath, destFullPath); err != nil {
 			return nil, err
 		}
@@ -167,17 +190,58 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 		}
 		ifs = append(ifs, ff)
 	}
+
+	if binDir != "" {
+		files, err = ioutil.ReadDir(binDir)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, f := range files {
+			name := f.Name()
+			srcFullPath := filepath.Join(binDir, name)
+			destFullPath := filepath.Join(destDir, name)
+
+			isExec, err := isExecutableFile(f, srcFullPath)
+			if err != nil {
+				return nil, err
+			}
+			if !isExec {
+				continue
+			}
+
+			if err := os.Symlink(srcFullPath, destFullPath); err != nil {
+				return nil, err
+			}
+			ff := InstalledFile{
+				Src:  srcFullPath,
+				Dest: destFullPath,
+			}
+			ifs = append(ifs, ff)
+		}
+	}
+
 	return ifs, nil
 }
 
-func isExecutableFile(f os.FileInfo) bool {
+func isExecutableFile(f os.FileInfo, path string) (bool, error) {
 	mode := f.Mode()
 	if !mode.IsRegular() {
-		return false
+		return false, nil
 	}
 
 	if mode&0111 != 0 {
-		return true
+		return true, nil
 	}
-	return false
+
+	typ, err := filetype.MatchFile(path)
+	if err != nil {
+		return false, err
+	}
+	switch typ.Extension {
+	case "elf", "exe":
+		return true, nil
+	}
+
+	return false, nil
 }

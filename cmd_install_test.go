@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -8,6 +9,57 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestCmdInstall(t *testing.T) {
+	tests := []struct {
+		desc      string
+		app       App
+		url       string
+		want      Package
+		wantCount int
+		wantErr   bool
+	}{
+		{
+			desc: "ok: installing",
+			app: App{
+				Config: Config{
+					GhrPkgRoot: testOutputDir,
+				},
+			},
+			url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			want: Package{
+				URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+				Owner:         "jiro4989",
+				Repo:          "nimjson",
+				Version:       "v1.2.6",
+				AssetFileName: "nimjson_linux.tar.gz",
+			},
+			wantCount: 1,
+			wantErr:   false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+			err := tt.app.CmdInstall(tt.url)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.NoError(err)
+
+			p := filepath.Join(testOutputDir, "pkg", tt.want.Owner, tt.want.Repo, tt.want.Version, "pkginfo.json")
+			b, err := ioutil.ReadFile(p)
+			assert.NoError(err)
+
+			var pi PackageInfo
+			err = json.Unmarshal(b, &pi)
+			assert.NoError(err)
+			assert.Equal(tt.want, pi.Package)
+			assert.Len(pi.InstalledFiles, tt.wantCount)
+		})
+	}
+}
 
 func TestParseURL(t *testing.T) {
 	tests := []struct {
@@ -162,10 +214,24 @@ func TestInstallFiles(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			desc:    "ok: download file",
+			desc:    "ok: install files",
 			srcDir:  filepath.Join(testDir, "test_install_files"),
 			destDir: testOutputDir,
 			want:    2,
+			wantErr: false,
+		},
+		{
+			desc:    "ok: install file (nested directory)",
+			srcDir:  filepath.Join(testDir, "test_install_files_2"),
+			destDir: testOutputDir,
+			want:    1,
+			wantErr: false,
+		},
+		{
+			desc:    "ok: install file (nested directory and bin directory)",
+			srcDir:  filepath.Join(testDir, "test_install_files_3"),
+			destDir: testOutputDir,
+			want:    1,
 			wantErr: false,
 		},
 		{
@@ -205,50 +271,56 @@ func TestInstallFiles(t *testing.T) {
 }
 
 func TestIsExecutableFile(t *testing.T) {
-	f1, err := os.Open(filepath.Join(testDir, "script.sh"))
-	assert.NoError(t, err)
-	defer f1.Close()
-	f1s, err := f1.Stat()
-	assert.NoError(t, err)
-
-	f2, err := os.Open(filepath.Join(testDir, "text.txt"))
-	assert.NoError(t, err)
-	defer f2.Close()
-	f2s, err := f2.Stat()
-	assert.NoError(t, err)
-
-	f3, err := os.Open(testDir)
-	assert.NoError(t, err)
-	defer f3.Close()
-	f3s, err := f3.Stat()
-	assert.NoError(t, err)
-
 	tests := []struct {
 		desc string
-		file os.FileInfo
+		path string
 		want bool
 	}{
 		{
 			desc: "ok: executable shellscript",
-			file: f1s,
+			path: filepath.Join(testDir, "script.sh"),
 			want: true,
 		},
 		{
+			desc: "ok: executable binary (linux)",
+			path: filepath.Join(testDir, "bin"),
+			want: true,
+		},
+		{
+			desc: "ok: executable binary (windows)",
+			path: filepath.Join(testDir, "bin.exe"),
+			want: true,
+		},
+		// TODO:
+		// {
+		// 	desc: "ok: executable binary (darwin)",
+		// 	path: filepath.Join(testDir, "darwin"),
+		// 	want: true,
+		// },
+		{
 			desc: "ng: text file",
-			file: f2s,
+			path: filepath.Join(testDir, "text.txt"),
 			want: false,
 		},
 		{
 			desc: "ng: directory",
-			file: f3s,
+			path: testDir,
 			want: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
-			got := isExecutableFile(tt.file)
+
+			file, err := os.Open(tt.path)
+			assert.NoError(err)
+			defer file.Close()
+			fi, err := file.Stat()
+			assert.NoError(err)
+
+			got, err := isExecutableFile(fi, tt.path)
 			assert.Equal(tt.want, got)
+			assert.NoError(err)
 		})
 	}
 }
