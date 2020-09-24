@@ -139,11 +139,6 @@ func downloadFile(url, destDir, destFile string) (string, error) {
 }
 
 func installFiles(srcDir, destDir string) (InstalledFiles, error) {
-	files, err := ioutil.ReadDir(srcDir)
-	if err != nil {
-		return nil, err
-	}
-
 	df, err := os.Stat(destDir)
 	if os.IsNotExist(err) {
 		return nil, err
@@ -154,12 +149,38 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 		return nil, errors.New(msg)
 	}
 
+	files, err := ioutil.ReadDir(srcDir)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(files) == 1 && files[0].IsDir() {
 		srcDir = filepath.Join(srcDir, files[0].Name())
-		files, err = ioutil.ReadDir(srcDir)
-		if err != nil {
-			return nil, err
-		}
+	}
+
+	ifs, binDir, err := linkExecutableFilesToDest(srcDir, destDir)
+	if err != nil {
+		return nil, err
+	}
+
+	if binDir == "" {
+		return ifs, nil
+	}
+
+	ifs2, _, err := linkExecutableFilesToDest(binDir, destDir)
+	if err != nil {
+		return nil, err
+	}
+
+	ifs = append(ifs, ifs2...)
+
+	return ifs, nil
+}
+
+func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, error) {
+	files, err := ioutil.ReadDir(srcDir)
+	if err != nil {
+		return nil, "", err
 	}
 
 	var ifs InstalledFiles
@@ -178,38 +199,12 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 			continue
 		}
 		if err != nil {
-			return nil, err
+			return nil, "", err
 		}
 
 		ifs = append(ifs, *ff)
 	}
-
-	if binDir == "" {
-		return ifs, nil
-	}
-
-	files, err = ioutil.ReadDir(binDir)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, f := range files {
-		name := f.Name()
-		srcFullPath := filepath.Join(binDir, name)
-		destFullPath := filepath.Join(destDir, name)
-
-		ff, err := linkExecutableFileToDest(f, srcFullPath, destFullPath)
-		if ff == nil && err == nil {
-			continue
-		}
-		if err != nil {
-			return nil, err
-		}
-
-		ifs = append(ifs, *ff)
-	}
-
-	return ifs, nil
+	return ifs, binDir, nil
 }
 
 func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
