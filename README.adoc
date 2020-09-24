@@ -1,11 +1,11 @@
-= ghrpkg
+= relm
 :toc: left
 :sectnums:
 
-image:https://github.com/jiro4989/ghrpkg/workflows/test/badge.svg[test]
-image:https://codecov.io/gh/jiro4989/ghrpkg/branch/master/graph/badge.svg[codecov, link="https://codecov.io/gh/jiro4989/ghrpkg"]
+image:https://github.com/jiro4989/relm/workflows/test/badge.svg[test]
+image:https://codecov.io/gh/jiro4989/relm/branch/master/graph/badge.svg[codecov, link="https://codecov.io/gh/jiro4989/relm"]
 
-`ghrpkg` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
+`relm` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
 スでパッケージ・バージョン管理するためのコマンドです。
 
 WIP
@@ -42,19 +42,19 @@ install -m 0755 ./mmv ~/bin/
 最初に `init` サブコマンドで設定ファイルを作成します。
 
 その後 `install` サブコマンドでGitHubのリリースURLを渡すと、生成された設定ファイ
-ルに記載のパスにインストールされます。初期設定では `~/ghrpkg/bin` にシンボリック
+ルに記載のパスにインストールされます。初期設定では `~/relm/bin` にシンボリック
 リンクが作成されます。
-それらの設定ファイルの実体は `~/ghrpkg/pkg/<owner>/<repo>` に保存されます。
+それらの設定ファイルの実体は `~/relm/pkg/<owner>/<repo>` に保存されます。
 
 コマンドとしては以下の実行をします。
 
 [source,bash]
 ----
-ghrpkg init
-ghrpkg install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
+relm init
+relm install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
 ----
 
-インストールされたコマンドとパッケージの情報は `~/ghrpkg/pkg/<owner>/<repo>` に
+インストールされたコマンドとパッケージの情報は `~/relm/pkg/<owner>/<repo>` に
 保存されます。バージョンアップの際はこのパッケージディレクトリ配下のJSONを元に実
 行されます。
 
@@ -62,15 +62,15 @@ ghrpkg install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.
 
 [source,bash]
 ----
-ghrpkg upgrade itchyny/mmv
+relm upgrade itchyny/mmv
 ----
 
-これは `ghrpkg upgrade <owner>/<repo>` というルールに従っています。
+これは `relm upgrade <owner>/<repo>` というルールに従っています。
 バージョンを指定したい場合は以下のコマンドを実行します。
 
 [source,bash]
 ----
-ghrpkg upgrade itchyny/mmv v0.1.2
+relm upgrade itchyny/mmv v0.1.2
 ----
 
 インストールしたコマンドをすべてアップグレードしたい場合は、以下のコマンドを実行
@@ -78,28 +78,28 @@ ghrpkg upgrade itchyny/mmv v0.1.2
 
 [source,bash]
 ----
-ghrpkg upgrade --all
+relm upgrade --all
 ----
 
 インストール可能なバージョンを確認したい場合は、以下のコマンドを実行します。
 
 [source,bash]
 ----
-ghrpkg show itchyny/mmv
+relm show itchyny/mmv
 ----
 
 インストール済みのパッケージ一覧の確認は以下のコマンドを実行します。
 
 [source,bash]
 ----
-ghrpkg list
+relm list
 ----
 
 アップグレード可能なパッケージ一覧の確認は以下のコマンドを実行します。
 
 [source,bash]
 ----
-ghrpkg list --upgradable
+relm list --upgradable
 ----
 
 インストールしたパッケージをアンインストールする場合は、以下のコマンドを実行しま
@@ -107,7 +107,7 @@ ghrpkg list --upgradable
 
 [source,bash]
 ----
-ghrpkg remove itchyny/mmv
+relm remove itchyny/mmv
 ----
 
 この場合、 `y/n` の確認がされます。
@@ -115,11 +115,11 @@ ghrpkg remove itchyny/mmv
 
 [source,bash]
 ----
-ghrpkg remove --yes itchyny/mmv
+relm remove --yes itchyny/mmv
 
 # または
 
-ghrpkg remove -y itchyny/mmv
+relm remove -y itchyny/mmv
 ----
 
 == インストール

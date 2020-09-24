@@ -23,7 +23,7 @@ func TestCmdInstall(t *testing.T) {
 			desc: "ok: installing",
 			app: App{
 				Config: Config{
-					GhrPkgRoot: testOutputDir,
+					RelmRoot: testOutputDir,
 				},
 			},
 			url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",

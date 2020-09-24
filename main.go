@@ -10,40 +10,40 @@ type App struct {
 }
 
 type Config struct {
-	GhrPkgRoot string
+	RelmRoot string
 }
 
 func (c *Config) PackageDir() string {
-	return filepath.Join(c.GhrPkgRoot, "pkg")
+	return filepath.Join(c.RelmRoot, "pkg")
 }
 
 func (c *Config) BinDir() string {
-	return filepath.Join(c.GhrPkgRoot, "bin")
+	return filepath.Join(c.RelmRoot, "bin")
 }
 
-const usage = `ghrpkg manages GitHub Releases versioning.
+const usage = `relm manages GitHub Releases versioning.
 
 Usage:
-  ghrpkg [commands] [options]
-  ghrpkg -h | --help
-  ghrpkg --version
+  relm [commands] [options]
+  relm -h | --help
+  relm --version
 
 Examples:
-  $ ghrpkg init
+  $ relm init
 
-  $ ghrpkg edit
+  $ relm edit
 
-  $ ghrpkg install https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz
+  $ relm install https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz
 
-  $ ghrpkg list --upgradable
+  $ relm list --upgradable
 
-  $ ghrpkg show jiro4989/nimjson
+  $ relm show jiro4989/nimjson
 
-  $ ghrpkg upgrade jiro4989/nimjson v1.2.7
+  $ relm upgrade jiro4989/nimjson v1.2.7
 
-  $ ghrpkg upgrade --all
+  $ relm upgrade --all
 
-  $ ghrpkg remove jiro4989/nimjson
+  $ relm remove jiro4989/nimjson
 
 Commands:
   init

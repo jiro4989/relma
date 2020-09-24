@@ -1,4 +1,4 @@
-module github.com/jiro4989/ghrpkg
+module github.com/jiro4989/relm
 
 go 1.14
 
