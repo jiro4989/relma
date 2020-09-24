@@ -173,22 +173,15 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 			binDir = srcFullPath
 		}
 
-		isExec, err := isExecutableFile(f, srcFullPath)
+		ff, err := linkExecutableFilesToDest(f, srcFullPath, destFullPath)
+		if ff == nil && err == nil {
+			continue
+		}
 		if err != nil {
 			return nil, err
 		}
-		if !isExec {
-			continue
-		}
 
-		if err := os.Symlink(srcFullPath, destFullPath); err != nil {
-			return nil, err
-		}
-		ff := InstalledFile{
-			Src:  srcFullPath,
-			Dest: destFullPath,
-		}
-		ifs = append(ifs, ff)
+		ifs = append(ifs, *ff)
 	}
 
 	if binDir != "" {
@@ -202,26 +195,38 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 			srcFullPath := filepath.Join(binDir, name)
 			destFullPath := filepath.Join(destDir, name)
 
-			isExec, err := isExecutableFile(f, srcFullPath)
+			ff, err := linkExecutableFilesToDest(f, srcFullPath, destFullPath)
+			if ff == nil && err == nil {
+				continue
+			}
 			if err != nil {
 				return nil, err
 			}
-			if !isExec {
-				continue
-			}
 
-			if err := os.Symlink(srcFullPath, destFullPath); err != nil {
-				return nil, err
-			}
-			ff := InstalledFile{
-				Src:  srcFullPath,
-				Dest: destFullPath,
-			}
-			ifs = append(ifs, ff)
+			ifs = append(ifs, *ff)
 		}
 	}
 
 	return ifs, nil
+}
+
+func linkExecutableFilesToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
+	isExec, err := isExecutableFile(f, src)
+	if err != nil {
+		return nil, err
+	}
+	if !isExec {
+		return nil, nil
+	}
+
+	if err := os.Symlink(src, dest); err != nil {
+		return nil, err
+	}
+	ff := InstalledFile{
+		Src:  src,
+		Dest: dest,
+	}
+	return &ff, nil
 }
 
 func isExecutableFile(f os.FileInfo, path string) (bool, error) {
