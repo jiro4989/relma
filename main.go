@@ -10,40 +10,40 @@ type App struct {
 }
 
 type Config struct {
-	RelmRoot string
+	RelmaRoot string
 }
 
 func (c *Config) PackageDir() string {
-	return filepath.Join(c.RelmRoot, "pkg")
+	return filepath.Join(c.RelmaRoot, "pkg")
 }
 
 func (c *Config) BinDir() string {
-	return filepath.Join(c.RelmRoot, "bin")
+	return filepath.Join(c.RelmaRoot, "bin")
 }
 
-const usage = `relm manages GitHub Releases versioning.
+const usage = `relma manages GitHub Releases versioning.
 
 Usage:
-  relm [commands] [options]
-  relm -h | --help
-  relm --version
+  relma [commands] [options]
+  relma -h | --help
+  relma --version
 
 Examples:
-  $ relm init
+  $ relma init
 
-  $ relm edit
+  $ relma edit
 
-  $ relm install https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz
+  $ relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz
 
-  $ relm list --upgradable
+  $ relma list --upgradable
 
-  $ relm show jiro4989/nimjson
+  $ relma show jiro4989/nimjson
 
-  $ relm upgrade jiro4989/nimjson v1.2.7
+  $ relma upgrade jiro4989/nimjson v1.2.7
 
-  $ relm upgrade --all
+  $ relma upgrade --all
 
-  $ relm remove jiro4989/nimjson
+  $ relma remove jiro4989/nimjson
 
 Commands:
   init

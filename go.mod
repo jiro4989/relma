@@ -1,4 +1,4 @@
-module github.com/jiro4989/relm
+module github.com/jiro4989/relma
 
 go 1.14
 
