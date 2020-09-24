@@ -1,4 +1,4 @@
-= relma - github RELease Management cli
+= relma - github RELease MAnagement cli
 :toc: left
 :sectnums:
 
