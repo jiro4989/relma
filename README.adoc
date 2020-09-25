@@ -78,7 +78,7 @@ relma upgrade itchyny/mmv v0.1.2
 
 [source,bash]
 ----
-relma upgrade --all
+relma upgrade
 ----
 
 インストール可能なバージョンを確認したい場合は、以下のコマンドを実行します。
