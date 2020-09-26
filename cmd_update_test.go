@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -13,6 +16,7 @@ func TestCmdUpdate(t *testing.T) {
 		desc    string
 		app     App
 		rel     Releases
+		param   *CmdUpdateParam
 		wantErr bool
 	}{
 		{
@@ -21,6 +25,9 @@ func TestCmdUpdate(t *testing.T) {
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "test_cmd_update"),
 				},
+			},
+			param: &CmdUpdateParam{
+				Yes: true,
 			},
 			rel: Releases{
 				{
@@ -39,24 +46,37 @@ func TestCmdUpdate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
-			// assert := assert.New(t)
-			//
-			// dir := tt.app.Config.RelmaRoot
-			// err := os.MkdirAll(dir, os.ModePerm)
-			// assert.NoError(err)
-			//
-			// f := tt.app.Config.ReleasesFile()
-			// b, err := json.Marshal(tt.rel)
-			// assert.NoError(err)
-			// err = ioutil.WriteFile(f, b, os.ModePerm)
-			// assert.NoError(err)
-			//
-			// err = tt.app.CmdUpdate(nil)
-			// if tt.wantErr {
-			// 	assert.Error(err)
-			// 	return
-			// }
-			// assert.NoError(err)
+			assert := assert.New(t)
+
+			dir := tt.app.Config.RelmaRoot
+			err := os.MkdirAll(dir, os.ModePerm)
+			assert.NoError(err)
+
+			f := tt.app.Config.ReleasesFile()
+			b, err := json.Marshal(tt.rel)
+			assert.NoError(err)
+			err = ioutil.WriteFile(f, b, os.ModePerm)
+			assert.NoError(err)
+
+			err = tt.app.CmdUpdate(tt.param)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.NoError(err)
+
+			b, err = ioutil.ReadFile(f)
+			assert.NoError(err)
+
+			var rs Releases
+			err = json.Unmarshal(b, &rs)
+			assert.NoError(err)
+			for i, r := range rs {
+				rel := tt.rel[i]
+				assert.NotEqual(r.LatestVersion, rel.LatestVersion)
+				r.LatestVersion = rel.LatestVersion
+				assert.Equal(r, rel)
+			}
 		})
 	}
 }

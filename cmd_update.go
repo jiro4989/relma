@@ -29,7 +29,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 
 	c := github.NewClient(nil)
 	for i := 0; i < len(rels); i++ {
-		rel := rels[i]
+		rel := &rels[i] // for override 'LatestVersion'
 
 		latestTag, err := fetchLatestTag(c, rel.Owner, rel.Repo)
 		if err != nil {
