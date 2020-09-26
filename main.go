@@ -9,60 +9,72 @@ import (
 )
 
 type CommandLineParam struct {
-	Command          string   `docopt:"command"`
-	GitHubReleaseURL string   `docopt:"<github_release_url>"`
-	Yes              bool     `docopt:"-y,--yes"`
-	Args             []string `docopt:"<args>"`
+	Command string   `docopt:"<command>"`
+	Args    []string `docopt:"<args>"`
 }
 
-const version = "v1.0.0"
+type CommandLineInstallParam struct {
+	GitHubReleaseURL string `docopt:"<github_release_url>"`
+}
 
-const usage = `relma manages GitHub Releases versioning.
+type CommandLineUpdateParam struct {
+	Yes      bool     `docopt:"-y,--yes"`
+	Releases []string `docopt:"<releases>"`
+}
 
-Usage:
-  relma [command] [options]
+type CommandLineUpgradeParam struct {
+	Command          string   `docopt:"command"`
+	Args             []string `docopt:"<args>"`
+	GitHubReleaseURL string   `docopt:"<github_release_url>"`
+	Yes              bool     `docopt:"-y,--yes"`
+}
+
+const (
+	version = "v1.0.0"
+	usage   = `relma manages GitHub Releases versioning.
+
+usage:
+  relma [options] <command> [<args>...]
   relma -h | --help
   relma --version
 
-Examples:
-  $ relma init
+commands:
+  init         initialize config file.
+  edit         edit config file.
+  install      install GitHub Releases.
+  list
+  update       update installed version infomation.
+  upgrade      upgrade installed GitHub Releases.
+  uninstall    uninstall GitHub Releases.
 
-  $ relma edit
-
-  $ relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz
-
-  $ relma list --upgradable
-
-  $ relma show jiro4989/nimjson
-
-  $ relma upgrade jiro4989/nimjson v1.2.7
-
-  $ relma upgrade --all
-
-  $ relma remove jiro4989/nimjson
-
-Commands:
-  init
-  install [-d | --dry-run] <github_release_url>
-  list    [-u | --upgradable]
-  update  [-y | --yes]
-  upgrade show <package>
-  upgrade <package> <version>
-          [--all]
-  remove <package>
-  edit
-
-Options:
+options:
   -h, --help    print this help
-      --version print version
+  --version     print version
 `
+
+	usageInstall = `usage: relma install [options] <github_release_url>
+
+options:
+  -h, --help       print this help
+  -d, --dry-run    print this help
+`
+
+	usageUpdate = `usage: relma update [options] [<args>...]
+
+options:
+  -h, --help       print this help
+  -d, --dry-run    print this help
+`
+)
 
 func main() {
 	os.Exit(Main(os.Args[1:]))
 }
 
 func Main(args []string) int {
-	opts, err := docopt.ParseArgs(usage, args, version)
+	parser := &docopt.Parser{OptionsFirst: true}
+
+	opts, err := parser.ParseArgs(usage, args, version)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return 1
@@ -83,8 +95,25 @@ func Main(args []string) int {
 	}
 	switch clp.Command {
 	case "install":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageInstall, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineInstallParam
+		opts.Bind(&clp)
+
 		err = a.CmdInstall(clp.GitHubReleaseURL)
 	case "update":
+		args := opts["<args>"].([]string)
+		opts, err := docopt.ParseArgs(usageUpdate, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineUpdateParam
+		opts.Bind(&clp)
+
 		p := CmdUpdateParam{
 			Yes: clp.Yes,
 		}
