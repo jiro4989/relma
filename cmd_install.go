@@ -63,8 +63,7 @@ func (a *App) CmdInstall(url string) error {
 	}
 	rel.InstalledFiles = installedFiles
 
-	releasesFile := a.Config.ReleasesFile()
-	rels, err := readReleasesFile(releasesFile)
+	rels, err := a.Config.ReadReleasesFile()
 	if err != nil {
 		return err
 	}
@@ -74,7 +73,7 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	if err := ioutil.WriteFile(releasesFile, b, os.ModePerm); err != nil {
+	if err := ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm); err != nil {
 		return err
 	}
 
@@ -245,19 +244,4 @@ func isExecutableFile(f os.FileInfo, path string) (bool, error) {
 	}
 
 	return false, nil
-}
-
-func readReleasesFile(path string) (Releases, error) {
-	var rels Releases
-	_, err := os.Stat(path)
-	if !os.IsNotExist(err) {
-		b, err := ioutil.ReadFile(path)
-		if err != nil {
-			return nil, err
-		}
-		if err := json.Unmarshal(b, &rels); err != nil {
-			return nil, err
-		}
-	}
-	return rels, nil
 }
