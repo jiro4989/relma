@@ -44,7 +44,7 @@ install -m 0755 ./mmv ~/bin/
 その後 `install` サブコマンドでGitHubのリリースURLを渡すと、生成された設定ファイ
 ルに記載のパスにインストールされます。初期設定では `~/relma/bin` にシンボリック
 リンクが作成されます。
-それらの設定ファイルの実体は `~/relma/pkg/<owner>/<repo>` に保存されます。
+それらの設定ファイルの実体は `~/relma/releases/<owner>/<repo>` に保存されます。
 
 コマンドとしては以下の実行をします。
 
@@ -54,7 +54,7 @@ relma init
 relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
 ----
 
-インストールされたコマンドとパッケージの情報は `~/relma/pkg/<owner>/<repo>` に
+インストールされたコマンドとパッケージの情報は `~/relma/releases/<owner>/<repo>` に
 保存されます。バージョンアップの際はこのパッケージディレクトリ配下のJSONを元に実
 行されます。
 

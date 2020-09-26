@@ -48,7 +48,7 @@ func TestCmdInstall(t *testing.T) {
 			}
 			assert.NoError(err)
 
-			p := filepath.Join(testOutputDir, "pkg", tt.want.Owner, tt.want.Repo, tt.want.Version, "pkginfo.json")
+			p := filepath.Join(testOutputDir, "releases", tt.want.Owner, tt.want.Repo, tt.want.Version, "releasesinfo.json")
 			b, err := ioutil.ReadFile(p)
 			assert.NoError(err)
 

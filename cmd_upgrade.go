@@ -4,13 +4,13 @@ type CmdUpgradeParam struct {
 }
 
 func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
-	pkgDir := a.Config.ReleasesDir()
-	pkgFiles, err := readReleasesFiles(pkgDir)
+	releasesDir := a.Config.ReleasesDir()
+	releasesFiles, err := readReleasesFiles(releasesDir)
 	if err != nil {
 		return err
 	}
-	for _, pkgFile := range pkgFiles {
-		_, err := readReleases(pkgFile)
+	for _, releasesFile := range releasesFiles {
+		_, err := readReleases(releasesFile)
 		if err != nil {
 			return err
 		}

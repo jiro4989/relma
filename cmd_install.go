@@ -35,23 +35,23 @@ type ReleasesInfo struct {
 }
 
 func (a *App) CmdInstall(url string) error {
-	pkg, err := parseURL(url)
+	releases, err := parseURL(url)
 	if err != nil {
 		return err
 	}
 
 	dir := a.Config.ReleasesDir()
-	pkgDir := filepath.Join(dir, pkg.Owner, pkg.Repo, pkg.Version)
-	if err := os.MkdirAll(pkgDir, os.ModePerm); err != nil {
+	releasesDir := filepath.Join(dir, releases.Owner, releases.Repo, releases.Version)
+	if err := os.MkdirAll(releasesDir, os.ModePerm); err != nil {
 		return err
 	}
 
-	assetFile, err := downloadFile(pkg.URL, pkgDir, pkg.AssetFileName)
+	assetFile, err := downloadFile(releases.URL, releasesDir, releases.AssetFileName)
 	if err != nil {
 		return err
 	}
 
-	assetDir := filepath.Join(pkgDir, "assets")
+	assetDir := filepath.Join(releasesDir, "assets")
 	if err := os.MkdirAll(assetDir, os.ModePerm); err != nil {
 		return err
 	}
@@ -66,7 +66,7 @@ func (a *App) CmdInstall(url string) error {
 	}
 
 	p := ReleasesInfo{
-		Releases:        *pkg,
+		Releases:        *releases,
 		InstalledFiles: installedFiles,
 	}
 	b, err := json.Marshal(&p)
@@ -74,8 +74,8 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	pkgFile := filepath.Join(pkgDir, "pkginfo.json")
-	if err := ioutil.WriteFile(pkgFile, b, os.ModePerm); err != nil {
+	releasesFile := filepath.Join(releasesDir, "releasesinfo.json")
+	if err := ioutil.WriteFile(releasesFile, b, os.ModePerm); err != nil {
 		return err
 	}
 

@@ -14,7 +14,7 @@ type Config struct {
 }
 
 func (c *Config) ReleasesDir() string {
-	return filepath.Join(c.RelmaRoot, "pkg")
+	return filepath.Join(c.RelmaRoot, "releases")
 }
 
 func (c *Config) BinDir() string {
