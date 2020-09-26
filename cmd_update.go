@@ -42,19 +42,14 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 
 	fmt.Println("")
 
-	doUpdate := p.Yes
-	if !doUpdate {
+	if !p.Yes {
 		fmt.Print("update? [y/n] > ")
 		sc := bufio.NewScanner(os.Stdin)
 		sc.Scan()
-		if strings.ToLower(sc.Text()) == "y" {
-			doUpdate = true
+		if strings.ToLower(sc.Text()) != "y" {
+			fmt.Println("not updated")
+			return nil
 		}
-	}
-
-	if !doUpdate {
-		fmt.Println("not updated")
-		return nil
 	}
 
 	b, err := json.Marshal(rels)
