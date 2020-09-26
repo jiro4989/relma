@@ -14,6 +14,7 @@ type CommandLineParam struct {
 }
 
 type CommandLineInstallParam struct {
+	Install          bool
 	GitHubReleaseURL string `docopt:"<github_release_url>"`
 }
 
@@ -23,10 +24,9 @@ type CommandLineUpdateParam struct {
 }
 
 type CommandLineUpgradeParam struct {
-	Command          string   `docopt:"command"`
-	Args             []string `docopt:"<args>"`
-	GitHubReleaseURL string   `docopt:"<github_release_url>"`
-	Yes              bool     `docopt:"-y,--yes"`
+	Command string   `docopt:"command"`
+	Args    []string `docopt:"<args>"`
+	Yes     bool     `docopt:"-y,--yes"`
 }
 
 const (
@@ -56,7 +56,6 @@ options:
 
 options:
   -h, --help       print this help
-  -d, --dry-run    print this help
 `
 
 	usageUpdate = `usage: relma update [options] [<args>...]
@@ -81,7 +80,10 @@ func Main(args []string) int {
 	}
 
 	var clp CommandLineParam
-	opts.Bind(&clp)
+	err = opts.Bind(&clp)
+	if err != nil {
+		panic(err)
+	}
 
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -102,7 +104,10 @@ func Main(args []string) int {
 			panic(err)
 		}
 		var clp CommandLineInstallParam
-		opts.Bind(&clp)
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
 
 		err = a.CmdInstall(clp.GitHubReleaseURL)
 	case "update":
