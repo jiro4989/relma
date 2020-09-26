@@ -28,19 +28,27 @@ func TestCmdInstall(t *testing.T) {
 			},
 			url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			want: Releases{
-				URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
-				Owner:         "jiro4989",
-				Repo:          "nimjson",
-				Version:       "v1.2.6",
-				AssetFileName: "nimjson_linux.tar.gz",
+				{
+					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+					Owner:         "jiro4989",
+					Repo:          "nimjson",
+					Version:       "v1.2.6",
+					AssetFileName: "nimjson_linux.tar.gz",
+					InstalledFiles: InstalledFiles{
+						{},
+					},
+				},
 			},
-			wantCount: 1,
-			wantErr:   false,
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
+
+			p := filepath.Join(testOutputDir, "releases.json")
+			os.Remove(p)
+
 			err := tt.app.CmdInstall(tt.url)
 			if tt.wantErr {
 				assert.Error(err)
@@ -48,15 +56,23 @@ func TestCmdInstall(t *testing.T) {
 			}
 			assert.NoError(err)
 
-			p := filepath.Join(testOutputDir, "releases", tt.want.Owner, tt.want.Repo, tt.want.Version, "releasesinfo.json")
 			b, err := ioutil.ReadFile(p)
 			assert.NoError(err)
 
-			var pi ReleasesInfo
-			err = json.Unmarshal(b, &pi)
+			var rels Releases
+			err = json.Unmarshal(b, &rels)
 			assert.NoError(err)
-			assert.Equal(tt.want, pi.Releases)
-			assert.Len(pi.InstalledFiles, tt.wantCount)
+			assert.Equal(len(tt.want), len(rels))
+
+			for i, want := range tt.want {
+				rel := rels[i]
+				assert.Equal(want.URL, rel.URL)
+				assert.Equal(want.Owner, rel.Owner)
+				assert.Equal(want.Repo, rel.Repo)
+				assert.Equal(want.Version, rel.Version)
+				assert.Equal(want.AssetFileName, rel.AssetFileName)
+				assert.Equal(len(want.InstalledFiles), len(rel.InstalledFiles))
+			}
 		})
 	}
 }
@@ -65,13 +81,13 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		desc    string
 		url     string
-		want    *Releases
+		want    *Release
 		wantErr bool
 	}{
 		{
 			desc: "ok: parsing",
 			url:  "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Releases{
+			want: &Release{
 				URL:           "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
@@ -83,7 +99,7 @@ func TestParseURL(t *testing.T) {
 		{
 			desc: "ok: GITHUB.COM",
 			url:  "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Releases{
+			want: &Release{
 				URL:           "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",

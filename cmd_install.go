@@ -16,37 +16,34 @@ import (
 	"github.com/mholt/archiver/v3"
 )
 
-type Releases struct {
-	URL           string
-	Owner         string
-	Repo          string
-	Version       string
-	AssetFileName string
+type Release struct {
+	URL            string
+	Owner          string
+	Repo           string
+	Version        string
+	AssetFileName  string
+	InstalledFiles InstalledFiles
 }
+type Releases []Release
 
-type InstalledFiles []InstalledFile
 type InstalledFile struct {
 	Src, Dest string
 }
-
-type ReleasesInfo struct {
-	Releases        Releases
-	InstalledFiles InstalledFiles
-}
+type InstalledFiles []InstalledFile
 
 func (a *App) CmdInstall(url string) error {
-	releases, err := parseURL(url)
+	rel, err := parseURL(url)
 	if err != nil {
 		return err
 	}
 
 	dir := a.Config.ReleasesDir()
-	releasesDir := filepath.Join(dir, releases.Owner, releases.Repo, releases.Version)
+	releasesDir := filepath.Join(dir, rel.Owner, rel.Repo, rel.Version)
 	if err := os.MkdirAll(releasesDir, os.ModePerm); err != nil {
 		return err
 	}
 
-	assetFile, err := downloadFile(releases.URL, releasesDir, releases.AssetFileName)
+	assetFile, err := downloadFile(rel.URL, releasesDir, rel.AssetFileName)
 	if err != nil {
 		return err
 	}
@@ -64,17 +61,26 @@ func (a *App) CmdInstall(url string) error {
 	if err != nil {
 		return err
 	}
+	rel.InstalledFiles = installedFiles
 
-	p := ReleasesInfo{
-		Releases:        *releases,
-		InstalledFiles: installedFiles,
+	var rels Releases
+	releasesFile := filepath.Join(a.Config.RelmaRoot, "releases.json")
+	_, err = os.Stat(releasesFile)
+	if os.IsExist(err) {
+		b, err := ioutil.ReadFile(releasesFile)
+		if err != nil {
+			return err
+		}
+		if err := json.Unmarshal(b, &rels); err != nil {
+			return err
+		}
 	}
-	b, err := json.Marshal(&p)
+	rels = append(rels, *rel)
+	b, err := json.MarshalIndent(&rels, "", "  ")
 	if err != nil {
 		return err
 	}
 
-	releasesFile := filepath.Join(releasesDir, "releasesinfo.json")
 	if err := ioutil.WriteFile(releasesFile, b, os.ModePerm); err != nil {
 		return err
 	}
@@ -82,7 +88,7 @@ func (a *App) CmdInstall(url string) error {
 	return nil
 }
 
-func parseURL(s string) (*Releases, error) {
+func parseURL(s string) (*Release, error) {
 	u, err := url.Parse(s)
 	if err != nil {
 		return nil, err
@@ -105,7 +111,7 @@ func parseURL(s string) (*Releases, error) {
 		return nil, errors.New("illegal install URL")
 	}
 
-	p := &Releases{
+	p := &Release{
 		URL:           s,
 		Owner:         owner,
 		Repo:          repo,
