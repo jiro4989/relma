@@ -21,6 +21,7 @@ type Release struct {
 	Owner          string
 	Repo           string
 	Version        string
+	LatestVersion  string
 	AssetFileName  string
 	InstalledFiles InstalledFiles
 }

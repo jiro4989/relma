@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/google/go-github/v32/github"
@@ -22,19 +25,40 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 	}
 
 	c := github.NewClient(nil)
-	for _, rel := range rels {
-		ghRels, _, err := c.Repositories.ListReleases(context.Background(), rel.Owner, rel.Repo, nil)
+	for i := 0; i < len(rels); i++ {
+		rel := rels[i]
+
+		latestTag, err := fetchLatestTag(c, rel.Owner, rel.Repo)
 		if err != nil {
 			return err
 		}
-		var latestTag string
-		for _, ghRel := range ghRels {
-			r := *ghRel
-			latestTag = r.GetTagName()
-			break
-		}
 		fmt.Println(rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
+		rel.LatestVersion = latestTag
 		time.Sleep(1 * time.Second)
 	}
+
+	b, err := json.Marshal(rels)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func fetchLatestTag(c *github.Client, owner, repo string) (string, error) {
+	rel, _, err := c.Repositories.ListReleases(context.Background(), owner, repo, nil)
+	if err != nil {
+		return "", err
+	}
+	var latestTag string
+	for _, rel := range rel {
+		r := *rel
+		latestTag = r.GetTagName()
+		return latestTag, nil
+	}
+	return "", nil
 }
