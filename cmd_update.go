@@ -15,7 +15,7 @@ import (
 )
 
 type CmdUpdateParam struct {
-	yes bool
+	Yes bool
 }
 
 func (a *App) CmdUpdate(p *CmdUpdateParam) error {
@@ -42,7 +42,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 
 	fmt.Println("")
 
-	doUpdate := p.yes
+	doUpdate := p.Yes
 	if !doUpdate {
 		fmt.Print("update? [y/n] > ")
 		sc := bufio.NewScanner(os.Stdin)
