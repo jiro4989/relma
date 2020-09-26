@@ -58,16 +58,16 @@ relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2
 保存されます。バージョンアップの際はこのパッケージディレクトリ配下のJSONを元に実
 行されます。
 
-また、 `relma install` をすると `~/relma/packages.json` にインストールした
+また、 `relma install` をすると `~/relma/releases.json` にインストールした
 Releaseの情報がすべて保存されます。
 このJSONを使ってReleaseを一括インストールすることが可能です。
 
-つまり、この `packages.json` をgit管理することで、別の環境にインストールした
+つまり、この `releases.json` をgit管理することで、別の環境にインストールした
 Releasesをまるごと移す事が可能です。
 
 [source,bash]
 ----
-relma install -f packages.json
+relma install -f releases.json
 ----
 
 最新版にアップグレードする際は以下のコマンドを実行します。

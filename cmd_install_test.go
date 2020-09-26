@@ -15,7 +15,7 @@ func TestCmdInstall(t *testing.T) {
 		desc      string
 		app       App
 		url       string
-		want      Package
+		want      Releases
 		wantCount int
 		wantErr   bool
 	}{
@@ -27,7 +27,7 @@ func TestCmdInstall(t *testing.T) {
 				},
 			},
 			url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
-			want: Package{
+			want: Releases{
 				URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 				Owner:         "jiro4989",
 				Repo:          "nimjson",
@@ -52,10 +52,10 @@ func TestCmdInstall(t *testing.T) {
 			b, err := ioutil.ReadFile(p)
 			assert.NoError(err)
 
-			var pi PackageInfo
+			var pi ReleasesInfo
 			err = json.Unmarshal(b, &pi)
 			assert.NoError(err)
-			assert.Equal(tt.want, pi.Package)
+			assert.Equal(tt.want, pi.Releases)
 			assert.Len(pi.InstalledFiles, tt.wantCount)
 		})
 	}
@@ -65,13 +65,13 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		desc    string
 		url     string
-		want    *Package
+		want    *Releases
 		wantErr bool
 	}{
 		{
 			desc: "ok: parsing",
 			url:  "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Package{
+			want: &Releases{
 				URL:           "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
@@ -83,7 +83,7 @@ func TestParseURL(t *testing.T) {
 		{
 			desc: "ok: GITHUB.COM",
 			url:  "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Package{
+			want: &Releases{
 				URL:           "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",

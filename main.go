@@ -13,7 +13,7 @@ type Config struct {
 	RelmaRoot string
 }
 
-func (c *Config) PackageDir() string {
+func (c *Config) ReleasesDir() string {
 	return filepath.Join(c.RelmaRoot, "pkg")
 }
 

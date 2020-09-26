@@ -16,7 +16,7 @@ import (
 	"github.com/mholt/archiver/v3"
 )
 
-type Package struct {
+type Releases struct {
 	URL           string
 	Owner         string
 	Repo          string
@@ -29,8 +29,8 @@ type InstalledFile struct {
 	Src, Dest string
 }
 
-type PackageInfo struct {
-	Package        Package
+type ReleasesInfo struct {
+	Releases        Releases
 	InstalledFiles InstalledFiles
 }
 
@@ -40,7 +40,7 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	dir := a.Config.PackageDir()
+	dir := a.Config.ReleasesDir()
 	pkgDir := filepath.Join(dir, pkg.Owner, pkg.Repo, pkg.Version)
 	if err := os.MkdirAll(pkgDir, os.ModePerm); err != nil {
 		return err
@@ -65,8 +65,8 @@ func (a *App) CmdInstall(url string) error {
 		return err
 	}
 
-	p := PackageInfo{
-		Package:        *pkg,
+	p := ReleasesInfo{
+		Releases:        *pkg,
 		InstalledFiles: installedFiles,
 	}
 	b, err := json.Marshal(&p)
@@ -82,7 +82,7 @@ func (a *App) CmdInstall(url string) error {
 	return nil
 }
 
-func parseURL(s string) (*Package, error) {
+func parseURL(s string) (*Releases, error) {
 	u, err := url.Parse(s)
 	if err != nil {
 		return nil, err
@@ -105,7 +105,7 @@ func parseURL(s string) (*Package, error) {
 		return nil, errors.New("illegal install URL")
 	}
 
-	p := &Package{
+	p := &Releases{
 		URL:           s,
 		Owner:         owner,
 		Repo:          repo,
