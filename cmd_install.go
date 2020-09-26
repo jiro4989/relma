@@ -215,6 +215,11 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 		return nil, nil
 	}
 
+	err = os.Chmod(src, f.Mode()|0111)
+	if err != nil {
+		return nil, err
+	}
+
 	if err := os.Symlink(src, dest); err != nil {
 		return nil, err
 	}
