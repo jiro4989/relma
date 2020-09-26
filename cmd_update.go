@@ -1,18 +1,21 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/v32/github"
 )
 
 type CmdUpdateParam struct {
+	yes bool
 }
 
 func (a *App) CmdUpdate(p *CmdUpdateParam) error {
@@ -37,6 +40,23 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		time.Sleep(1 * time.Second)
 	}
 
+	fmt.Println("")
+
+	doUpdate := p.yes
+	if !doUpdate {
+		fmt.Print("update? [y/n] > ")
+		sc := bufio.NewScanner(os.Stdin)
+		sc.Scan()
+		if strings.ToLower(sc.Text()) == "y" {
+			doUpdate = true
+		}
+	}
+
+	if !doUpdate {
+		fmt.Println("not updated")
+		return nil
+	}
+
 	b, err := json.Marshal(rels)
 	if err != nil {
 		return err
@@ -46,6 +66,9 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("update successful")
+
 	return nil
 }
 
