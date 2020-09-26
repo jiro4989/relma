@@ -64,7 +64,7 @@ func (a *App) CmdInstall(url string) error {
 	rel.InstalledFiles = installedFiles
 
 	var rels Releases
-	releasesFile := filepath.Join(a.Config.RelmaRoot, "releases.json")
+	releasesFile := a.Config.ReleasesFile()
 	_, err = os.Stat(releasesFile)
 	if os.IsExist(err) {
 		b, err := ioutil.ReadFile(releasesFile)

@@ -17,6 +17,10 @@ func (c *Config) ReleasesDir() string {
 	return filepath.Join(c.RelmaRoot, "releases")
 }
 
+func (c *Config) ReleasesFile() string {
+	return filepath.Join(c.RelmaRoot, "releases.json")
+}
+
 func (c *Config) BinDir() string {
 	return filepath.Join(c.RelmaRoot, "bin")
 }
