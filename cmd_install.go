@@ -68,7 +68,11 @@ func (a *App) CmdInstall(url string) error {
 	if err != nil {
 		return err
 	}
-	rels = append(rels, *rel)
+	if existed, index := existsRepo(rels, *rel); existed {
+		rels[index] = *rel
+	} else {
+		rels = append(rels, *rel)
+	}
 	b, err := json.MarshalIndent(&rels, "", "  ")
 	if err != nil {
 		return err
@@ -77,6 +81,7 @@ func (a *App) CmdInstall(url string) error {
 	if err := ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm); err != nil {
 		return err
 	}
+	fmt.Println("install successfull (" + rel.Owner + "/" + rel.Repo + ":" + rel.Version + ")")
 
 	return nil
 }
@@ -109,6 +114,7 @@ func parseURL(s string) (*Release, error) {
 		Owner:         owner,
 		Repo:          repo,
 		Version:       version,
+		LatestVersion: version,
 		AssetFileName: file,
 	}
 
@@ -220,6 +226,14 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 		return nil, err
 	}
 
+	_, err = os.Stat(dest)
+	if !os.IsNotExist(err) {
+		err := os.Remove(dest)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if err := os.Symlink(src, dest); err != nil {
 		return nil, err
 	}
@@ -250,4 +264,17 @@ func isExecutableFile(f os.FileInfo, path string) (bool, error) {
 	}
 
 	return false, nil
+}
+
+func existsRepo(rels Releases, rel Release) (bool, int) {
+	for i, r := range rels {
+		if strings.ToLower(r.Owner) != strings.ToLower(rel.Owner) {
+			continue
+		}
+		if strings.ToLower(r.Repo) != strings.ToLower(rel.Repo) {
+			continue
+		}
+		return true, i
+	}
+	return false, -1
 }

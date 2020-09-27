@@ -24,9 +24,8 @@ type CommandLineUpdateParam struct {
 }
 
 type CommandLineUpgradeParam struct {
-	Command string   `docopt:"command"`
-	Args    []string `docopt:"<args>"`
-	Yes     bool     `docopt:"-y,--yes"`
+	Yes      bool     `docopt:"-y,--yes"`
+	Releases []string `docopt:"<releases>"`
 }
 
 const (
@@ -59,6 +58,13 @@ options:
 `
 
 	usageUpdate = `usage: relma update [options] [<releases>...]
+
+options:
+  -h, --help       print this help
+  -y, --yes        yes
+`
+
+	usageUpgrade = `usage: relma upgrade [options] [<releases>...]
 
 options:
   -h, --help       print this help
@@ -125,6 +131,19 @@ func Main(args []string) int {
 		}
 		err = a.CmdUpdate(&p)
 	case "upgrade":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageUpgrade, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineUpgradeParam
+		opts.Bind(&clp)
+
+		p := CmdUpgradeParam{
+			Yes: clp.Yes,
+		}
+		err = a.CmdUpgrade(&p)
 	}
 	if err != nil {
 		panic(err)

@@ -1,27 +1,34 @@
 package main
 
+import (
+	"errors"
+	"strings"
+	"time"
+)
+
 type CmdUpgradeParam struct {
+	Yes bool
 }
 
 func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
-	releasesDir := a.Config.ReleasesDir()
-	releasesFiles, err := readReleasesFiles(releasesDir)
+	rels, err := a.Config.ReadReleasesFile()
 	if err != nil {
 		return err
 	}
-	for _, releasesFile := range releasesFiles {
-		_, err := readReleases(releasesFile)
+	if rels == nil {
+		return errors.New("installed releases don't exist")
+	}
+	for _, rel := range rels {
+		if rel.Version == rel.LatestVersion {
+			continue
+		}
+		url := strings.ReplaceAll(rel.URL, rel.Version, rel.LatestVersion)
+		err := a.CmdInstall(url)
 		if err != nil {
 			return err
 		}
+
+		time.Sleep(1 * time.Second)
 	}
 	return nil
-}
-
-func readReleasesFiles(dir string) ([]string, error) {
-	return nil, nil
-}
-
-func readReleases(path string) (*Releases, error) {
-	return nil, nil
 }
