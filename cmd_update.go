@@ -15,7 +15,8 @@ import (
 )
 
 type CmdUpdateParam struct {
-	Yes bool
+	Yes      bool
+	Releases []string
 }
 
 func (a *App) CmdUpdate(p *CmdUpdateParam) error {

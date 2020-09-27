@@ -19,11 +19,13 @@ type CommandLineInstallParam struct {
 }
 
 type CommandLineUpdateParam struct {
+	Update   bool
 	Yes      bool     `docopt:"-y,--yes"`
 	Releases []string `docopt:"<releases>"`
 }
 
 type CommandLineUpgradeParam struct {
+	Upgrade  bool
 	Yes      bool     `docopt:"-y,--yes"`
 	Releases []string `docopt:"<releases>"`
 }
@@ -127,7 +129,8 @@ func Main(args []string) int {
 		opts.Bind(&clp)
 
 		p := CmdUpdateParam{
-			Yes: clp.Yes,
+			Yes:      clp.Yes,
+			Releases: clp.Releases,
 		}
 		err = a.CmdUpdate(&p)
 	case "upgrade":
