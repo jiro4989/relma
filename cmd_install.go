@@ -226,12 +226,8 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 		return nil, err
 	}
 
-	_, err = os.Stat(dest)
-	if !os.IsNotExist(err) {
-		err := os.Remove(dest)
-		if err != nil {
-			return nil, err
-		}
+	if _, err := os.Lstat(dest); err == nil {
+		os.Remove(dest)
 	}
 
 	if err := os.Symlink(src, dest); err != nil {
