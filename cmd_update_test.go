@@ -94,7 +94,7 @@ func TestFetchLatestTag(t *testing.T) {
 			desc:    "ok: fetch latest tag",
 			owner:   "jiro4989",
 			repo:    "nimjson",
-			want:    "v1.2.7",
+			want:    "v1.2.8",
 			wantErr: false,
 		},
 	}
