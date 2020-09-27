@@ -52,7 +52,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		}
 	}
 
-	b, err := json.Marshal(rels)
+	b, err := json.MarshalIndent(rels, "", "  ")
 	if err != nil {
 		return err
 	}

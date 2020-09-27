@@ -58,11 +58,11 @@ options:
   -h, --help       print this help
 `
 
-	usageUpdate = `usage: relma update [options] [<args>...]
+	usageUpdate = `usage: relma update [options] [<releases>...]
 
 options:
   -h, --help       print this help
-  -d, --dry-run    print this help
+  -y, --yes        yes
 `
 )
 
@@ -111,7 +111,8 @@ func Main(args []string) int {
 
 		err = a.CmdInstall(clp.GitHubReleaseURL)
 	case "update":
-		args := opts["<args>"].([]string)
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageUpdate, args, "")
 		if err != nil {
 			panic(err)
