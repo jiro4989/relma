@@ -13,6 +13,10 @@ type CommandLineParam struct {
 	Args    []string `docopt:"<args>"`
 }
 
+type CommandLineInitParam struct {
+	Init bool
+}
+
 type CommandLineInstallParam struct {
 	Install          bool
 	GitHubReleaseURL string `docopt:"<github_release_url>"`
@@ -31,6 +35,7 @@ type CommandLineUpgradeParam struct {
 }
 
 const (
+	appName = "relma"
 	version = "v1.0.0"
 	usage   = `relma manages GitHub Releases versioning.
 
@@ -51,6 +56,12 @@ commands:
 options:
   -h, --help    print this help
   --version     print version
+`
+
+	usageInit = `usage: relma init [options]
+
+options:
+  -h, --help       print this help
 `
 
 	usageInstall = `usage: relma install [options] <github_release_url>
@@ -104,6 +115,19 @@ func Main(args []string) int {
 		},
 	}
 	switch clp.Command {
+	case "init":
+		args := []string{clp.Command}
+		opts, err := docopt.ParseArgs(usageInit, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineInitParam
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
+
+		err = a.CmdInit()
 	case "install":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)

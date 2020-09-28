@@ -15,6 +15,72 @@ type Config struct {
 	RelmaRoot string
 }
 
+func DefaultConfig() (Config, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return Config{}, err
+	}
+	c := Config{
+		RelmaRoot: filepath.Join(home, appName),
+	}
+	return c, nil
+}
+
+func ConfigDir() (string, error) {
+	dir, err := os.UserConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	p := filepath.Join(dir, appName)
+	return p, nil
+}
+
+func CreateConfigDir() (string, error) {
+	dir, err := ConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	_, err = os.Stat(dir)
+	if !os.IsNotExist(err) {
+		return dir, nil
+	}
+
+	err = os.MkdirAll(dir, os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+	return dir, nil
+}
+
+func ConfigFile() (string, error) {
+	dir, err := ConfigDir()
+	if err != nil {
+		return "", err
+	}
+
+	p := filepath.Join(dir, "config.json")
+	return p, nil
+}
+
+func CreateConfigFile(c Config) (string, error) {
+	file, err := ConfigFile()
+	if err != nil {
+		return "", err
+	}
+
+	b, err := json.Marshal(c)
+	if err != nil {
+		return "", err
+	}
+	err = ioutil.WriteFile(file, b, os.ModePerm)
+	if err != nil {
+		return "", err
+	}
+	return file, nil
+}
+
 func (c *Config) ReleasesDir() string {
 	return filepath.Join(c.RelmaRoot, "releases")
 }
