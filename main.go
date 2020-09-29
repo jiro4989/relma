@@ -53,10 +53,10 @@ commands:
   init         initialize config file.
   edit         edit config file.
   install      install GitHub Releases.
-  list
   update       update installed version infomation.
   upgrade      upgrade installed GitHub Releases.
   uninstall    uninstall GitHub Releases.
+  list         print installed GitHub Releases infomation.
 
 options:
   -h, --help    print this help
