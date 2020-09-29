@@ -17,6 +17,11 @@ type CommandLineInitParam struct {
 	Init bool
 }
 
+type CommandLineEditParam struct {
+	Edit   bool
+	Editor string `docopt:"-e,--editor"`
+}
+
 type CommandLineInstallParam struct {
 	Install          bool
 	GitHubReleaseURL string `docopt:"<github_release_url>"`
@@ -62,6 +67,13 @@ options:
 
 options:
   -h, --help       print this help
+`
+
+	usageEdit = `usage: relma edit [options]
+
+options:
+  -h, --help               print this help
+  -e, --editor=<editor>    using editor
 `
 
 	usageInstall = `usage: relma install [options] <github_release_url>
@@ -128,6 +140,20 @@ func Main(args []string) int {
 		}
 
 		err = a.CmdInit()
+	case "edit":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageEdit, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineEditParam
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
+
+		err = a.CmdEdit(&clp)
 	case "install":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
