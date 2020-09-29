@@ -70,7 +70,7 @@ func CreateConfigFile(c Config) (string, error) {
 		return "", err
 	}
 
-	b, err := json.Marshal(c)
+	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return "", err
 	}
