@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/docopt/docopt-go"
 )
@@ -37,6 +38,11 @@ type CommandLineUpgradeParam struct {
 	Upgrade  bool
 	Yes      bool     `docopt:"-y,--yes"`
 	Releases []string `docopt:"<releases>"`
+}
+
+type CommandLineUninstallParam struct {
+	Uninstall bool
+	OwnerRepo string `docopt:"<owner/repo>"`
 }
 
 const (
@@ -94,6 +100,12 @@ options:
 options:
   -h, --help       print this help
   -y, --yes        yes
+`
+
+	usageUninstall = `usage: relma uninstall [options] <owner/repo>
+
+options:
+  -h, --help       print this help
 `
 )
 
@@ -176,7 +188,10 @@ func Main(args []string) int {
 			panic(err)
 		}
 		var clp CommandLineUpdateParam
-		opts.Bind(&clp)
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
 
 		p := CmdUpdateParam{
 			Yes:      clp.Yes,
@@ -191,12 +206,30 @@ func Main(args []string) int {
 			panic(err)
 		}
 		var clp CommandLineUpgradeParam
-		opts.Bind(&clp)
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
 
 		p := CmdUpgradeParam{
 			Yes: clp.Yes,
 		}
 		err = a.CmdUpgrade(&p)
+	case "uninstall":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageUninstall, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineUninstallParam
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
+
+		o := strings.Split(clp.OwnerRepo, "/")
+		err = a.CmdUninstall(o[0], o[1])
 	}
 	if err != nil {
 		panic(err)
