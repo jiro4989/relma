@@ -32,6 +32,14 @@ type InstalledFile struct {
 }
 type InstalledFiles []InstalledFile
 
+func (files InstalledFiles) fixPath(srcDir, destDir string) {
+	for i := 0; i < len(files); i++ {
+		file := &files[i]
+		file.Src = file.Src[len(srcDir)+1:]
+		file.Dest = file.Dest[len(destDir)+1:]
+	}
+}
+
 func (a *App) CmdInstall(url string) error {
 	rel, err := parseURL(url)
 	if err != nil {
@@ -167,6 +175,9 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 	if err != nil {
 		return nil, err
 	}
+	if ifs != nil {
+		ifs.fixPath(srcDir, destDir)
+	}
 
 	if binDir == "" {
 		return ifs, nil
@@ -175,6 +186,9 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 	ifs2, _, err := linkExecutableFilesToDest(binDir, destDir)
 	if err != nil {
 		return nil, err
+	}
+	if ifs2 != nil {
+		ifs2.fixPath(srcDir, destDir)
 	}
 
 	ifs = append(ifs, ifs2...)

@@ -35,7 +35,10 @@ func TestCmdInstall(t *testing.T) {
 					Version:       "v1.2.6",
 					AssetFileName: "nimjson_linux.tar.gz",
 					InstalledFiles: InstalledFiles{
-						{},
+						{
+							Src:  filepath.Join("bin", "nimjson"),
+							Dest: "nimjson",
+						},
 					},
 				},
 			},
@@ -71,7 +74,7 @@ func TestCmdInstall(t *testing.T) {
 				assert.Equal(want.Repo, rel.Repo)
 				assert.Equal(want.Version, rel.Version)
 				assert.Equal(want.AssetFileName, rel.AssetFileName)
-				assert.Equal(len(want.InstalledFiles), len(rel.InstalledFiles))
+				assert.Equal(want.InstalledFiles, rel.InstalledFiles)
 			}
 		})
 	}
