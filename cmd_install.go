@@ -16,17 +16,6 @@ import (
 	"github.com/mholt/archiver/v3"
 )
 
-type Release struct {
-	URL            string
-	Owner          string
-	Repo           string
-	Version        string
-	LatestVersion  string
-	AssetFileName  string
-	InstalledFiles InstalledFiles
-}
-type Releases []Release
-
 type InstalledFile struct {
 	Src, Dest string
 }
