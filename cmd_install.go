@@ -16,19 +16,6 @@ import (
 	"github.com/mholt/archiver/v3"
 )
 
-type InstalledFile struct {
-	Src, Dest string
-}
-type InstalledFiles []InstalledFile
-
-func (files InstalledFiles) fixPath(srcDir, destDir string) {
-	for i := 0; i < len(files); i++ {
-		file := &files[i]
-		file.Src = file.Src[len(srcDir)+1:]
-		file.Dest = file.Dest[len(destDir)+1:]
-	}
-}
-
 func (a *App) CmdInstall(url string) error {
 	rel, err := parseURL(url)
 	if err != nil {
@@ -165,7 +152,7 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 		return nil, err
 	}
 	if ifs != nil {
-		ifs.fixPath(srcDir, destDir)
+		ifs.FixPath(srcDir, destDir)
 	}
 
 	if binDir == "" {
@@ -177,7 +164,7 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 		return nil, err
 	}
 	if ifs2 != nil {
-		ifs2.fixPath(srcDir, destDir)
+		ifs2.FixPath(srcDir, destDir)
 	}
 
 	ifs = append(ifs, ifs2...)

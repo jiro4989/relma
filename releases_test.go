@@ -31,3 +31,39 @@ func TestRelease_FormatSimpleInformation(t *testing.T) {
 		})
 	}
 }
+
+func TestInstalledFiles_FixPath(t *testing.T) {
+	tests := []struct {
+		desc  string
+		files InstalledFiles
+		src   string
+		dest  string
+		want  InstalledFiles
+	}{
+		{
+			desc: "ok: fix path",
+			files: InstalledFiles{
+				{
+					Src:  "/home/foobar/sample",
+					Dest: "/home/foobar/bin/sample",
+				},
+			},
+			src:  "/home/foobar",
+			dest: "/home/foobar/bin",
+			want: InstalledFiles{
+				{
+					Src:  "sample",
+					Dest: "sample",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			tt.files.FixPath(tt.src, tt.dest)
+			assert.Equal(tt.want, tt.files)
+		})
+	}
+}
