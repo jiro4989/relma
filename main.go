@@ -45,6 +45,10 @@ type CommandLineUninstallParam struct {
 	OwnerRepo string `docopt:"<owner/repo>"`
 }
 
+type CommandLineListParam struct {
+	List bool
+}
+
 const (
 	appName = "relma"
 	version = "v1.0.0"
@@ -103,6 +107,12 @@ options:
 `
 
 	usageUninstall = `usage: relma uninstall [options] <owner/repo>
+
+options:
+  -h, --help       print this help
+`
+
+	usageList = `usage: relma list [options]
 
 options:
   -h, --help       print this help
@@ -230,6 +240,20 @@ func Main(args []string) int {
 
 		o := strings.Split(clp.OwnerRepo, "/")
 		err = a.CmdUninstall(o[0], o[1])
+	case "list":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageList, args, "")
+		if err != nil {
+			panic(err)
+		}
+		var clp CommandLineListParam
+		err = opts.Bind(&clp)
+		if err != nil {
+			panic(err)
+		}
+
+		err = a.CmdList(&clp)
 	}
 	if err != nil {
 		panic(err)
