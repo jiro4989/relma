@@ -11,8 +11,7 @@ func (a *App) CmdList(p *CommandLineListParam) error {
 	}
 
 	for _, rel := range rels {
-		s := fmt.Sprintf("%s/%s %s", rel.Owner, rel.Repo, rel.Version)
-		fmt.Println(s)
+		fmt.Println(rel.FormatSimpleInformation())
 	}
 	return nil
 }
