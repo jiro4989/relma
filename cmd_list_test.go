@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -38,6 +40,13 @@ func TestCmdList(t *testing.T) {
 			assert := assert.New(t)
 
 			err := os.MkdirAll(tt.app.Config.RelmaRoot, os.ModePerm)
+			assert.NoError(err)
+
+			b, err := json.MarshalIndent(&tt.rels, "", "  ")
+			assert.NoError(err)
+
+			f := tt.app.Config.ReleasesFile()
+			err = ioutil.WriteFile(f, b, os.ModePerm)
 			assert.NoError(err)
 
 			err = tt.app.CmdList(nil)
