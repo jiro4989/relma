@@ -48,9 +48,12 @@ type CommandLineListParam struct {
 	List bool
 }
 
+var (
+	version = "dev"
+)
+
 const (
 	appName = "relma"
-	version = "v0.1.0"
 	usage   = `relma manages GitHub Releases versioning.
 
 usage:
