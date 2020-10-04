@@ -34,9 +34,9 @@ type CommandLineUpdateParam struct {
 }
 
 type CommandLineUpgradeParam struct {
-	Upgrade  bool
-	Yes      bool     `docopt:"-y,--yes"`
-	Releases []string `docopt:"<releases>"`
+	Upgrade   bool
+	Yes       bool   `docopt:"-y,--yes"`
+	OwnerRepo string `docopt:"<owner/repo>"`
 }
 
 type CommandLineUninstallParam struct {
@@ -107,7 +107,7 @@ options:
   -y, --yes        yes
 `
 
-	usageUpgrade = `usage: relma upgrade [options] [<releases>...]
+	usageUpgrade = `usage: relma upgrade [options] [<release>]
 
 options:
   -h, --help       print this help
@@ -225,7 +225,8 @@ func Main(args []string) int {
 		}
 
 		p := CmdUpgradeParam{
-			Yes: clp.Yes,
+			OwnerRepo: clp.OwnerRepo,
+			Yes:       clp.Yes,
 		}
 		err = a.CmdUpgrade(&p)
 	case "uninstall":

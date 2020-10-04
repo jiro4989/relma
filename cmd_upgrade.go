@@ -10,7 +10,8 @@ import (
 )
 
 type CmdUpgradeParam struct {
-	Yes bool
+	OwnerRepo string
+	Yes       bool
 }
 
 func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
@@ -22,6 +23,18 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		return errors.New("installed releases don't exist")
 	}
 
+	if p.OwnerRepo != "" {
+		rels, err = searchRelease(rels, p.OwnerRepo)
+		if err != nil {
+			return err
+		}
+		if len(rels) < 1 {
+			info := fmt.Sprintf("%s was not installed", p.OwnerRepo)
+			fmt.Println(info)
+			return nil
+		}
+	}
+
 	var targets Releases
 	for _, rel := range rels {
 		if rel.Version == rel.LatestVersion {
@@ -30,6 +43,10 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		targets = append(targets, rel)
 		info := fmt.Sprintf("%s/%s %s -> %s", rel.Owner, rel.Repo, rel.Version, rel.LatestVersion)
 		fmt.Println(info)
+	}
+	if len(targets) < 1 {
+		fmt.Println("upgradable releases were not existed")
+		return nil
 	}
 
 	fmt.Print("update? [y/n] > ")
@@ -52,4 +69,18 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 	fmt.Println("upgrade successful")
 
 	return nil
+}
+
+func searchRelease(rels Releases, ownerRepo string) (Releases, error) {
+	var retRels Releases
+	for _, rel := range rels {
+		if ok, err := rel.EqualRepo(ownerRepo); err != nil {
+			return nil, err
+		} else if !ok {
+			continue
+		}
+		retRels = append(retRels, rel)
+		return retRels, nil
+	}
+	return nil, nil
 }
