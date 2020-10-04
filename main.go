@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/docopt/docopt-go"
@@ -51,7 +50,7 @@ type CommandLineListParam struct {
 
 const (
 	appName = "relma"
-	version = "v1.0.0"
+	version = "v0.1.0"
 	usage   = `relma manages GitHub Releases versioning.
 
 usage:
@@ -138,16 +137,11 @@ func Main(args []string) int {
 		panic(err)
 	}
 
-	home, err := os.UserHomeDir()
+	a, err := NewApp()
 	if err != nil {
 		panic(err)
 	}
 
-	a := App{
-		Config: Config{
-			RelmaRoot: filepath.Join(home, "relma"),
-		},
-	}
 	switch clp.Command {
 	case "init":
 		args := []string{clp.Command}

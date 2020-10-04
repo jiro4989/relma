@@ -11,6 +11,17 @@ type App struct {
 	Config Config
 }
 
+func NewApp() (App, error) {
+	conf, err := ReadConfigFile()
+	if err != nil {
+		return App{}, err
+	}
+	app := App{
+		Config: conf,
+	}
+	return app, nil
+}
+
 type Config struct {
 	RelmaRoot string
 }
@@ -62,6 +73,25 @@ func ConfigFile() (string, error) {
 
 	p := filepath.Join(dir, "config.json")
 	return p, nil
+}
+
+func ReadConfigFile() (Config, error) {
+	file, err := ConfigFile()
+	if err != nil {
+		return Config{}, err
+	}
+
+	b, err := ioutil.ReadFile(file)
+	if err != nil {
+		return Config{}, err
+	}
+
+	var conf Config
+	err = json.Unmarshal(b, &conf)
+	if err != nil {
+		return Config{}, err
+	}
+	return conf, nil
 }
 
 func CreateConfigFile(c Config) (string, error) {
