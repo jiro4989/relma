@@ -121,7 +121,7 @@ relma list
 
 [source,bash]
 ----
-relma remove itchyny/mmv
+relma uninstall itchyny/mmv
 ----
 
 この場合、 `y/n` の確認がされます。
@@ -129,11 +129,11 @@ relma remove itchyny/mmv
 
 [source,bash]
 ----
-relma remove --yes itchyny/mmv
+relma uninstall --yes itchyny/mmv
 
 # または
 
-relma remove -y itchyny/mmv
+relma uninstall -y itchyny/mmv
 ----
 
 == インストール
