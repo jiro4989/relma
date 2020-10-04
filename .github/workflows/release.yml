@@ -6,7 +6,9 @@ on:
       - 'v*.*.*'
 
 env:
-  app: textimg
+  app: relma
+  package_desc: 'relma manages GitHub Releases versioning.'
+  release_files: README.* LICENSE
   goversion: '1.14'
   build_opts: '-ldflags="-s -w -extldflags \"-static\""'
 
@@ -26,9 +28,9 @@ jobs:
         run: |
           go build ${{ env.build_opts }}
           if [[ $GOOS = windows ]]; then
-            7z a ${{ env.app }}-$GOOS-$GOARCH.zip ./${{ env.app }}.exe
+            7z a ${{ env.app }}-$GOOS-$GOARCH.zip ./${{ env.app }}.exe ${{ env.release_files }}
           else
-            tar czf ${{ env.app }}-$GOOS-$GOARCH.tar.gz ./${{ env.app }}
+            tar czf ${{ env.app }}-$GOOS-$GOARCH.tar.gz ./${{ env.app }} ${{ env.release_files }}
           fi
         env:
           GOOS: ${{ matrix.os }}
@@ -67,7 +69,7 @@ jobs:
           maintainer: jiro4989
           version: ${{ github.ref }}
           arch: 'amd64'
-          desc: '${{ env.app }} is command to convert from color text (ANSI or 256) to image.'
+          desc: ${{ env.package_desc }}
       - uses: actions/upload-artifact@v2
         with:
           name: artifact-deb
@@ -88,13 +90,13 @@ jobs:
           cp -p ./${{ env.app }} .rpmpkg/usr/bin/
       - uses: jiro4989/build-rpm-action@v2
         with:
-          summary: '${{ env.app }} is command to convert from color text (ANSI or 256) to image.'
+          summary: ${{ env.package_desc }}
           package: ${{ env.app }}
           package_root: .rpmpkg
           maintainer: jiro4989
           version: ${{ github.ref }}
           arch: 'x86_64'
-          desc: '${{ env.app }} is command to convert from color text (ANSI or 256) to image.'
+          desc: ${{ env.package_desc }}
       - uses: actions/upload-artifact@v2
         with:
           name: artifact-rpm
