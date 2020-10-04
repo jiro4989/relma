@@ -124,17 +124,17 @@ relma list
 relma uninstall itchyny/mmv
 ----
 
-この場合、 `y/n` の確認がされます。
-確認なしに削除を実施する場合は、 `--yes` を付与します。
-
-[source,bash]
-----
-relma uninstall --yes itchyny/mmv
-
-# または
-
-relma uninstall -y itchyny/mmv
-----
+// この場合、 `y/n` の確認がされます。
+// 確認なしに削除を実施する場合は、 `--yes` を付与します。
+// 
+// [source,bash]
+// ----
+// relma uninstall --yes itchyny/mmv
+// 
+// # または
+// 
+// relma uninstall -y itchyny/mmv
+// ----
 
 == インストール
 
