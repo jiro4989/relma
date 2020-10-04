@@ -138,7 +138,16 @@ relma uninstall itchyny/mmv
 
 == インストール
 
-WIPなので提供してません。
+Goコンパイラがインストールされているなら、以下のコマンドでインストールできます。
+ただし、その場合は `relma --version` で出力されるバージョン情報が固定値になります。
+
+[source,bash]
+----
+go get -u github.com/jiro4989/relma
+----
+
+実行可能バイナリを取得したい場合は https://github.com/jiro4989/relma/releases を
+参照ください。
 
 == LICENSE
 
