@@ -92,6 +92,7 @@ Releaseの情報がすべて保存されます。
 
 [source,bash]
 ----
+relma update
 relma upgrade
 ----
 
