@@ -11,6 +11,7 @@ env:
   release_files: README.* LICENSE
   goversion: '1.14'
   build_opts: '-ldflags="-s -w -extldflags \"-static\" -X \"main.version=relma $(git describe --tags) (rev - $(git rev-parse HEAD))\""'
+  maintainer: jiro
 
 jobs:
   build-artifact:
@@ -69,7 +70,7 @@ jobs:
         with:
           package: ${{ env.app }}
           package_root: .debpkg
-          maintainer: jiro4989
+          maintainer: ${{ env.maintainer }}
           version: ${{ github.ref }}
           arch: 'amd64'
           desc: ${{ env.package_desc }}
@@ -96,7 +97,7 @@ jobs:
           summary: ${{ env.package_desc }}
           package: ${{ env.app }}
           package_root: .rpmpkg
-          maintainer: jiro4989
+          maintainer: ${{ env.maintainer }}
           version: ${{ github.ref }}
           arch: 'x86_64'
           desc: ${{ env.package_desc }}

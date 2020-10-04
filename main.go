@@ -73,6 +73,12 @@ commands:
 options:
   -h, --help    print this help
   --version     print version
+
+author:
+  jiro
+
+repository:
+  https://github.com/jiro4989/relma
 `
 
 	usageInit = `usage: relma init [options]
