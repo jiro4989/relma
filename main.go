@@ -107,7 +107,7 @@ options:
   -y, --yes        yes
 `
 
-	usageUpgrade = `usage: relma upgrade [options] [<release>]
+	usageUpgrade = `usage: relma upgrade [options] [<owner/repo>]
 
 options:
   -h, --help       print this help
