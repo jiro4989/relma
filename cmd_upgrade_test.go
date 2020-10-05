@@ -1,79 +1,134 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCmdUpgrade(t *testing.T) {
-	// tests := []struct {
-	// 	desc      string
-	// 	app       App
-	// 	url       string
-	// 	want      Releases
-	// 	wantCount int
-	// 	wantErr   bool
-	// }{
-	// 	{
-	// 		desc: "ok: installing",
-	// 		app: App{
-	// 			Config: Config{
-	// 				RelmaRoot: testOutputDir,
-	// 			},
-	// 		},
-	// 		url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
-	// 		want: Releases{
-	// 			{
-	// 				URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
-	// 				Owner:         "jiro4989",
-	// 				Repo:          "nimjson",
-	// 				Version:       "v1.2.6",
-	// 				AssetFileName: "nimjson_linux.tar.gz",
-	// 				InstalledFiles: InstalledFiles{
-	// 					{
-	// 						Src:  filepath.Join("bin", "nimjson"),
-	// 						Dest: "nimjson",
-	// 					},
-	// 				},
-	// 			},
-	// 		},
-	// 		wantErr: false,
-	// 	},
-	// }
-	// for _, tt := range tests {
-	// 	t.Run(tt.desc, func(t *testing.T) {
-	// 		assert := assert.New(t)
-	//
-	// 		p := filepath.Join(testOutputDir, "releases.json")
-	// 		os.Remove(p)
-	//
-	// 		err := tt.app.CmdInstall(tt.url)
-	// 		if tt.wantErr {
-	// 			assert.Error(err)
-	// 			return
-	// 		}
-	// 		assert.NoError(err)
-	//
-	// 		b, err := ioutil.ReadFile(p)
-	// 		assert.NoError(err)
-	//
-	// 		var rels Releases
-	// 		err = json.Unmarshal(b, &rels)
-	// 		assert.NoError(err)
-	// 		assert.Equal(len(tt.want), len(rels))
-	//
-	// 		for i, want := range tt.want {
-	// 			rel := rels[i]
-	// 			assert.Equal(want.URL, rel.URL)
-	// 			assert.Equal(want.Owner, rel.Owner)
-	// 			assert.Equal(want.Repo, rel.Repo)
-	// 			assert.Equal(want.Version, rel.Version)
-	// 			assert.Equal(want.AssetFileName, rel.AssetFileName)
-	// 			assert.Equal(want.InstalledFiles, rel.InstalledFiles)
-	// 		}
-	// 	})
-	// }
+	validReleases := Releases{
+		{
+			URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			Owner:         "Jiro4989",
+			Repo:          "textimg",
+			Version:       "v1.2.6",
+			LatestVersion: "v1.2.8",
+		},
+	}
+	invalidReleases := Releases{
+		{
+			URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			Owner:         "Jiro4989",
+			Repo:          "textimg",
+			Version:       "v1.2.6",
+			LatestVersion: "v1.2.6",
+		},
+	}
+	invalidReleases2 := Releases{
+		{
+			URL:           "https://gitlab.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			Owner:         "Jiro4989",
+			Repo:          "textimg",
+			Version:       "v1.2.6",
+			LatestVersion: "v1.2.8",
+		},
+	}
+
+	tests := []struct {
+		desc    string
+		app     App
+		rels    Releases
+		param   *CmdUpgradeParam
+		wantErr bool
+		wantNil bool
+	}{
+		{
+			desc: "ok: upgrade",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_1"),
+				},
+			},
+			rels: validReleases,
+			param: &CmdUpgradeParam{
+				Yes: true,
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ng: illegal owner/repo",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_2"),
+				},
+			},
+			rels: validReleases,
+			param: &CmdUpgradeParam{
+				Yes:       true,
+				OwnerRepo: "jiro4989textimg",
+			},
+			wantErr: true,
+		},
+		{
+			desc: "ng: no upgradable releases",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_3"),
+				},
+			},
+			rels: invalidReleases,
+			param: &CmdUpgradeParam{
+				Yes: true,
+			},
+			wantErr: false,
+			wantNil: true,
+		},
+		{
+			desc: "ng: failed to install",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_4"),
+				},
+			},
+			rels: invalidReleases2,
+			param: &CmdUpgradeParam{
+				Yes: true,
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			err := os.MkdirAll(tt.app.Config.RelmaRoot, os.ModePerm)
+			assert.NoError(err)
+
+			err = os.MkdirAll(tt.app.Config.BinDir(), os.ModePerm)
+			assert.NoError(err)
+
+			err = os.MkdirAll(tt.app.Config.ReleasesDir(), os.ModePerm)
+			assert.NoError(err)
+
+			err = tt.app.cmdUpgrade(tt.rels, tt.param)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.NoError(err)
+			if tt.wantNil {
+				return
+			}
+
+			rels, err := tt.app.Config.ReadReleasesFile()
+			assert.NoError(err)
+			rel := rels[0]
+			assert.Equal(rel.Version, rel.LatestVersion)
+		})
+	}
 }
 
 func TestSearchReleaseOrDefault(t *testing.T) {

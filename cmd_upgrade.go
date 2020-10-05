@@ -20,7 +20,11 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		return err
 	}
 
-	rels, err = searchReleaseOrDefault(rels, p.OwnerRepo)
+	return a.cmdUpgrade(rels, p)
+}
+
+func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
+	rels, err := searchReleaseOrDefault(rels, p.OwnerRepo)
 	if err != nil {
 		return err
 	}

@@ -19,6 +19,8 @@ func TestMain(m *testing.M) {
 }
 
 func testBefore() {
+	os.RemoveAll(testOutputDir)
+
 	if err := os.Mkdir(testOutputDir, os.ModePerm); err != nil {
 		panic(err)
 	}
