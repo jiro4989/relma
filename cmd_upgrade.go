@@ -31,7 +31,7 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		return nil
 	}
 
-	fmt.Print("update? [y/n] > ")
+	fmt.Print("upgrade? [y/n] > ")
 	sc := bufio.NewScanner(os.Stdin)
 	sc.Scan()
 	if strings.ToLower(sc.Text()) != "y" {
