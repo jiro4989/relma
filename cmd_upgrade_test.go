@@ -76,6 +76,114 @@ func TestCmdUpgrade(t *testing.T) {
 	// }
 }
 
+func TestSearchReleaseOrDefault(t *testing.T) {
+	tests := []struct {
+		desc      string
+		rels      Releases
+		ownerRepo string
+		want      Releases
+		wantErr   bool
+	}{
+		{
+			desc: "ok: default releases",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			ownerRepo: "",
+			want: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: found owner/repo",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "sushi",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			ownerRepo: "JIRO4989/TEXTIMG",
+			want: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ng: not found owner/repo",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "sushi",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			ownerRepo: "jiro4989/onigiri",
+			want:      nil,
+			wantErr:   true,
+		},
+		{
+			desc: "ng: illegal owner/repo",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "sushi",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			ownerRepo: "jiro4989textimg",
+			want:      nil,
+			wantErr:   true,
+		},
+		{
+			desc:      "ng: releases are nil",
+			rels:      nil,
+			ownerRepo: "jiro4989/textimg",
+			want:      nil,
+			wantErr:   true,
+		},
+		{
+			desc:      "ng: releases are empty",
+			rels:      Releases{},
+			ownerRepo: "jiro4989/textimg",
+			want:      nil,
+			wantErr:   true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			got, err := searchReleaseOrDefault(tt.rels, tt.ownerRepo)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.NoError(err)
+			assert.Equal(tt.want, got)
+		})
+	}
+}
+
 func TestSearchRelease(t *testing.T) {
 	tests := []struct {
 		desc      string

@@ -19,20 +19,10 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 	if err != nil {
 		return err
 	}
-	if rels == nil {
-		return errors.New("installed releases don't exist")
-	}
 
-	if p.OwnerRepo != "" {
-		rels, err = searchRelease(rels, p.OwnerRepo)
-		if err != nil {
-			return err
-		}
-		if len(rels) < 1 {
-			info := fmt.Sprintf("%s was not installed", p.OwnerRepo)
-			fmt.Println(info)
-			return nil
-		}
+	rels, err = searchReleaseOrDefault(rels, p.OwnerRepo)
+	if err != nil {
+		return err
 	}
 
 	var targets Releases
@@ -69,6 +59,26 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 	fmt.Println("upgrade successful")
 
 	return nil
+}
+
+func searchReleaseOrDefault(rels Releases, ownerRepo string) (Releases, error) {
+	if len(rels) < 1 {
+		return nil, errors.New("installed releases don't exist")
+	}
+
+	if ownerRepo != "" {
+		var err error
+		rels, err = searchRelease(rels, ownerRepo)
+		if err != nil {
+			return nil, err
+		}
+		if len(rels) < 1 {
+			msg := fmt.Sprintf("%s was not installed", ownerRepo)
+			return nil, errors.New(msg)
+		}
+	}
+
+	return rels, nil
 }
 
 func searchRelease(rels Releases, ownerRepo string) (Releases, error) {
