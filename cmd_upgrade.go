@@ -31,12 +31,16 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		return nil
 	}
 
-	fmt.Print("upgrade? [y/n] > ")
-	sc := bufio.NewScanner(os.Stdin)
-	sc.Scan()
-	if strings.ToLower(sc.Text()) != "y" {
-		fmt.Println("not upgrade")
-		return nil
+	fmt.Println("")
+
+	if !p.Yes {
+		fmt.Print("upgrade? [y/n] > ")
+		sc := bufio.NewScanner(os.Stdin)
+		sc.Scan()
+		if strings.ToLower(sc.Text()) != "y" {
+			fmt.Println("not upgrade")
+			return nil
+		}
 	}
 
 	for _, rel := range targets {
