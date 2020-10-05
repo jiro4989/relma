@@ -25,15 +25,7 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 		return err
 	}
 
-	var targets Releases
-	for _, rel := range rels {
-		if rel.Version == rel.LatestVersion {
-			continue
-		}
-		targets = append(targets, rel)
-		info := fmt.Sprintf("%s/%s %s -> %s", rel.Owner, rel.Repo, rel.Version, rel.LatestVersion)
-		fmt.Println(info)
-	}
+	targets := upgradableReleases(rels)
 	if len(targets) < 1 {
 		fmt.Println("upgradable releases were not existed")
 		return nil
@@ -93,4 +85,17 @@ func searchRelease(rels Releases, ownerRepo string) (Releases, error) {
 		return retRels, nil
 	}
 	return nil, nil
+}
+
+func upgradableReleases(rels Releases) Releases {
+	var upgradables Releases
+	for _, rel := range rels {
+		if rel.Version == rel.LatestVersion {
+			continue
+		}
+		upgradables = append(upgradables, rel)
+		info := fmt.Sprintf("%s/%s %s -> %s", rel.Owner, rel.Repo, rel.Version, rel.LatestVersion)
+		fmt.Println(info)
+	}
+	return upgradables
 }
