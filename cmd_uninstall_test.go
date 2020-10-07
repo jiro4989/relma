@@ -201,31 +201,6 @@ func TestUninstallRelease(t *testing.T) {
 			wantErr:   false,
 		},
 		{
-			desc: "ng: release dir was not existed",
-			app: App{
-				Config: Config{
-					RelmaRoot: filepath.Join(testOutputDir, "cmd_uninstall_test_not_exist"),
-				},
-			},
-			rel: &Release{
-				Owner: "jiro4989",
-				Repo:  "textimg",
-				InstalledFiles: InstalledFiles{
-					{
-						Dest: "sample1",
-					},
-					{
-						Dest: "sample2",
-					},
-				},
-			},
-			param: &CmdUninstallParam{
-				OwnerRepo: "jiro4989/textimg",
-			},
-			wantCount: 0,
-			wantErr:   true,
-		},
-		{
 			desc: "ng: uninstall target doesn't exist",
 			app: App{
 				Config: conf2,
