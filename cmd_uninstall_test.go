@@ -1,6 +1,9 @@
 package main
 
 import (
+	"io/ioutil"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -132,6 +135,68 @@ func TestUninstallableRelease(t *testing.T) {
 				return
 			}
 			assert.Equal(tt.want, got)
+			assert.NoError(err)
+		})
+	}
+}
+
+func TestUninstallRelease(t *testing.T) {
+	dir1 := filepath.Join(testOutputDir, "cmd_uninstall_release_test_1")
+	conf1 := Config{
+		RelmaRoot: dir1,
+	}
+	for _, dir := range []string{dir1, conf1.BinDir(), conf1.ReleasesDir()} {
+		err := os.MkdirAll(dir, os.ModePerm)
+		assert.NoError(t, err)
+	}
+	for _, file := range []string{"sample1", "sample2"} {
+		f1 := filepath.Join(conf1.BinDir(), file)
+		err := ioutil.WriteFile(f1, []byte{1}, os.ModePerm)
+		assert.NoError(t, err)
+	}
+
+	tests := []struct {
+		desc      string
+		app       App
+		rel       *Release
+		param     *CmdUninstallParam
+		wantCount int
+		wantErr   bool
+	}{
+		{
+			desc: "ok: success uninstall",
+			app: App{
+				Config: conf1,
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "textimg",
+				InstalledFiles: InstalledFiles{
+					{
+						Dest: "sample1",
+					},
+					{
+						Dest: "sample2",
+					},
+				},
+			},
+			param: &CmdUninstallParam{
+				OwnerRepo: "jiro4989/textimg",
+			},
+			wantCount: 3,
+			wantErr:   false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			got, err := tt.app.uninstallRelease(tt.rel, tt.param)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.Equal(tt.wantCount, len(got))
 			assert.NoError(err)
 		})
 	}
