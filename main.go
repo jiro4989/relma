@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/docopt/docopt-go"
 )
@@ -242,8 +241,10 @@ func Main(args []string) int {
 			panic(err)
 		}
 
-		o := strings.Split(clp.OwnerRepo, "/")
-		err = a.CmdUninstall(o[0], o[1])
+		p := CmdUninstallParam{
+			OwnerRepo: clp.OwnerRepo,
+		}
+		err = a.CmdUninstall(&p)
 	case "list":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
