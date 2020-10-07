@@ -150,8 +150,22 @@ func TestUninstallRelease(t *testing.T) {
 		assert.NoError(t, err)
 	}
 	for _, file := range []string{"sample1", "sample2"} {
-		f1 := filepath.Join(conf1.BinDir(), file)
-		err := ioutil.WriteFile(f1, []byte{1}, os.ModePerm)
+		f := filepath.Join(conf1.BinDir(), file)
+		err := ioutil.WriteFile(f, []byte{1}, os.ModePerm)
+		assert.NoError(t, err)
+	}
+
+	dir2 := filepath.Join(testOutputDir, "cmd_uninstall_release_test_2")
+	conf2 := Config{
+		RelmaRoot: dir2,
+	}
+	for _, dir := range []string{dir2, conf2.BinDir(), conf2.ReleasesDir()} {
+		err := os.MkdirAll(dir, os.ModePerm)
+		assert.NoError(t, err)
+	}
+	for _, file := range []string{"sample1"} {
+		f := filepath.Join(conf2.BinDir(), file)
+		err := ioutil.WriteFile(f, []byte{1}, os.ModePerm)
 		assert.NoError(t, err)
 	}
 
@@ -185,6 +199,51 @@ func TestUninstallRelease(t *testing.T) {
 			},
 			wantCount: 3,
 			wantErr:   false,
+		},
+		{
+			desc: "ng: release dir was not existed",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_uninstall_test_not_exist"),
+				},
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "textimg",
+				InstalledFiles: InstalledFiles{
+					{
+						Dest: "sample1",
+					},
+					{
+						Dest: "sample2",
+					},
+				},
+			},
+			param: &CmdUninstallParam{
+				OwnerRepo: "jiro4989/textimg",
+			},
+			wantCount: 0,
+			wantErr:   true,
+		},
+		{
+			desc: "ng: uninstall target doesn't exist",
+			app: App{
+				Config: conf2,
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "textimg",
+				InstalledFiles: InstalledFiles{
+					{
+						Dest: "sample2",
+					},
+				},
+			},
+			param: &CmdUninstallParam{
+				OwnerRepo: "jiro4989/textimg",
+			},
+			wantCount: 0,
+			wantErr:   true,
 		},
 	}
 	for _, tt := range tests {
