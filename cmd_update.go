@@ -1,14 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/google/go-github/v32/github"
@@ -36,19 +33,16 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
+		Info("updatable", rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
 		rel.LatestVersion = latestTag
 		time.Sleep(1 * time.Second)
 	}
 
-	fmt.Println("")
-
 	if !p.Yes {
-		fmt.Print("update? [y/n] > ")
-		sc := bufio.NewScanner(os.Stdin)
-		sc.Scan()
-		if strings.ToLower(sc.Text()) != "y" {
-			fmt.Println("not updated")
+		if yes, err := PromptYesNo("update? [yes/no]"); err != nil {
+			return err
+		} else if !yes {
+			Info("not updated")
 			return nil
 		}
 	}
@@ -63,7 +57,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		return err
 	}
 
-	fmt.Println("update successful")
+	Info("update successful")
 
 	return nil
 }

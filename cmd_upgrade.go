@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
-	"os"
 	"strings"
 	"time"
 )
@@ -31,18 +29,15 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 	targets := upgradableReleases(rels)
 	if len(targets) < 1 {
-		fmt.Println("upgradable releases were not existed")
+		Info("upgradable releases were not existed")
 		return nil
 	}
 
-	fmt.Println("")
-
 	if !p.Yes {
-		fmt.Print("upgrade? [y/n] > ")
-		sc := bufio.NewScanner(os.Stdin)
-		sc.Scan()
-		if strings.ToLower(sc.Text()) != "y" {
-			fmt.Println("not upgrade")
+		if yes, err := PromptYesNo("upgrade? [yes/no]"); err != nil {
+			return err
+		} else if !yes {
+			Info("not upgrade")
 			return nil
 		}
 	}
@@ -56,7 +51,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 		time.Sleep(1 * time.Second)
 	}
-	fmt.Println("upgrade successful")
+	Info("upgrade successful")
 
 	return nil
 }
@@ -103,7 +98,7 @@ func upgradableReleases(rels Releases) Releases {
 		}
 		upgradables = append(upgradables, rel)
 		info := fmt.Sprintf("%s/%s %s -> %s", rel.Owner, rel.Repo, rel.Version, rel.LatestVersion)
-		fmt.Println(info)
+		Info(info)
 	}
 	return upgradables
 }
