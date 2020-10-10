@@ -2,7 +2,21 @@ name: test
 
 on:
   push:
+    paths-ignore:
+      - 'LICENSE'
+      - '*.md'
+      - '*.adoc'
+      - 'docs/*'
+      - '.gitignore'
+      - '.chglog/*'
   pull_request:
+    paths-ignore:
+      - 'LICENSE'
+      - '*.md'
+      - '*.adoc'
+      - 'docs/*'
+      - '.gitignore'
+      - '.chglog/*'
 
 jobs:
   skip:
