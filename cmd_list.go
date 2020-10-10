@@ -11,7 +11,7 @@ func (a *App) CmdList(p *CommandLineListParam) error {
 	}
 
 	for _, rel := range rels {
-		Info(rel.FormatSimpleInformation())
+		fmt.Println(rel.FormatSimpleInformation())
 	}
 	return nil
 }
