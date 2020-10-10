@@ -150,6 +150,97 @@ func TestUnset(t *testing.T) {
 	}
 }
 
+func TestRemoveRelease(t *testing.T) {
+	tests := []struct {
+		desc string
+		rels Releases
+		rel  *Release
+		want Releases
+	}{
+		{
+			desc: "ok: remove 0",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "monit",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "monit",
+			},
+			want: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+		},
+		{
+			desc: "ok: remove 1",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "monit",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "textimg",
+			},
+			want: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "monit",
+				},
+			},
+		},
+		{
+			desc: "ok: no remove",
+			rels: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "monit",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+			rel: &Release{
+				Owner: "jiro4989",
+				Repo:  "sushi",
+			},
+			want: Releases{
+				{
+					Owner: "jiro4989",
+					Repo:  "monit",
+				},
+				{
+					Owner: "jiro4989",
+					Repo:  "textimg",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			got := RemoveRelease(tt.rels, tt.rel)
+			assert.Equal(tt.want, got)
+		})
+	}
+}
+
 func TestRelease_EqualRelease(t *testing.T) {
 	tests := []struct {
 		desc string
