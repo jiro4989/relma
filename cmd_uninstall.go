@@ -27,7 +27,11 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 		return err
 	}
 
-	// TODO: update releases.json
+	rels = RemoveRelease(rels, rel)
+	err = a.SaveReleases(rels)
+	if err != nil {
+		return err
+	}
 
 	Info("uninstall successful")
 

@@ -24,6 +24,23 @@ type InstalledFile struct {
 
 type InstalledFiles []InstalledFile
 
+func RemoveRelease(rels Releases, rel *Release) Releases {
+	for i, v := range rels {
+		if !rel.EqualRelease(&v) {
+			continue
+		}
+		return unset(rels, i)
+	}
+	return rels
+}
+
+func unset(s Releases, i int) Releases {
+	if i >= len(s) {
+		return s
+	}
+	return append(s[:i], s[i+1:]...)
+}
+
 func (r *Release) FormatSimpleInformation() string {
 	return fmt.Sprintf("%s/%s %s", r.Owner, r.Repo, r.Version)
 }
@@ -37,6 +54,11 @@ func (r *Release) EqualRepo(ownerRepo string) (bool, error) {
 
 	ok := strings.ToLower(oRepo[0]) == strings.ToLower(r.Owner) && strings.ToLower(oRepo[1]) == strings.ToLower(r.Repo)
 	return ok, nil
+}
+
+func (r *Release) EqualRelease(r2 *Release) bool {
+	ok := strings.ToLower(r.Owner) == strings.ToLower(r2.Owner) && strings.ToLower(r.Repo) == strings.ToLower(r2.Repo)
+	return ok
 }
 
 func (files InstalledFiles) FixPath(srcDir, destDir string) {
