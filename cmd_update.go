@@ -32,7 +32,11 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		if err != nil {
 			return err
 		}
-		Info("updatable", rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
+		if rel.Version != latestTag {
+			Info("updatable", rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
+		} else {
+			Info("not updatable", rel.FormatSimpleInformation())
+		}
 		rel.LatestVersion = latestTag
 		time.Sleep(1 * time.Second)
 	}
