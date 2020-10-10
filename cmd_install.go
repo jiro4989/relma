@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -57,14 +56,11 @@ func (a *App) CmdInstall(url string) error {
 	} else {
 		rels = append(rels, *rel)
 	}
-	b, err := json.MarshalIndent(&rels, "", "  ")
+	err = a.SaveReleases(rels)
 	if err != nil {
 		return err
 	}
 
-	if err := ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm); err != nil {
-		return err
-	}
 	Info("install successfull (" + rel.Owner + "/" + rel.Repo + ":" + rel.Version + ")")
 
 	return nil

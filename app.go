@@ -22,6 +22,19 @@ func NewApp() (App, error) {
 	return app, nil
 }
 
+func (a *App) SaveReleases(rels Releases) error {
+	b, err := json.MarshalIndent(&rels, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type Config struct {
 	RelmaRoot string
 }

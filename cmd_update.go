@@ -2,10 +2,7 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
-	"io/ioutil"
-	"os"
 	"time"
 
 	"github.com/google/go-github/v32/github"
@@ -41,12 +38,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		time.Sleep(1 * time.Second)
 	}
 
-	b, err := json.MarshalIndent(rels, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	err = ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm)
+	err = a.SaveReleases(rels)
 	if err != nil {
 		return err
 	}
