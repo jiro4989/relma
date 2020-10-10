@@ -29,7 +29,7 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 
 	// TODO: update releases.json
 
-	fmt.Println("uninstall successful")
+	Info("uninstall successful")
 
 	return nil
 }
