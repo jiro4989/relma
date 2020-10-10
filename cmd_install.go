@@ -65,7 +65,7 @@ func (a *App) CmdInstall(url string) error {
 	if err := ioutil.WriteFile(a.Config.ReleasesFile(), b, os.ModePerm); err != nil {
 		return err
 	}
-	fmt.Println("install successfull (" + rel.Owner + "/" + rel.Repo + ":" + rel.Version + ")")
+	Info("install successfull (" + rel.Owner + "/" + rel.Repo + ":" + rel.Version + ")")
 
 	return nil
 }
