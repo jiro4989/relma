@@ -21,7 +21,7 @@ jobs:
         # NOTE:
         #   supported OS and architecture
         #   https://golang.org/doc/install/source#environment
-        os: [windows, linux, darwin, freebsd, netbsd, plan9]
+        os: [windows, linux, darwin]
         arch: [386, amd64]
     steps:
       - uses: actions/checkout@v1
