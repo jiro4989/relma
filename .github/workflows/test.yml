@@ -21,6 +21,8 @@ jobs:
     strategy:
       matrix:
         go: [ '1.14' ]
+        os: [windows, linux, darwin]
+        arch: [386, amd64]
     name: build go ${{ matrix.go }}
     needs: before
     steps:
@@ -29,7 +31,11 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go build
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
       - run: go test -v -cover
+        if: matrix.os == 'linux' && matrix.arch == 'amd64'
 
   coverage:
     runs-on: ubuntu-latest
