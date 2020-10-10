@@ -148,7 +148,7 @@ jobs:
     needs: create-release
     strategy:
       matrix:
-        os: [windows, linux, darwin, freebsd, netbsd, plan9]
+        os: [windows, linux, darwin]
         arch: [386, amd64]
         include:
           - os: windows
@@ -156,12 +156,6 @@ jobs:
           - os: linux
             asset_content_type: application/gzip
           - os: darwin
-            asset_content_type: application/gzip
-          - os: freebsd
-            asset_content_type: application/gzip
-          - os: netbsd
-            asset_content_type: application/gzip
-          - os: plan9
             asset_content_type: application/gzip
     steps:
       - uses: actions/download-artifact@v2
