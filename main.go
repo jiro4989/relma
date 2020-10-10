@@ -24,6 +24,7 @@ type CommandLineEditParam struct {
 type CommandLineInstallParam struct {
 	Install          bool
 	GitHubReleaseURL string `docopt:"<github_release_url>"`
+	File             string `docopt:"-f,--file"`
 }
 
 type CommandLineUpdateParam struct {
@@ -96,6 +97,7 @@ options:
 
 options:
   -h, --help       print this help
+  -f, --file       install with releases.json
 `
 
 	usageUpdate = `usage: relma update [options] [<releases>...]
