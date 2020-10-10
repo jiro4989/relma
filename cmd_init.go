@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 )
 
@@ -10,7 +9,7 @@ func (a *App) CmdInit() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("created " + configDir)
+	Info("created " + configDir)
 
 	conf, err := DefaultConfig()
 	if err != nil {
@@ -21,7 +20,7 @@ func (a *App) CmdInit() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("created " + confFile)
+	Info("created " + confFile)
 
 	paths := []string{
 		conf.RelmaRoot,
@@ -31,7 +30,7 @@ func (a *App) CmdInit() error {
 	for _, path := range paths {
 		_, err := os.Stat(path)
 		if !os.IsNotExist(err) {
-			fmt.Println(path + " was already existed")
+			Info(path + " was already existed")
 			continue
 		}
 
@@ -39,10 +38,10 @@ func (a *App) CmdInit() error {
 		if err != nil {
 			return err
 		}
-		fmt.Println("created " + path)
+		Info("created " + path)
 	}
 
-	fmt.Println("initialize successful")
+	Info("initialize successful")
 
 	return nil
 }
