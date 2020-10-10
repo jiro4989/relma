@@ -51,6 +51,16 @@ jobs:
       - run: go test -v -cover
         if: matrix.os == 'linux' && matrix.arch == 'amd64'
 
+  lint:
+    runs-on: ubuntu-latest
+    name: build go ${{ matrix.go }}
+    needs: before
+    steps:
+      - uses: actions/checkout@v2
+      - uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.31
+
   coverage:
     runs-on: ubuntu-latest
     needs: before
