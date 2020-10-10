@@ -28,7 +28,6 @@ type CommandLineInstallParam struct {
 
 type CommandLineUpdateParam struct {
 	Update   bool
-	Yes      bool     `docopt:"-y,--yes"`
 	Releases []string `docopt:"<releases>"`
 }
 
@@ -103,7 +102,6 @@ options:
 
 options:
   -h, --help       print this help
-  -y, --yes        yes
 `
 
 	usageUpgrade = `usage: relma upgrade [options] [<owner/repo>]
@@ -206,7 +204,6 @@ func Main(args []string) int {
 		}
 
 		p := CmdUpdateParam{
-			Yes:      clp.Yes,
 			Releases: clp.Releases,
 		}
 		err = a.CmdUpdate(&p)

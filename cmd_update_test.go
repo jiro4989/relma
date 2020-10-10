@@ -26,9 +26,7 @@ func TestCmdUpdate(t *testing.T) {
 					RelmaRoot: filepath.Join(testOutputDir, "test_cmd_update"),
 				},
 			},
-			param: &CmdUpdateParam{
-				Yes: true,
-			},
+			param: &CmdUpdateParam{},
 			rel: Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",

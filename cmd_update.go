@@ -12,7 +12,6 @@ import (
 )
 
 type CmdUpdateParam struct {
-	Yes      bool
 	Releases []string
 }
 
@@ -36,15 +35,6 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		Info("updatable", rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
 		rel.LatestVersion = latestTag
 		time.Sleep(1 * time.Second)
-	}
-
-	if !p.Yes {
-		if yes, err := PromptYesNo("update? [yes/no]"); err != nil {
-			return err
-		} else if !yes {
-			Info("not updated")
-			return nil
-		}
 	}
 
 	b, err := json.MarshalIndent(rels, "", "  ")
