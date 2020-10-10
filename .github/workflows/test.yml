@@ -53,7 +53,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    name: build go ${{ matrix.go }}
     needs: before
     steps:
       - uses: actions/checkout@v2
