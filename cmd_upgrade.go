@@ -44,7 +44,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 	for _, rel := range targets {
 		url := strings.ReplaceAll(rel.URL, rel.Version, rel.LatestVersion)
-		err := a.CmdInstall(url)
+		err := a.CmdInstall(&CmdInstallParam{URL: url})
 		if err != nil {
 			return err
 		}

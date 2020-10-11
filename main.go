@@ -185,13 +185,18 @@ func Main(args []string) int {
 		if err != nil {
 			panic(err)
 		}
+
 		var clp CommandLineInstallParam
 		err = opts.Bind(&clp)
 		if err != nil {
 			panic(err)
 		}
 
-		err = a.CmdInstall(clp.GitHubReleaseURL)
+		p := CmdInstallParam{
+			URL:  clp.GitHubReleaseURL,
+			File: clp.File,
+		}
+		err = a.CmdInstall(&p)
 	case "update":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)

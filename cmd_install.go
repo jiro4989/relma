@@ -15,7 +15,13 @@ import (
 	"github.com/mholt/archiver/v3"
 )
 
-func (a *App) CmdInstall(url string) error {
+type CmdInstallParam struct {
+	URL  string
+	File string
+}
+
+func (a *App) CmdInstall(p *CmdInstallParam) error {
+	url := p.URL
 	rel, err := parseURL(url)
 	if err != nil {
 		return err

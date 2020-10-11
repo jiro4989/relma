@@ -14,7 +14,7 @@ func TestCmdInstall(t *testing.T) {
 	tests := []struct {
 		desc      string
 		app       App
-		url       string
+		param     *CmdInstallParam
 		want      Releases
 		wantCount int
 		wantErr   bool
@@ -26,7 +26,9 @@ func TestCmdInstall(t *testing.T) {
 					RelmaRoot: testOutputDir,
 				},
 			},
-			url: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			param: &CmdInstallParam{
+				URL: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			},
 			want: Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
@@ -52,7 +54,7 @@ func TestCmdInstall(t *testing.T) {
 			p := filepath.Join(testOutputDir, "releases.json")
 			os.Remove(p)
 
-			err := tt.app.CmdInstall(tt.url)
+			err := tt.app.CmdInstall(tt.param)
 			if tt.wantErr {
 				assert.Error(err)
 				return
