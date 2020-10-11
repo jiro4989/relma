@@ -204,7 +204,7 @@ func TestReadReleasesFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			got, err := readReleasesFile(tt.path)
+			got, err := ReadReleasesFile(tt.path)
 			if tt.wantErr {
 				assert.Error(err)
 				return

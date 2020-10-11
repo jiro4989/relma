@@ -137,10 +137,10 @@ func (c *Config) BinDir() string {
 }
 
 func (c *Config) ReadReleasesFile() (Releases, error) {
-	return readReleasesFile(c.ReleasesFile())
+	return ReadReleasesFile(c.ReleasesFile())
 }
 
-func readReleasesFile(path string) (Releases, error) {
+func ReadReleasesFile(path string) (Releases, error) {
 	var rels Releases
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {

@@ -21,6 +21,25 @@ type CmdInstallParam struct {
 }
 
 func (a *App) CmdInstall(p *CmdInstallParam) error {
+	if p.File != "" {
+		rels, err := ReadReleasesFile(p.File)
+		if err != nil {
+			return err
+		}
+		var errCount int
+		for _, rel := range rels {
+			p := CmdInstallParam{URL: rel.URL}
+			err := a.CmdInstall(&p)
+			if err != nil {
+				Error(err)
+				errCount++
+			}
+		}
+		if 0 < errCount {
+			return errors.New("install failed")
+		}
+	}
+
 	url := p.URL
 	rel, err := parseURL(url)
 	if err != nil {
