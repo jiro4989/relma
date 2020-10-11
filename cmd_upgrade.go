@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 )
 
 type CmdUpgradeParam struct {
@@ -49,7 +48,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 			return err
 		}
 
-		time.Sleep(1 * time.Second)
+		Sleep()
 	}
 	Info("upgrade successful")
 

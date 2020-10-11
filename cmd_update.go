@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"time"
 
 	"github.com/google/go-github/v32/github"
 )
@@ -35,7 +34,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 			Info("not updatable", rel.FormatSimpleInformation())
 		}
 		rel.LatestVersion = latestTag
-		time.Sleep(1 * time.Second)
+		Sleep()
 	}
 
 	err = a.SaveReleases(rels)

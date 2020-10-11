@@ -34,6 +34,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 				Error(err)
 				errCount++
 			}
+			Sleep()
 		}
 		if 0 < errCount {
 			return errors.New("install failed")
