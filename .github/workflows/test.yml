@@ -37,7 +37,6 @@ jobs:
         go: [ '1.14' ]
         os: [windows, linux, darwin]
         arch: [386, amd64]
-    name: build go ${{ matrix.go }}
     needs: before
     steps:
       - uses: actions/checkout@v2
