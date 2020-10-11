@@ -39,6 +39,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 		if 0 < errCount {
 			return errors.New("install failed")
 		}
+		return nil
 	}
 
 	url := p.URL
