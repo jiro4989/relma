@@ -24,6 +24,7 @@ type CommandLineEditParam struct {
 type CommandLineInstallParam struct {
 	Install          bool
 	GitHubReleaseURL string `docopt:"<github_release_url>"`
+	File             string `docopt:"-f,--file"`
 }
 
 type CommandLineUpdateParam struct {
@@ -95,7 +96,8 @@ options:
 	usageInstall = `usage: relma install [options] <github_release_url>
 
 options:
-  -h, --help       print this help
+  -h, --help           print this help
+  -f, --file=<file>    install with releases.json
 `
 
 	usageUpdate = `usage: relma update [options] [<releases>...]
@@ -183,13 +185,18 @@ func Main(args []string) int {
 		if err != nil {
 			panic(err)
 		}
+
 		var clp CommandLineInstallParam
 		err = opts.Bind(&clp)
 		if err != nil {
 			panic(err)
 		}
 
-		err = a.CmdInstall(clp.GitHubReleaseURL)
+		p := CmdInstallParam{
+			URL:  clp.GitHubReleaseURL,
+			File: clp.File,
+		}
+		err = a.CmdInstall(&p)
 	case "update":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
