@@ -277,10 +277,7 @@ func isExecutableFile(f os.FileInfo, path string) (bool, error) {
 
 func existsRepo(rels Releases, rel Release) (bool, int) {
 	for i, r := range rels {
-		if strings.ToLower(r.Owner) != strings.ToLower(rel.Owner) {
-			continue
-		}
-		if strings.ToLower(r.Repo) != strings.ToLower(rel.Repo) {
+		if !r.EqualRelease(&rel) {
 			continue
 		}
 		return true, i
