@@ -46,12 +46,55 @@ func TestCmdInstall(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			desc: "ok: installing with releases.json",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "cmd_install_test"),
+				},
+			},
+			param: &CmdInstallParam{
+				File: filepath.Join(testDir, "cmd_install_releases.json"),
+			},
+			want: Releases{
+				{
+					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz",
+					Owner:         "jiro4989",
+					Repo:          "nimjson",
+					Version:       "v1.2.8",
+					AssetFileName: "nimjson_linux.tar.gz",
+					InstalledFiles: InstalledFiles{
+						{
+							Src:  filepath.Join("bin", "nimjson"),
+							Dest: "nimjson",
+						},
+					},
+				},
+				{
+					URL:           "https://github.com/jiro4989/monit/releases/download/1.1.0/monit_linux.tar.gz",
+					Owner:         "jiro4989",
+					Repo:          "monit",
+					Version:       "1.1.0",
+					AssetFileName: "monit_linux.tar.gz",
+					InstalledFiles: InstalledFiles{
+						{
+							Src:  filepath.Join("bin", "monit"),
+							Dest: "monit",
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			p := filepath.Join(testOutputDir, "releases.json")
+			os.MkdirAll(tt.app.Config.BinDir(), os.ModePerm)
+			os.MkdirAll(tt.app.Config.ReleasesDir(), os.ModePerm)
+
+			p := tt.app.Config.ReleasesFile()
 			os.Remove(p)
 
 			err := tt.app.CmdInstall(tt.param)
