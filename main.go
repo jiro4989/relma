@@ -96,8 +96,8 @@ options:
 	usageInstall = `usage: relma install [options] <github_release_url>
 
 options:
-  -h, --help       print this help
-  -f, --file       install with releases.json
+  -h, --help           print this help
+  -f, --file=<file>    install with releases.json
 `
 
 	usageUpdate = `usage: relma update [options] [<releases>...]
