@@ -53,7 +53,7 @@ install -m 0755 ./nimjson_linux/bin/nimjson ~/bin/
 [source,bash]
 ----
 relma init
-relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
+relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
 ----
 
 インストールされたコマンドとパッケージの情報は `~/relma/releases/<owner>/<repo>` に
@@ -62,15 +62,13 @@ relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2
 
 また、 `relma install` をすると `~/relma/releases.json` にインストールした
 Releaseの情報がすべて保存されます。
-// このJSONを使ってReleaseを一括インストールすることが可能です。
-// 
-// つまり、この `releases.json` をgit管理することで、別の環境にインストールした
-// Releasesをまるごと移す事が可能です。
-// 
-// [source,bash]
-// ----
-// relma install -f releases.json
-// ----
+このJSONを使ってReleaseを一括インストールすることが可能です。
+以下のコマンドで、 `releases.json` からリリースをインストールできます。
+
+[source,bash]
+----
+relma install -f releases.json
+----
 
 // 最新版にアップグレードする際は以下のコマンドを実行します。
 // 
