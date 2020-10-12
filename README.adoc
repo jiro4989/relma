@@ -9,8 +9,6 @@ image:https://codecov.io/gh/jiro4989/relma/branch/master/graph/badge.svg[codecov
 
 image:https://user-images.githubusercontent.com/13825004/94369291-d0976d00-0123-11eb-9545-34c9bd31c184.gif[relma.gif]
 
-WIP
-
 == Motivation
 
 It is pretty useful to versioning that the package management system like  `apt` or `yum`.
