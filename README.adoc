@@ -83,7 +83,10 @@ relma upgrade --yes
 
 [source,bash]
 ----
-relma upgrade --yes jiro4989/nimjson
+relma upgrade --yes <owner/repo>
+
+# ex:
+# relma upgrade --yes jiro4989/nimjson
 ----
 
 これは `relma upgrade <owner>/<repo>` というルールに従っています。
@@ -115,20 +118,11 @@ relma list
 
 [source,bash]
 ----
-relma uninstall itchyny/mmv
-----
+relma uninstall <owner/repo>
 
-// この場合、 `y/n` の確認がされます。
-// 確認なしに削除を実施する場合は、 `--yes` を付与します。
-// 
-// [source,bash]
-// ----
-// relma uninstall --yes itchyny/mmv
-// 
-// # または
-// 
-// relma uninstall -y itchyny/mmv
-// ----
+# ex:
+# relma upgrade --yes jiro4989/nimjson
+----
 
 == インストール
 
