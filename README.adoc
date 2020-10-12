@@ -70,36 +70,24 @@ Releaseの情報がすべて保存されます。
 relma install -f releases.json
 ----
 
-// 最新版にアップグレードする際は以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma upgrade itchyny/mmv
-// ----
-// 
-// これは `relma upgrade <owner>/<repo>` というルールに従っています。
-// バージョンを指定したい場合は以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma upgrade itchyny/mmv v0.1.2
-// ----
-
 インストールしたコマンドをすべてアップグレードしたい場合は、以下のコマンドを実行
 します。
 
 [source,bash]
 ----
 relma update
-relma upgrade
+relma upgrade --yes
 ----
 
-// インストール可能なバージョンを確認したい場合は、以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma show itchyny/mmv
-// ----
+特定のパッケージのみ最新版にアップグレードする際は以下のコマンドを実行します。
+
+[source,bash]
+----
+relma upgrade --yes jiro4989/nimjson
+----
+
+これは `relma upgrade <owner>/<repo>` というルールに従っています。
+`<owner>/<repo>` の確認は以下のコマンドを入力します。
 
 インストール済みのパッケージ一覧の確認は以下のコマンドを実行します。
 
@@ -107,6 +95,13 @@ relma upgrade
 ----
 relma list
 ----
+
+// バージョンを指定したい場合は以下のコマンドを実行します。
+// 
+// [source,bash]
+// ----
+// relma upgrade itchyny/mmv v0.1.2
+// ----
 
 // アップグレード可能なパッケージ一覧の確認は以下のコマンドを実行します。
 // 
