@@ -5,22 +5,18 @@
 image:https://github.com/jiro4989/relma/workflows/test/badge.svg[test]
 image:https://codecov.io/gh/jiro4989/relma/branch/master/graph/badge.svg[codecov, link="https://codecov.io/gh/jiro4989/relma"]
 
-`relma` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
-スでパッケージ・バージョン管理するためのコマンドです。
+`relma` is the command to manage executables in GitHub Releases. `relma` helps you to upgrade one.
 
 image:https://user-images.githubusercontent.com/13825004/94369291-d0976d00-0123-11eb-9545-34c9bd31c184.gif[relma.gif]
 
 WIP
 
-== モチベーション
+== Motivation
 
-`apt` なり `yum` なりのOSに付属のパッケージ管理システムがあると、インストールす
-るコマンドのバージョン管理ができて便利です。
+It is pretty useful to versioning that the package management system like  `apt` or `yum`.
+But we have to manage ourselves about executables in GitHub Releases.
 
-しかしながら、GitHubReleaseだけに公開されている便利なコマンドなどのバージョン管
-理は各人に委ねられている状態だと思います。
-
-たとえば以下。
+Examples:
 
 [source,bash]
 ----
@@ -31,13 +27,11 @@ mkdir -p ~/bin
 install -m 0755 ./nimjson_linux/bin/nimjson ~/bin/
 ----
 
-このように手動インストールしたコマンド類をアップグレードしたい場合、
-上記と同じような手順で再度インストールし直す必要があります。
+We have to run those commands if we want to upgrade one.
 
-この問題を解決することが、このコマンドのモチベーションです。
+I want to resolve this problem.
 
-最終的には、様々なGitHubReleaseから取得したコマンドを、統一的なインタフェースで
-管理し、一括アップグレード等を可能にすることをゴールとします。
+`relma` can upgrade your executables that installed with `relma`.
 
 == 使い方
 
