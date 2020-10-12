@@ -25,10 +25,10 @@ WIP
 [source,bash]
 ----
 cd /tmp
-wget https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
-tar xzf mmv_v0.1.2_linux_amd64.tar.gz
+wget https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
+tar xzf nimjson_linux.tar.gz
 mkdir -p ~/bin
-install -m 0755 ./mmv ~/bin/
+install -m 0755 ./nimjson_linux/bin/nimjson ~/bin/
 ----
 
 このように手動インストールしたコマンド類をアップグレードしたい場合、
@@ -53,7 +53,7 @@ install -m 0755 ./mmv ~/bin/
 [source,bash]
 ----
 relma init
-relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
+relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
 ----
 
 インストールされたコマンドとパッケージの情報は `~/relma/releases/<owner>/<repo>` に
@@ -62,30 +62,13 @@ relma install https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2
 
 また、 `relma install` をすると `~/relma/releases.json` にインストールした
 Releaseの情報がすべて保存されます。
-// このJSONを使ってReleaseを一括インストールすることが可能です。
-// 
-// つまり、この `releases.json` をgit管理することで、別の環境にインストールした
-// Releasesをまるごと移す事が可能です。
-// 
-// [source,bash]
-// ----
-// relma install -f releases.json
-// ----
+このJSONを使ってReleaseを一括インストールすることが可能です。
+以下のコマンドで、 `releases.json` からリリースをインストールできます。
 
-// 最新版にアップグレードする際は以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma upgrade itchyny/mmv
-// ----
-// 
-// これは `relma upgrade <owner>/<repo>` というルールに従っています。
-// バージョンを指定したい場合は以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma upgrade itchyny/mmv v0.1.2
-// ----
+[source,bash]
+----
+relma install -f releases.json
+----
 
 インストールしたコマンドをすべてアップグレードしたい場合は、以下のコマンドを実行
 します。
@@ -93,15 +76,21 @@ Releaseの情報がすべて保存されます。
 [source,bash]
 ----
 relma update
-relma upgrade
+relma upgrade --yes
 ----
 
-// インストール可能なバージョンを確認したい場合は、以下のコマンドを実行します。
-// 
-// [source,bash]
-// ----
-// relma show itchyny/mmv
-// ----
+特定のパッケージのみ最新版にアップグレードする際は以下のコマンドを実行します。
+
+[source,bash]
+----
+relma upgrade --yes <owner/repo>
+
+# ex:
+# relma upgrade --yes jiro4989/nimjson
+----
+
+これは `relma upgrade <owner>/<repo>` というルールに従っています。
+`<owner>/<repo>` の確認は以下のコマンドを入力します。
 
 インストール済みのパッケージ一覧の確認は以下のコマンドを実行します。
 
@@ -109,6 +98,13 @@ relma upgrade
 ----
 relma list
 ----
+
+// バージョンを指定したい場合は以下のコマンドを実行します。
+// 
+// [source,bash]
+// ----
+// relma upgrade itchyny/mmv v0.1.2
+// ----
 
 // アップグレード可能なパッケージ一覧の確認は以下のコマンドを実行します。
 // 
@@ -122,20 +118,11 @@ relma list
 
 [source,bash]
 ----
-relma uninstall itchyny/mmv
-----
+relma uninstall <owner/repo>
 
-// この場合、 `y/n` の確認がされます。
-// 確認なしに削除を実施する場合は、 `--yes` を付与します。
-// 
-// [source,bash]
-// ----
-// relma uninstall --yes itchyny/mmv
-// 
-// # または
-// 
-// relma uninstall -y itchyny/mmv
-// ----
+# ex:
+# relma upgrade --yes jiro4989/nimjson
+----
 
 == インストール
 
