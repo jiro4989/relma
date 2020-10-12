@@ -25,10 +25,10 @@ WIP
 [source,bash]
 ----
 cd /tmp
-wget https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz
-tar xzf mmv_v0.1.2_linux_amd64.tar.gz
+wget https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
+tar xzf nimjson_linux.tar.gz
 mkdir -p ~/bin
-install -m 0755 ./mmv ~/bin/
+install -m 0755 ./nimjson_linux/bin/nimjson ~/bin/
 ----
 
 このように手動インストールしたコマンド類をアップグレードしたい場合、
