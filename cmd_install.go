@@ -88,7 +88,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 		return err
 	}
 
-	MessageOK("install   (" + rel.FormatVersion() + ")")
+	Message("install successfull (" + rel.Owner + "/" + rel.Repo + ":" + rel.Version + ")")
 
 	return nil
 }

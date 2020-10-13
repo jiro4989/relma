@@ -42,7 +42,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		return err
 	}
 
-	MessageOK("update")
+	Message("update successful")
 
 	return nil
 }

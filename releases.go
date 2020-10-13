@@ -45,10 +45,6 @@ func (r *Release) FormatSimpleInformation() string {
 	return fmt.Sprintf("%s/%s %s", r.Owner, r.Repo, r.Version)
 }
 
-func (r *Release) FormatVersion() string {
-	return fmt.Sprintf("%s/%s:%s", r.Owner, r.Repo, r.Version)
-}
-
 func (r *Release) EqualRepo(ownerRepo string) (bool, error) {
 	oRepo := strings.Split(ownerRepo, "/")
 	if len(oRepo) < 2 {

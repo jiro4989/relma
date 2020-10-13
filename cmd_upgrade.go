@@ -50,8 +50,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 		Sleep()
 	}
-
-	MessageOK("upgrade")
+	Message("upgrade successful")
 
 	return nil
 }
