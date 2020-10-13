@@ -7,7 +7,7 @@ import (
 
 var (
 	msgLogger   = log.New(os.Stdout, "", 0)
-	errorLogger = log.New(os.Stdout, appName+": ERROR ", log.Ldate|log.Ltime)
+	errorLogger = log.New(os.Stderr, appName+": ERROR ", 0)
 )
 
 func Message(msgs ...interface{}) {
