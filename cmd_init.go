@@ -37,7 +37,7 @@ func (a *App) CmdInit() error {
 		}
 	}
 
-	Message("initialize successful")
+	MessageOK("init")
 
 	return nil
 }

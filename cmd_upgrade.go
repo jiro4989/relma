@@ -28,7 +28,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 	targets := upgradableReleases(rels)
 	if len(targets) < 1 {
-		Message("upgradable releases were not existed")
+		MessageOK("no upgradables")
 		return nil
 	}
 
@@ -50,7 +50,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 		Sleep()
 	}
-	Message("upgrade successful")
+	MessageOK("upgrade")
 
 	return nil
 }
@@ -96,8 +96,7 @@ func upgradableReleases(rels Releases) Releases {
 			continue
 		}
 		upgradables = append(upgradables, rel)
-		info := fmt.Sprintf("%s/%s %s -> %s", rel.Owner, rel.Repo, rel.Version, rel.LatestVersion)
-		Message(info)
+		MessageOK("upgradable", rel.FormatVersion()+" -> "+rel.LatestVersion)
 	}
 	return upgradables
 }
