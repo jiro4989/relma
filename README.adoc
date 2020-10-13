@@ -109,17 +109,19 @@ relma uninstall <owner/repo>
 # relma upgrade --yes jiro4989/nimjson
 ----
 
-== インストール
+== Installation
 
-Goコンパイラがインストールされているなら、以下のコマンドでインストールできます。
-ただし、その場合は `relma --version` で出力されるバージョン情報が固定値になります。
+You can install `relma` if you have Go compiler.
+But `relma --version` always prints `dev`.
+
+Run below:
 
 [source,bash]
 ----
 go get -u github.com/jiro4989/relma
 ----
 
-また、実行可能ファイルを https://github.com/jiro4989/relma/releases[GitHub Releases] からダウンロードできます。
+Or, you can download and install from https://github.com/jiro4989/relma/releases[GitHub Releases].
 
 == LICENSE
 
