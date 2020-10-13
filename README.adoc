@@ -48,14 +48,11 @@ relma init
 relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
 ----
 
-インストールされたコマンドとパッケージの情報は `~/relma/releases/<owner>/<repo>` に
-保存されます。バージョンアップの際はこのパッケージディレクトリ配下のJSONを元に実
-行されます。
+`$HOME/relma/releases.json` has informations of installed releases.
 
-また、 `relma install` をすると `~/relma/releases.json` にインストールした
-Releaseの情報がすべて保存されます。
-このJSONを使ってReleaseを一括インストールすることが可能です。
-以下のコマンドで、 `releases.json` からリリースをインストールできます。
+And you can install releases with `releases.json`.
+
+Examples:
 
 [source,bash]
 ----
