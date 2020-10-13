@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 func (a *App) CmdList(p *CommandLineListParam) error {
 	rels, err := a.Config.ReadReleasesFile()
 	if err != nil {
@@ -11,7 +7,7 @@ func (a *App) CmdList(p *CommandLineListParam) error {
 	}
 
 	for _, rel := range rels {
-		fmt.Println(rel.FormatSimpleInformation())
+		Message(rel.FormatSimpleInformation())
 	}
 	return nil
 }
