@@ -93,7 +93,10 @@ options:
   -e, --editor=<editor>    using editor
 `
 
-	usageInstall = `usage: relma install [options] <github_release_url>
+	usageInstall = `usage:
+  relma install <github_release_url>
+  relma install -f <file>
+  relma install -h | --help
 
 options:
   -h, --help           print this help
