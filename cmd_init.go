@@ -9,7 +9,7 @@ func (a *App) CmdInit() error {
 	if err != nil {
 		return err
 	}
-	Info("created " + configDir)
+	Message("created " + configDir)
 
 	conf, err := DefaultConfig()
 	if err != nil {
@@ -20,7 +20,7 @@ func (a *App) CmdInit() error {
 	if err != nil {
 		return err
 	}
-	Info("created " + confFile)
+	Message("created " + confFile)
 
 	paths := []string{
 		conf.RelmaRoot,
@@ -30,7 +30,7 @@ func (a *App) CmdInit() error {
 	for _, path := range paths {
 		_, err := os.Stat(path)
 		if !os.IsNotExist(err) {
-			Info(path + " was already existed")
+			Message(path + " was already existed")
 			continue
 		}
 
@@ -38,10 +38,10 @@ func (a *App) CmdInit() error {
 		if err != nil {
 			return err
 		}
-		Info("created " + path)
+		Message("created " + path)
 	}
 
-	Info("initialize successful")
+	Message("initialize successful")
 
 	return nil
 }

@@ -33,7 +33,7 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 		return err
 	}
 
-	Info("uninstall successful")
+	Message("uninstall successful")
 
 	return nil
 }
