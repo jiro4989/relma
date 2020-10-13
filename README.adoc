@@ -5,22 +5,16 @@
 image:https://github.com/jiro4989/relma/workflows/test/badge.svg[test]
 image:https://codecov.io/gh/jiro4989/relma/branch/master/graph/badge.svg[codecov, link="https://codecov.io/gh/jiro4989/relma"]
 
-`relma` は GitHub Release からインストールしたコマンド類を統一的なインタフェー
-スでパッケージ・バージョン管理するためのコマンドです。
+`relma` is the command to manage executables in GitHub Releases. `relma` helps you to upgrade one.
 
 image:https://user-images.githubusercontent.com/13825004/94369291-d0976d00-0123-11eb-9545-34c9bd31c184.gif[relma.gif]
 
-WIP
+== Motivation
 
-== モチベーション
+It is pretty useful to versioning that the package management system like  `apt` or `yum`.
+But we have to manage ourselves about executables in GitHub Releases.
 
-`apt` なり `yum` なりのOSに付属のパッケージ管理システムがあると、インストールす
-るコマンドのバージョン管理ができて便利です。
-
-しかしながら、GitHubReleaseだけに公開されている便利なコマンドなどのバージョン管
-理は各人に委ねられている状態だと思います。
-
-たとえば以下。
+Examples:
 
 [source,bash]
 ----
@@ -31,24 +25,22 @@ mkdir -p ~/bin
 install -m 0755 ./nimjson_linux/bin/nimjson ~/bin/
 ----
 
-このように手動インストールしたコマンド類をアップグレードしたい場合、
-上記と同じような手順で再度インストールし直す必要があります。
+We have to run those commands if we want to upgrade one.
 
-この問題を解決することが、このコマンドのモチベーションです。
+I want to resolve this problem.
 
-最終的には、様々なGitHubReleaseから取得したコマンドを、統一的なインタフェースで
-管理し、一括アップグレード等を可能にすることをゴールとします。
+`relma` can upgrade your executables that installed with `relma`.
 
-== 使い方
+== Usage
 
-最初に `init` サブコマンドで設定ファイルを作成します。
+At first, you have to run `relma init` to create configuration file.
 
-その後 `install` サブコマンドでGitHubのリリースURLを渡すと、生成された設定ファイ
-ルに記載のパスにインストールされます。初期設定では `~/relma/bin` にシンボリック
-リンクが作成されます。
-それらの設定ファイルの実体は `~/relma/releases/<owner>/<repo>` に保存されます。
+Next, executables in GitHub Releases will be installed when you run `relma init <release_url>`.
+At default, symbolic links will be created in `$HOME/relma/bin`.
 
-コマンドとしては以下の実行をします。
+The entities will be stored in `$HOME/relma/releases/<owner/repo>`.
+
+Examples:
 
 [source,bash]
 ----
@@ -56,22 +48,18 @@ relma init
 relma install https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz
 ----
 
-インストールされたコマンドとパッケージの情報は `~/relma/releases/<owner>/<repo>` に
-保存されます。バージョンアップの際はこのパッケージディレクトリ配下のJSONを元に実
-行されます。
+`$HOME/relma/releases.json` has informations of installed releases.
 
-また、 `relma install` をすると `~/relma/releases.json` にインストールした
-Releaseの情報がすべて保存されます。
-このJSONを使ってReleaseを一括インストールすることが可能です。
-以下のコマンドで、 `releases.json` からリリースをインストールできます。
+And you can install releases with `releases.json`.
+
+Examples:
 
 [source,bash]
 ----
 relma install -f releases.json
 ----
 
-インストールしたコマンドをすべてアップグレードしたい場合は、以下のコマンドを実行
-します。
+Please you run below if you want to upgrade all releases.
 
 [source,bash]
 ----
@@ -79,7 +67,7 @@ relma update
 relma upgrade --yes
 ----
 
-特定のパッケージのみ最新版にアップグレードする際は以下のコマンドを実行します。
+Please you run below if you want to upgrade specific releases.
 
 [source,bash]
 ----
@@ -89,10 +77,8 @@ relma upgrade --yes <owner/repo>
 # relma upgrade --yes jiro4989/nimjson
 ----
 
-これは `relma upgrade <owner>/<repo>` というルールに従っています。
-`<owner>/<repo>` の確認は以下のコマンドを入力します。
-
-インストール済みのパッケージ一覧の確認は以下のコマンドを実行します。
+`<owner/repo>` is the release name in `relma`.
+Please run below if you want to check those.
 
 [source,bash]
 ----
@@ -113,8 +99,7 @@ relma list
 // relma list --upgradable
 // ----
 
-インストールしたパッケージをアンインストールする場合は、以下のコマンドを実行しま
-す。
+Please you run below if you want to uninstall specific releases.
 
 [source,bash]
 ----
@@ -124,17 +109,19 @@ relma uninstall <owner/repo>
 # relma upgrade --yes jiro4989/nimjson
 ----
 
-== インストール
+== Installation
 
-Goコンパイラがインストールされているなら、以下のコマンドでインストールできます。
-ただし、その場合は `relma --version` で出力されるバージョン情報が固定値になります。
+You can install `relma` if you have Go compiler.
+But `relma --version` always prints `dev`.
+
+Run below:
 
 [source,bash]
 ----
 go get -u github.com/jiro4989/relma
 ----
 
-また、実行可能ファイルを https://github.com/jiro4989/relma/releases[GitHub Releases] からダウンロードできます。
+Or, you can download and install from https://github.com/jiro4989/relma/releases[GitHub Releases].
 
 == LICENSE
 
