@@ -31,16 +31,16 @@ I want to resolve this problem.
 
 `relma` can upgrade your executables that installed with `relma`.
 
-== 使い方
+== Usage
 
-最初に `init` サブコマンドで設定ファイルを作成します。
+At first, you have to run `relma init` to create configuration file.
 
-その後 `install` サブコマンドでGitHubのリリースURLを渡すと、生成された設定ファイ
-ルに記載のパスにインストールされます。初期設定では `~/relma/bin` にシンボリック
-リンクが作成されます。
-それらの設定ファイルの実体は `~/relma/releases/<owner>/<repo>` に保存されます。
+Next, executables in GitHub Releases will be installed when you run `relma init <release_url>`.
+At default, symbolic links will be created in `$HOME/relma/bin`.
 
-コマンドとしては以下の実行をします。
+The entities will be stored in `$HOME/relma/releases/<owner/repo>`.
+
+Examples:
 
 [source,bash]
 ----
