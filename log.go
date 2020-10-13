@@ -14,6 +14,11 @@ func Message(msgs ...interface{}) {
 	msgLogger.Println(msgs...)
 }
 
+func MessageOK(msgs ...interface{}) {
+	msgs = append([]interface{}{"ok     "}, msgs...)
+	msgLogger.Println(msgs...)
+}
+
 func Error(msgs ...interface{}) {
 	errorLogger.Println(msgs...)
 }

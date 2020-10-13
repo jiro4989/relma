@@ -32,7 +32,7 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 		return err
 	}
 
-	Message("uninstall successful")
+	MessageOK("uninstall (" + rel.FormatVersion() + ")")
 
 	return nil
 }
