@@ -5,22 +5,20 @@ import (
 )
 
 func (a *App) CmdInit() error {
-	configDir, err := CreateConfigDir()
+	_, err := CreateConfigDir()
 	if err != nil {
 		return err
 	}
-	Info("created " + configDir)
 
 	conf, err := DefaultConfig()
 	if err != nil {
 		return err
 	}
 
-	confFile, err := CreateConfigFile(conf)
+	_, err = CreateConfigFile(conf)
 	if err != nil {
 		return err
 	}
-	Info("created " + confFile)
 
 	paths := []string{
 		conf.RelmaRoot,
@@ -30,7 +28,6 @@ func (a *App) CmdInit() error {
 	for _, path := range paths {
 		_, err := os.Stat(path)
 		if !os.IsNotExist(err) {
-			Info(path + " was already existed")
 			continue
 		}
 
@@ -38,10 +35,9 @@ func (a *App) CmdInit() error {
 		if err != nil {
 			return err
 		}
-		Info("created " + path)
 	}
 
-	Info("initialize successful")
+	Message("initialize successful")
 
 	return nil
 }

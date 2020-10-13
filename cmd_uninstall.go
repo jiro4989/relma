@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -33,7 +32,7 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 		return err
 	}
 
-	Info("uninstall successful")
+	Message("uninstall successful")
 
 	return nil
 }
@@ -69,7 +68,7 @@ func (a *App) uninstallRelease(rel *Release, p *CmdUninstallParam) ([]string, er
 		d := filepath.Join(a.Config.BinDir(), f.Dest)
 		err := os.Remove(d)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "failed to remove file: path = "+d)
+			Error("failed to remove file: path = " + d)
 			errs = append(errs, err)
 		}
 		removedFiles = append(removedFiles, d)
