@@ -7,7 +7,7 @@ func (a *App) CmdList(p *CommandLineListParam) error {
 	}
 
 	for _, rel := range rels {
-		Message(rel.FormatSimpleInformation())
+		MessageEmpty("list", rel.FormatVersion())
 	}
 	return nil
 }

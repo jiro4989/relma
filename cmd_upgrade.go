@@ -28,7 +28,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 	targets := upgradableReleases(rels)
 	if len(targets) < 1 {
-		MessageOK("no upgradables")
+		MessageOK("upgradable", "none")
 		return nil
 	}
 
@@ -36,7 +36,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 		if yes, err := PromptYesNo("upgrade? [yes/no]"); err != nil {
 			return err
 		} else if !yes {
-			Message("not upgrade")
+			MessageOK("upgrade", "cancel")
 			return nil
 		}
 	}
