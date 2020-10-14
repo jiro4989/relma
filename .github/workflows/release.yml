@@ -123,7 +123,7 @@ jobs:
           wget https://github.com/git-chglog/git-chglog/releases/download/0.9.1/git-chglog_linux_amd64
           chmod +x git-chglog_linux_amd64
           mv git-chglog_linux_amd64 git-chglog
-          ./git-chglog --output ./changelog $(git describe --tags --abbrev=0)..
+          ./git-chglog --output ./changelog $(git tag --sort version:refname | tail -n 2 | head -n 1)..
 
       - name: Create Release
         id: create-release
