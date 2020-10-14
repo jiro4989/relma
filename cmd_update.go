@@ -29,9 +29,9 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 			return err
 		}
 		if rel.Version != latestTag {
-			Message("updatable", rel.Owner+"/"+rel.Repo, "current_tag:", rel.Version, "available_latest_tag:", latestTag)
+			MessageOK("update", rel.FormatVersion()+" -> "+latestTag)
 		} else {
-			Message("not updatable", rel.FormatSimpleInformation())
+			MessageOK("update", rel.FormatSimpleInformation()+" -> same")
 		}
 		rel.LatestVersion = latestTag
 		Sleep()
@@ -42,7 +42,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		return err
 	}
 
-	Message("update successful")
+	MessageOK("update")
 
 	return nil
 }
