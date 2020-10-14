@@ -13,10 +13,9 @@ options:
         - refactor
   commit_groups:
     title_maps:
-      feat: Features
-      fix: Bug Fixes
-      perf: Performance Improvements
-      refactor: Code Refactoring
+      feat: ":sparkles: Features"
+      fix: ":bug: Bug Fixes"
+      chore: ":+1: Improvements"
   header:
     pattern: "^(\\w*)\\:\\s(.*)$"
     pattern_maps:

@@ -24,7 +24,7 @@ jobs:
         os: [windows, linux, darwin]
         arch: [386, amd64]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - uses: actions/setup-go@v1
         with:
           go-version: ${{ env.goversion }}
@@ -116,6 +116,8 @@ jobs:
       - build-rpm-packages
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Generate changelog
         run: |
           wget https://github.com/git-chglog/git-chglog/releases/download/0.9.1/git-chglog_linux_amd64
