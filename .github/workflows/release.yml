@@ -124,7 +124,7 @@ jobs:
         env:
           REPO: ${{ github.repository }}
         with:
-          package-dir: '.github'
+          package-dir: '.github/package.json'
       - name: Create Release
         id: create-release
         uses: actions/create-release@v1
