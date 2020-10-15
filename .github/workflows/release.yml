@@ -119,7 +119,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Generate changelog
-        uses: scottbrenner/generate-changelog-action@master
+        uses: scottbrenner/generate-changelog-action@1.0.2
         id: changelog
         env:
           REPO: ${{ github.repository }}
