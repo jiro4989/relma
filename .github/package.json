@@ -1,1 +1,19 @@
-{}
+{
+  "name": "relma",
+  "version": "1.0.0",
+  "description": "= relma - github RELease MAnagement cli :toc: left :sectnums:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiro4989/relma.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jiro4989/relma/issues"
+  },
+  "homepage": "https://github.com/jiro4989/relma#readme"
+}
