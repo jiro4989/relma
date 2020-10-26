@@ -104,6 +104,9 @@ Please you run below if you want to uninstall specific releases.
 [source,bash]
 ----
 relma uninstall <owner/repo>
+
+# ex:
+# relma upgrade --yes jiro4989/nimjson
 ----
 
 == Installation
