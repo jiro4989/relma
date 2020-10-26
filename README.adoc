@@ -7,7 +7,7 @@ image:https://codecov.io/gh/jiro4989/relma/branch/master/graph/badge.svg[codecov
 
 `relma` is the command to manage executables in GitHub Releases. `relma` helps you to upgrade one.
 
-image:https://user-images.githubusercontent.com/13825004/94369291-d0976d00-0123-11eb-9545-34c9bd31c184.gif[relma.gif]
+image:https://user-images.githubusercontent.com/13825004/97173868-94b00000-17d4-11eb-8f59-f3ca7fdb5ae6.gif[relma.gif]
 
 == Motivation
 
