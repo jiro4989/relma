@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/go-github/v32/github"
 )
@@ -29,9 +30,9 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 			return err
 		}
 		if rel.Version != latestTag {
-			MessageOK("update", rel.FormatVersion()+" -> "+latestTag)
+			fmt.Println(rel.FormatVersion() + " -> " + latestTag)
 		} else {
-			MessageOK("update", rel.FormatSimpleInformation()+" -> same")
+			fmt.Println(rel.FormatSimpleInformation() + " -> same")
 		}
 		rel.LatestVersion = latestTag
 		Sleep()
@@ -42,7 +43,7 @@ func (a *App) CmdUpdate(p *CmdUpdateParam) error {
 		return err
 	}
 
-	MessageOK("update")
+	fmt.Println("update successful")
 
 	return nil
 }

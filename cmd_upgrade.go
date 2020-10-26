@@ -28,7 +28,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 	targets := upgradableReleases(rels)
 	if len(targets) < 1 {
-		MessageOK("upgradable", "none")
+		fmt.Println("no upgradable releases")
 		return nil
 	}
 
@@ -36,7 +36,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 		if yes, err := PromptYesNo("upgrade? [yes/no]"); err != nil {
 			return err
 		} else if !yes {
-			MessageOK("upgrade", "cancel")
+			fmt.Println("upgrade was canceled")
 			return nil
 		}
 	}
@@ -50,7 +50,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 
 		Sleep()
 	}
-	MessageOK("upgrade")
+	fmt.Println("upgrade successful")
 
 	return nil
 }
@@ -96,7 +96,7 @@ func upgradableReleases(rels Releases) Releases {
 			continue
 		}
 		upgradables = append(upgradables, rel)
-		MessageOK("upgradable", rel.FormatVersion()+" -> "+rel.LatestVersion)
+		fmt.Println(rel.FormatVersion() + " -> " + rel.LatestVersion)
 	}
 	return upgradables
 }

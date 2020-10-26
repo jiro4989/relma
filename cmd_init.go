@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -37,7 +38,7 @@ func (a *App) CmdInit() error {
 		}
 	}
 
-	MessageOK("init")
+	fmt.Println("initialize successful")
 
 	return nil
 }
