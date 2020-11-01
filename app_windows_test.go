@@ -1,4 +1,4 @@
-// +build !windows
+// +build windows
 
 package main
 
@@ -19,9 +19,9 @@ func TestDefaultConfig(t *testing.T) {
 	}{
 		{
 			desc: "ok: get default config",
-			home: "/home/testuser",
+			home: `C:\Users\testuser`,
 			want: Config{
-				RelmaRoot: "/home/testuser/" + appName,
+				RelmaRoot: `C:\Users\testuser\` + appName,
 			},
 			wantErr: false,
 		},
@@ -30,7 +30,7 @@ func TestDefaultConfig(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			os.Setenv("USERPROFILE", tt.home)
 
 			got, err := DefaultConfig()
 			assert.NoError(err)
