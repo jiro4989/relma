@@ -62,7 +62,7 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go build
-      - run: go test -v -cover
+      - run: go test -v -cover -tags windows
 
   lint:
     runs-on: ubuntu-latest
