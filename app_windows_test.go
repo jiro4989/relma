@@ -30,7 +30,7 @@ func TestDefaultConfig(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.home)
+			SetHome(tt.home)
 
 			got, err := DefaultConfig()
 			assert.NoError(err)
@@ -57,7 +57,7 @@ func TestConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setConfigDir(tt.configDir)
+			SetConfigDir(tt.configDir)
 
 			got, err := ConfigDir()
 			assert.NoError(err)
@@ -90,7 +90,7 @@ func TestCreateConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setConfigDir(tt.configDir)
+			SetConfigDir(tt.configDir)
 
 			got, err := CreateConfigDir()
 			assert.NoError(err)
@@ -117,7 +117,7 @@ func TestConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setConfigDir(tt.configDir)
+			SetConfigDir(tt.configDir)
 
 			got, err := ConfigFile()
 			assert.NoError(err)
@@ -161,7 +161,7 @@ func TestCreateConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setConfigDir(tt.configDir)
+			SetConfigDir(tt.configDir)
 
 			got, err := CreateConfigFile(tt.config)
 			if tt.wantErr {
@@ -215,12 +215,4 @@ func TestReadReleasesFile(t *testing.T) {
 			assert.Equal(tt.want, got)
 		})
 	}
-}
-
-func setHome(path string) {
-	os.Setenv("USERPROFILE", path)
-}
-
-func setConfigDir(path string) {
-	os.Setenv("AppData", path)
 }
