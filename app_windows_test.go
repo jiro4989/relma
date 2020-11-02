@@ -90,7 +90,7 @@ func TestCreateConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.configDir)
+			setConfigDir(tt.configDir)
 
 			got, err := CreateConfigDir()
 			assert.NoError(err)
@@ -117,7 +117,7 @@ func TestConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.configDir)
+			setConfigDir(tt.configDir)
 
 			got, err := ConfigFile()
 			assert.NoError(err)
@@ -161,7 +161,7 @@ func TestCreateConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.configDir)
+			setConfigDir(tt.configDir)
 
 			got, err := CreateConfigFile(tt.config)
 			if tt.wantErr {
