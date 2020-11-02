@@ -127,8 +127,8 @@ func TestConfigFile(t *testing.T) {
 }
 
 func TestCreateConfigFile(t *testing.T) {
-	p := filepath.Join(testOutputDir, "test_create_config_file_1", "AppData", "Roaming", appName)
-	err := os.MkdirAll(p, os.ModePerm)
+	appDir := filepath.Join(testOutputDir, "test_create_config_file_1", appName)
+	err := os.MkdirAll(appDir, os.ModePerm)
 	assert.NoError(t, err)
 
 	tests := []struct {
@@ -144,7 +144,7 @@ func TestCreateConfigFile(t *testing.T) {
 			config: Config{
 				RelmaRoot: "sushi",
 			},
-			want:    filepath.Join(testOutputDir, "test_create_config_file_1", appName, "config.json"),
+			want:    filepath.Join(appDir, "config.json"),
 			wantErr: false,
 		},
 		{
@@ -153,7 +153,7 @@ func TestCreateConfigFile(t *testing.T) {
 			config: Config{
 				RelmaRoot: "sushi",
 			},
-			want:    filepath.Join(testOutputDir, "test_create_config_file_2", appName, "config.json"),
+			want:    filepath.Join(appDir, "config.json"),
 			wantErr: true,
 		},
 	}
