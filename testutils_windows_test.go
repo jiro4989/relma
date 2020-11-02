@@ -2,6 +2,10 @@
 
 package main
 
+import (
+	"os"
+)
+
 func SetHome(path string) {
 	os.Setenv("USERPROFILE", path)
 }
