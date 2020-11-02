@@ -41,23 +41,23 @@ func TestDefaultConfig(t *testing.T) {
 
 func TestConfigDir(t *testing.T) {
 	tests := []struct {
-		desc    string
-		home    string
-		want    string
-		wantErr bool
+		desc      string
+		configDir string
+		want      string
+		wantErr   bool
 	}{
 		{
-			desc:    "ok: get default config directory",
-			home:    `C:\Users\testuser`,
-			want:    `C:\Users\testuser\AppData\Roaming\` + appName,
-			wantErr: false,
+			desc:      "ok: get default config directory",
+			configDir: `C:\Users\testuser\AppData\Roaming\`,
+			want:      `C:\Users\testuser\AppData\Roaming\` + appName,
+			wantErr:   false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.home)
+			setConfigDir(tt.configDir)
 
 			got, err := ConfigDir()
 			assert.NoError(err)
@@ -68,29 +68,29 @@ func TestConfigDir(t *testing.T) {
 
 func TestCreateConfigDir(t *testing.T) {
 	tests := []struct {
-		desc    string
-		home    string
-		want    string
-		wantErr bool
+		desc      string
+		configDir string
+		want      string
+		wantErr   bool
 	}{
 		{
-			desc:    "ok: create config directory",
-			home:    testOutputDir,
-			want:    filepath.Join(testOutputDir, "AppData", "Roaming", appName),
-			wantErr: false,
+			desc:      "ok: create config directory",
+			configDir: testOutputDir,
+			want:      filepath.Join(testOutputDir, appName),
+			wantErr:   false,
 		},
 		{
-			desc:    "ok: config directory was existed",
-			home:    testOutputDir,
-			want:    filepath.Join(testOutputDir, "AppData", "Roaming", appName),
-			wantErr: false,
+			desc:      "ok: config directory was existed",
+			configDir: testOutputDir,
+			want:      filepath.Join(testOutputDir, appName),
+			wantErr:   false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.home)
+			setHome(tt.configDir)
 
 			got, err := CreateConfigDir()
 			assert.NoError(err)
@@ -101,23 +101,23 @@ func TestCreateConfigDir(t *testing.T) {
 
 func TestConfigFile(t *testing.T) {
 	tests := []struct {
-		desc    string
-		home    string
-		want    string
-		wantErr bool
+		desc      string
+		configDir string
+		want      string
+		wantErr   bool
 	}{
 		{
-			desc:    "ok: get default config file",
-			home:    `C:\Users\testuser`,
-			want:    filepath.Join(`C:\Users\testuser`, "AppData", "Roaming", appName, "config.json"),
-			wantErr: false,
+			desc:      "ok: get default config file",
+			configDir: `C:\Users\testuser`,
+			want:      filepath.Join(`C:\Users\testuser`, appName, "config.json"),
+			wantErr:   false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.home)
+			setHome(tt.configDir)
 
 			got, err := ConfigFile()
 			assert.NoError(err)
@@ -132,28 +132,28 @@ func TestCreateConfigFile(t *testing.T) {
 	assert.NoError(t, err)
 
 	tests := []struct {
-		desc    string
-		home    string
-		config  Config
-		want    string
-		wantErr bool
+		desc      string
+		configDir string
+		config    Config
+		want      string
+		wantErr   bool
 	}{
 		{
-			desc: "ok: create config file",
-			home: filepath.Join(testOutputDir, "test_create_config_file_1"),
+			desc:      "ok: create config file",
+			configDir: filepath.Join(testOutputDir, "test_create_config_file_1"),
 			config: Config{
 				RelmaRoot: "sushi",
 			},
-			want:    filepath.Join(testOutputDir, "test_create_config_file_1", "AppData", "Roaming", appName, "config.json"),
+			want:    filepath.Join(testOutputDir, "test_create_config_file_1", appName, "config.json"),
 			wantErr: false,
 		},
 		{
-			desc: "ok: create config file",
-			home: filepath.Join(testOutputDir, "test_create_config_file_2"),
+			desc:      "ok: create config file",
+			configDir: filepath.Join(testOutputDir, "test_create_config_file_2"),
 			config: Config{
 				RelmaRoot: "sushi",
 			},
-			want:    filepath.Join(testOutputDir, "test_create_config_file_2", "AppData", "Roaming", appName, "config.json"),
+			want:    filepath.Join(testOutputDir, "test_create_config_file_2", appName, "config.json"),
 			wantErr: true,
 		},
 	}
@@ -161,7 +161,7 @@ func TestCreateConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			setHome(tt.home)
+			setHome(tt.configDir)
 
 			got, err := CreateConfigFile(tt.config)
 			if tt.wantErr {
@@ -217,6 +217,10 @@ func TestReadReleasesFile(t *testing.T) {
 	}
 }
 
-func setHome(home string) {
-	os.Setenv("USERPROFILE", home)
+func setHome(path string) {
+	os.Setenv("USERPROFILE", path)
+}
+
+func setConfigDir(path string) {
+	os.Setenv("AppData", path)
 }
