@@ -15,6 +15,7 @@ func TestCmdInit(t *testing.T) {
 
 	home := filepath.Join(testOutputDir, "test_cmd_init")
 	err := os.MkdirAll(home, os.ModePerm)
+	assert.NoError(err)
 	SetHome(home)
 
 	conf := filepath.Join(home, "AppData", "Roaming")
