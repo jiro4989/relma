@@ -350,6 +350,11 @@ func TestIsExecutableFile(t *testing.T) {
 			want: true,
 		},
 		{
+			desc: "ok: executable batch file",
+			path: filepath.Join(testDir, "script.bat"),
+			want: true,
+		},
+		{
 			desc: "ok: executable binary (linux)",
 			path: filepath.Join(testDir, "bin"),
 			want: true,

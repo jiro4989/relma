@@ -263,6 +263,12 @@ func isExecutableFile(f os.FileInfo, path string) (bool, error) {
 		return true, nil
 	}
 
+	ext := filepath.Ext(path)
+	switch strings.ToLower(ext) {
+	case ".bat", ".cmd":
+		return true, nil
+	}
+
 	typ, err := filetype.MatchFile(path)
 	if err != nil {
 		return false, err
