@@ -1,3 +1,5 @@
+// +build !windows
+
 package main
 
 import (
@@ -345,6 +347,11 @@ func TestIsExecutableFile(t *testing.T) {
 		{
 			desc: "ok: executable shellscript",
 			path: filepath.Join(testDir, "script.sh"),
+			want: true,
+		},
+		{
+			desc: "ok: executable batch file",
+			path: filepath.Join(testDir, "script.bat"),
 			want: true,
 		},
 		{
