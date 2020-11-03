@@ -167,6 +167,9 @@ func Main(args []string) int {
 		}
 
 		err = a.CmdInit()
+		if err != nil {
+			panic(err)
+		}
 	case "edit":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -181,6 +184,9 @@ func Main(args []string) int {
 		}
 
 		err = a.CmdEdit(&clp)
+		if err != nil {
+			panic(err)
+		}
 	case "install":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -200,6 +206,9 @@ func Main(args []string) int {
 			File: clp.File,
 		}
 		err = a.CmdInstall(&p)
+		if err != nil {
+			panic(err)
+		}
 	case "update":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -217,6 +226,9 @@ func Main(args []string) int {
 			Releases: clp.Releases,
 		}
 		err = a.CmdUpdate(&p)
+		if err != nil {
+			panic(err)
+		}
 	case "upgrade":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -235,6 +247,9 @@ func Main(args []string) int {
 			Yes:       clp.Yes,
 		}
 		err = a.CmdUpgrade(&p)
+		if err != nil {
+			panic(err)
+		}
 	case "uninstall":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -252,6 +267,9 @@ func Main(args []string) int {
 			OwnerRepo: clp.OwnerRepo,
 		}
 		err = a.CmdUninstall(&p)
+		if err != nil {
+			panic(err)
+		}
 	case "list":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
@@ -266,9 +284,9 @@ func Main(args []string) int {
 		}
 
 		err = a.CmdList(&clp)
-	}
-	if err != nil {
-		panic(err)
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	return 0
