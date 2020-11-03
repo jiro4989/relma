@@ -56,12 +56,12 @@ func (r *Release) EqualRepo(ownerRepo string) (bool, error) {
 		return false, errors.New(msg)
 	}
 
-	ok := strings.ToLower(oRepo[0]) == strings.ToLower(r.Owner) && strings.ToLower(oRepo[1]) == strings.ToLower(r.Repo)
+	ok := strings.EqualFold(oRepo[0], r.Owner) && strings.EqualFold(oRepo[1], r.Repo)
 	return ok, nil
 }
 
 func (r *Release) EqualRelease(r2 *Release) bool {
-	ok := strings.ToLower(r.Owner) == strings.ToLower(r2.Owner) && strings.ToLower(r.Repo) == strings.ToLower(r2.Repo)
+	ok := strings.EqualFold(r.Owner, r2.Owner) && strings.EqualFold(r.Repo, r2.Repo)
 	return ok
 }
 
