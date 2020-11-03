@@ -283,21 +283,21 @@ func TestInstallFiles(t *testing.T) {
 	}{
 		{
 			desc:    "ok: install files",
-			srcDir:  filepath.Join(testDir, "test_install_files"),
+			srcDir:  filepath.Join(testDir, "test_install_files_windows"),
 			destDir: testOutputDir,
 			want:    2,
 			wantErr: false,
 		},
 		{
 			desc:    "ok: install file (nested directory)",
-			srcDir:  filepath.Join(testDir, "test_install_files_2"),
+			srcDir:  filepath.Join(testDir, "test_install_files_windows_2"),
 			destDir: testOutputDir,
 			want:    1,
 			wantErr: false,
 		},
 		{
 			desc:    "ok: install file (nested directory and bin directory)",
-			srcDir:  filepath.Join(testDir, "test_install_files_3"),
+			srcDir:  filepath.Join(testDir, "test_install_files_windows_3"),
 			destDir: testOutputDir,
 			want:    1,
 			wantErr: false,
