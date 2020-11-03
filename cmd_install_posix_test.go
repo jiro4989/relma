@@ -93,8 +93,8 @@ func TestCmdInstall(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.MkdirAll(tt.app.Config.BinDir(), os.ModePerm)
-			os.MkdirAll(tt.app.Config.ReleasesDir(), os.ModePerm)
+			assert.NoError(os.MkdirAll(tt.app.Config.BinDir(), os.ModePerm))
+			assert.NoError(os.MkdirAll(tt.app.Config.ReleasesDir(), os.ModePerm))
 
 			p := tt.app.Config.ReleasesFile()
 			os.Remove(p)
