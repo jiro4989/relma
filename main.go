@@ -153,9 +153,12 @@ func Main(args []string) error {
 		return err
 	}
 
-	a, err := NewApp()
-	if err != nil {
-		return err
+	var a App
+	if clp.Command != "init" {
+		a, err = NewApp()
+		if err != nil {
+			return err
+		}
 	}
 
 	switch clp.Command {
