@@ -130,27 +130,32 @@ options:
 )
 
 func main() {
-	os.Exit(Main(os.Args[1:]))
+	var exitCode int
+	err := Main(os.Args[1:])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		exitCode = 1
+	}
+	os.Exit(exitCode)
 }
 
-func Main(args []string) int {
+func Main(args []string) error {
 	parser := &docopt.Parser{OptionsFirst: true}
 
 	opts, err := parser.ParseArgs(usage, args, version)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 1
+		return err
 	}
 
 	var clp CommandLineParam
 	err = opts.Bind(&clp)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	a, err := NewApp()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	switch clp.Command {
@@ -158,47 +163,47 @@ func Main(args []string) int {
 		args := []string{clp.Command}
 		opts, err := docopt.ParseArgs(usageInit, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineInitParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		err = a.CmdInit()
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "edit":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageEdit, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineEditParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		err = a.CmdEdit(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "install":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageInstall, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		var clp CommandLineInstallParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		p := CmdInstallParam{
@@ -207,19 +212,19 @@ func Main(args []string) int {
 		}
 		err = a.CmdInstall(&p)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "update":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageUpdate, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineUpdateParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		p := CmdUpdateParam{
@@ -227,19 +232,19 @@ func Main(args []string) int {
 		}
 		err = a.CmdUpdate(&p)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "upgrade":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageUpgrade, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineUpgradeParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		p := CmdUpgradeParam{
@@ -248,19 +253,19 @@ func Main(args []string) int {
 		}
 		err = a.CmdUpgrade(&p)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "uninstall":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageUninstall, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineUninstallParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		p := CmdUninstallParam{
@@ -268,26 +273,26 @@ func Main(args []string) int {
 		}
 		err = a.CmdUninstall(&p)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	case "list":
 		args := []string{clp.Command}
 		args = append(args, opts["<args>"].([]string)...)
 		opts, err := docopt.ParseArgs(usageList, args, "")
 		if err != nil {
-			panic(err)
+			return err
 		}
 		var clp CommandLineListParam
 		err = opts.Bind(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		err = a.CmdList(&clp)
 		if err != nil {
-			panic(err)
+			return err
 		}
 	}
 
-	return 0
+	return nil
 }
