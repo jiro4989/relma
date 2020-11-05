@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMainFunc(t *testing.T) {
-	testDir := filepath.Join(testOutputDir, "test_main_1")
+func TestMainNormal(t *testing.T) {
+	testDir := filepath.Join(testOutputDir, "test_main_1_1")
 	testConfDir := filepath.Join(testDir, ".config", appName)
 
 	tests := []struct {
@@ -65,8 +65,8 @@ func TestMainFunc(t *testing.T) {
 		},
 		{
 			desc:    "abnormal: hogefuga command doesn't exist",
-			home:    filepath.Join(testOutputDir, "test_main_9"),
-			confDir: filepath.Join(testOutputDir, "test_main_9", ".config", appName),
+			home:    filepath.Join(testOutputDir, "test_main_1_2"),
+			confDir: filepath.Join(testOutputDir, "test_main_1_2", ".config", appName),
 			args:    []string{"hogefuga"},
 			wantErr: true,
 		},
@@ -85,6 +85,64 @@ func TestMainFunc(t *testing.T) {
 				return
 			}
 			assert.NoError(err)
+		})
+	}
+}
+
+func TestMainAbnormal(t *testing.T) {
+	testDir := filepath.Join(testOutputDir, "test_main_2_1")
+	testConfDir := filepath.Join(testDir, ".config", appName)
+
+	tests := []struct {
+		desc    string
+		home    string
+		confDir string
+		args    []string
+	}{
+		{
+			desc:    "install",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"install", "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz"},
+		},
+		{
+			desc:    "list",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"list"},
+		},
+		{
+			desc:    "update",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"update"},
+		},
+		{
+			desc:    "upgrade",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"upgrade", "-y"},
+		},
+		{
+			desc:    "uninstall",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"uninstall", "jiro4989/nimjson"},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			assert.NoError(os.MkdirAll(tt.home, os.ModePerm))
+			SetHome(tt.home)
+			assert.NoError(os.MkdirAll(tt.confDir, os.ModePerm))
+
+			assert.NoError(Main([]string{"init"}))
+			assert.NoError(os.RemoveAll(tt.confDir))
+
+			err := Main(tt.args)
+			assert.Error(err)
 		})
 	}
 }
