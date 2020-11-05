@@ -43,6 +43,20 @@ func TestMainFunc(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			desc:    "normal: update",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"update"},
+			wantErr: false,
+		},
+		{
+			desc:    "normal: upgrade",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"upgrade", "-y"},
+			wantErr: false,
+		},
+		{
 			desc:    "normal: uninstall",
 			home:    testDir,
 			confDir: testConfDir,
