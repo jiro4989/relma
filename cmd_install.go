@@ -63,6 +63,12 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 	if err := os.MkdirAll(assetDir, os.ModePerm); err != nil {
 		return err
 	}
+	// 指定したファイルが単一の実行可能ファイルの場合は展開せずにインストール
+	if ok, err := isExecutableFileWithPath(assetFile); err != nil {
+		return err
+	} else if ok {
+		// TODO
+	}
 	if err := archiver.Unarchive(assetFile, assetDir); err != nil {
 		return err
 	}
@@ -289,4 +295,18 @@ func existsRepo(rels Releases, rel Release) (bool, int) {
 		return true, i
 	}
 	return false, -1
+}
+
+func isExecutableFileWithPath(path string) (bool, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return false, err
+	}
+	defer f.Close()
+
+	fi, err := f.Stat()
+	if err != nil {
+		return false, err
+	}
+	return isExecutableFile(fi, path)
 }
