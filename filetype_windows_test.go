@@ -2,6 +2,14 @@
 
 package main
 
+import (
+	"os"
+	"path/filepath"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
 func TestIsExecutableFile(t *testing.T) {
 	tests := []struct {
 		desc string
