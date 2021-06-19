@@ -1,4 +1,7 @@
-// +build !windows
+// +build !windows env
+
+// 並列にテストが走ったときに環境変数が上書きされるせいか、テストがコケてしまう
+// ため、明示的にテストしないとダメにする
 
 package main
 
