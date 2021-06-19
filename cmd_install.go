@@ -67,6 +67,18 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 	if err := os.MkdirAll(assetDir, os.ModePerm); err != nil {
 		return err
 	}
+
+	if ok, err := IsArchiveFile(assetFile); err != nil {
+		return err
+	} else if !ok {
+		// TODO
+		// Download and create symlink if assetFile is not archive file and is
+		// executable file. Not unarchive.
+		return nil
+	}
+
+	// Download and archive file and create symlink if assetFile is archive file.
+
 	if err := archiver.Unarchive(assetFile, assetDir); err != nil {
 		return err
 	}
