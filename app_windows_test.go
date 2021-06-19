@@ -1,4 +1,5 @@
-// +build windows env
+// +build windows
+// +build env
 
 package main
 
