@@ -49,7 +49,7 @@ jobs:
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
-      - run: go test -v -cover
+      - run: go test -cover
         if: matrix.os == 'linux' && matrix.arch == 'amd64'
 
   test-on-windows:
@@ -61,7 +61,7 @@ jobs:
         with:
           go-version: ${{ env.go-version }}
       - run: go build
-      - run: go test -v -cover -tags windows
+      - run: go test -cover -tags windows
 
   lint:
     runs-on: ubuntu-latest
