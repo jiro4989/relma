@@ -30,7 +30,8 @@ func TestDefaultConfig(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := DefaultConfig()
 			assert.NoError(err)
@@ -57,7 +58,8 @@ func TestConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := ConfigDir()
 			assert.NoError(err)
@@ -90,7 +92,8 @@ func TestCreateConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := CreateConfigDir()
 			assert.NoError(err)
@@ -117,7 +120,8 @@ func TestConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := ConfigFile()
 			assert.NoError(err)
@@ -161,7 +165,8 @@ func TestCreateConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			os.Setenv("HOME", tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := CreateConfigFile(tt.config)
 			if tt.wantErr {
