@@ -38,7 +38,7 @@ jobs:
     strategy:
       matrix:
         os: [windows, linux, darwin]
-        arch: [386, amd64]
+        arch: [amd64]
     needs: before
     steps:
       - uses: actions/checkout@v2
