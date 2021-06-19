@@ -36,3 +36,17 @@ func IsExecutableFile(f os.FileInfo, path string) (bool, error) {
 
 	return false, nil
 }
+
+// IsArchiveFile returns true if `f` is archive file (zip or gz).
+func IsArchiveFile(path string) (bool, error) {
+	typ, err := filetype.MatchFile(path)
+	if err != nil {
+		return false, err
+	}
+	switch typ.Extension {
+	case "gz", "zip":
+		return true, nil
+	}
+
+	return false, nil
+}
