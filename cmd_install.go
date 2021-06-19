@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/h2non/filetype"
 	"github.com/mholt/archiver/v3"
 )
 
@@ -20,6 +19,11 @@ type CmdInstallParam struct {
 	File string
 }
 
+// CmdInstall installs commands from an url of GitHub Releases.
+//
+// Decompress it if Releases file was archive file, and install executables to
+// relma directory.Install executables from urls of `releases.json` if `p.File`
+// (releases.json) is not empty.
 func (a *App) CmdInstall(p *CmdInstallParam) error {
 	if p.File != "" {
 		rels, err := ReadReleasesFile(p.File)
@@ -226,7 +230,7 @@ func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, 
 }
 
 func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
-	isExec, err := isExecutableFile(f, src)
+	isExec, err := IsExecutableFile(f, src)
 	if err != nil {
 		return nil, err
 	}
@@ -251,34 +255,6 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 		Dest: dest,
 	}
 	return &ff, nil
-}
-
-func isExecutableFile(f os.FileInfo, path string) (bool, error) {
-	mode := f.Mode()
-	if !mode.IsRegular() {
-		return false, nil
-	}
-
-	if mode&0111 != 0 {
-		return true, nil
-	}
-
-	ext := filepath.Ext(path)
-	switch strings.ToLower(ext) {
-	case ".bat", ".cmd":
-		return true, nil
-	}
-
-	typ, err := filetype.MatchFile(path)
-	if err != nil {
-		return false, err
-	}
-	switch typ.Extension {
-	case "elf", "exe":
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func existsRepo(rels Releases, rel Release) (bool, int) {
