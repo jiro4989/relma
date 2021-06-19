@@ -22,7 +22,7 @@ func TestCmdInstall(t *testing.T) {
 		wantErr   bool
 	}{
 		{
-			desc: "ok: installing",
+			desc: "ok: installing tar gz file",
 			app: App{
 				Config: Config{
 					RelmaRoot: testOutputDir,
@@ -42,6 +42,33 @@ func TestCmdInstall(t *testing.T) {
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: installing executable file",
+			app: App{
+				Config: Config{
+					RelmaRoot: testOutputDir,
+				},
+			},
+			param: &CmdInstallParam{
+				URL: "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
+			},
+			want: Releases{
+				{
+					URL:           "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
+					Owner:         "mvdan",
+					Repo:          "sh",
+					Version:       "v3.3.0",
+					AssetFileName: "shfmt_v3.3.0_linux_amd64",
+					InstalledFiles: InstalledFiles{
+						{
+							Src:  "shfmt_v3.3.0_linux_amd64",
+							Dest: "shfmt_v3.3.0_linux_amd64",
 						},
 					},
 				},
