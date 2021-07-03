@@ -22,7 +22,7 @@ func TestCmdInstall(t *testing.T) {
 		wantErr   bool
 	}{
 		{
-			desc: "ok: installing",
+			desc: "ok: installing tar gz file",
 			app: App{
 				Config: Config{
 					RelmaRoot: testOutputDir,
@@ -42,6 +42,33 @@ func TestCmdInstall(t *testing.T) {
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
+						},
+					},
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: installing executable file",
+			app: App{
+				Config: Config{
+					RelmaRoot: testOutputDir,
+				},
+			},
+			param: &CmdInstallParam{
+				URL: "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
+			},
+			want: Releases{
+				{
+					URL:           "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
+					Owner:         "mvdan",
+					Repo:          "sh",
+					Version:       "v3.3.0",
+					AssetFileName: "shfmt_v3.3.0_linux_amd64",
+					InstalledFiles: InstalledFiles{
+						{
+							Src:  "shfmt_v3.3.0_linux_amd64",
+							Dest: "shfmt_v3.3.0_linux_amd64",
 						},
 					},
 				},
@@ -333,66 +360,6 @@ func TestInstallFiles(t *testing.T) {
 				return
 			}
 			assert.Len(got, tt.want)
-			assert.NoError(err)
-		})
-	}
-}
-
-func TestIsExecutableFile(t *testing.T) {
-	tests := []struct {
-		desc string
-		path string
-		want bool
-	}{
-		{
-			desc: "ok: executable shellscript",
-			path: filepath.Join(testDir, "script.sh"),
-			want: true,
-		},
-		{
-			desc: "ok: executable batch file",
-			path: filepath.Join(testDir, "script.bat"),
-			want: true,
-		},
-		{
-			desc: "ok: executable binary (linux)",
-			path: filepath.Join(testDir, "bin"),
-			want: true,
-		},
-		{
-			desc: "ok: executable binary (windows)",
-			path: filepath.Join(testDir, "bin.exe"),
-			want: true,
-		},
-		// TODO:
-		// {
-		// 	desc: "ok: executable binary (darwin)",
-		// 	path: filepath.Join(testDir, "darwin"),
-		// 	want: true,
-		// },
-		{
-			desc: "ng: text file",
-			path: filepath.Join(testDir, "text.txt"),
-			want: false,
-		},
-		{
-			desc: "ng: directory",
-			path: testDir,
-			want: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.desc, func(t *testing.T) {
-			assert := assert.New(t)
-
-			file, err := os.Open(tt.path)
-			assert.NoError(err)
-			defer file.Close()
-			fi, err := file.Stat()
-			assert.NoError(err)
-
-			got, err := isExecutableFile(fi, tt.path)
-			assert.Equal(tt.want, got)
 			assert.NoError(err)
 		})
 	}

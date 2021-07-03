@@ -1,4 +1,5 @@
 // +build windows
+// +build env
 
 package main
 
@@ -30,7 +31,8 @@ func TestDefaultConfig(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			SetHome(tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 
 			got, err := DefaultConfig()
 			assert.NoError(err)

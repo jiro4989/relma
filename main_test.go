@@ -76,7 +76,8 @@ func TestMainNormal(t *testing.T) {
 			assert := assert.New(t)
 
 			assert.NoError(os.MkdirAll(tt.home, os.ModePerm))
-			SetHome(tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 			assert.NoError(os.MkdirAll(tt.confDir, os.ModePerm))
 
 			err := Main(tt.args)
@@ -135,7 +136,8 @@ func TestMainAbnormal(t *testing.T) {
 			assert := assert.New(t)
 
 			assert.NoError(os.MkdirAll(tt.home, os.ModePerm))
-			SetHome(tt.home)
+			recoverFunc := SetHomeWithRecoverFunc(tt.home)
+			defer recoverFunc()
 			assert.NoError(os.MkdirAll(tt.confDir, os.ModePerm))
 
 			assert.NoError(Main([]string{"init"}))

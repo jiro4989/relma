@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/h2non/filetype"
 	"github.com/mholt/archiver/v3"
 )
 
@@ -20,6 +19,11 @@ type CmdInstallParam struct {
 	File string
 }
 
+// CmdInstall installs commands from an url of GitHub Releases.
+//
+// Decompress it if Releases file was archive file, and install executables to
+// relma directory.Install executables from urls of `releases.json` if `p.File`
+// (releases.json) is not empty.
 func (a *App) CmdInstall(p *CmdInstallParam) error {
 	if p.File != "" {
 		rels, err := ReadReleasesFile(p.File)
@@ -63,12 +67,69 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 	if err := os.MkdirAll(assetDir, os.ModePerm); err != nil {
 		return err
 	}
+
+	if ok, err := IsArchiveFile(assetFile); err != nil {
+		return err
+	} else if !ok {
+		// Download and create symlink if assetFile is not archive file and is
+		// executable file. Not unarchive.
+		oldAssetFile, assetFile := assetFile, filepath.Join(assetDir, filepath.Base(assetFile))
+		if err := os.Rename(oldAssetFile, assetFile); err != nil {
+			return err
+		}
+
+		fi, err := os.Stat(assetFile)
+		if err != nil {
+			return err
+		}
+
+		if ok, err := IsExecutableFile(fi, assetFile); err != nil {
+			return err
+		} else if !ok {
+			err = errors.New("github_releases_url file must be executable file or archive file")
+			return err
+		}
+
+		name := filepath.Base(assetFile)
+		binDir := a.Config.BinDir()
+		destFile := filepath.Join(binDir, name)
+		ff, err := linkExecutableFileToDest(fi, assetFile, destFile)
+		if ff == nil && err == nil {
+			// 到達しないはず
+			err = errors.New("unknown error")
+			return err
+		}
+		if err != nil {
+			return err
+		}
+		rel.InstalledFiles = InstalledFiles{*ff}
+		rel.InstalledFiles.FixPath(filepath.Dir(assetFile), binDir)
+
+		rels, err := a.Config.ReadReleasesFile()
+		if err != nil {
+			return err
+		}
+		if existed, index := existsRepo(rels, *rel); existed {
+			rels[index] = *rel
+		} else {
+			rels = append(rels, *rel)
+		}
+		err = a.SaveReleases(rels)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(rel.FormatVersion())
+		return nil
+	}
+
+	// Download and archive file and create symlink if assetFile is archive file.
+
 	if err := archiver.Unarchive(assetFile, assetDir); err != nil {
 		return err
 	}
 
-	binDir := a.Config.BinDir()
-	installedFiles, err := installFiles(assetDir, binDir)
+	installedFiles, err := installFiles(assetDir, a.Config.BinDir())
 	if err != nil {
 		return err
 	}
@@ -226,7 +287,7 @@ func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, 
 }
 
 func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
-	isExec, err := isExecutableFile(f, src)
+	isExec, err := IsExecutableFile(f, src)
 	if err != nil {
 		return nil, err
 	}
@@ -251,34 +312,6 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 		Dest: dest,
 	}
 	return &ff, nil
-}
-
-func isExecutableFile(f os.FileInfo, path string) (bool, error) {
-	mode := f.Mode()
-	if !mode.IsRegular() {
-		return false, nil
-	}
-
-	if mode&0111 != 0 {
-		return true, nil
-	}
-
-	ext := filepath.Ext(path)
-	switch strings.ToLower(ext) {
-	case ".bat", ".cmd":
-		return true, nil
-	}
-
-	typ, err := filetype.MatchFile(path)
-	if err != nil {
-		return false, err
-	}
-	switch typ.Extension {
-	case "elf", "exe":
-		return true, nil
-	}
-
-	return false, nil
 }
 
 func existsRepo(rels Releases, rel Release) (bool, int) {
