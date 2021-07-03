@@ -1,8 +1,4 @@
 // +build !windows
-// +build env
-
-// 並列にテストが走ったときに環境変数が上書きされるせいか、テストがコケてしまう
-// ため、明示的にテストしないとダメにする
 
 package main
 
@@ -34,11 +30,8 @@ func TestDefaultConfig(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			recoverFunc := SetHomeWithRecoverFunc(tt.home)
-			defer recoverFunc()
-
-			got, err := DefaultConfig()
-			assert.NoError(err)
+			a := App{UserHomeDir: tt.home}
+			got := a.DefaultConfig()
 			assert.Equal(tt.want, got)
 		})
 	}
@@ -47,13 +40,13 @@ func TestDefaultConfig(t *testing.T) {
 func TestConfigDir(t *testing.T) {
 	tests := []struct {
 		desc    string
-		home    string
+		conf    string
 		want    string
 		wantErr bool
 	}{
 		{
 			desc:    "ok: get default config directory",
-			home:    "/home/testuser",
+			conf:    "/home/testuser/.config",
 			want:    "/home/testuser/.config/" + appName,
 			wantErr: false,
 		},
@@ -62,11 +55,8 @@ func TestConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			recoverFunc := SetHomeWithRecoverFunc(tt.home)
-			defer recoverFunc()
-
-			got, err := ConfigDir()
-			assert.NoError(err)
+			a := App{UserConfigDir: tt.conf}
+			got := a.ConfigDir()
 			assert.Equal(tt.want, got)
 		})
 	}
@@ -76,18 +66,21 @@ func TestCreateConfigDir(t *testing.T) {
 	tests := []struct {
 		desc    string
 		home    string
+		conf    string
 		want    string
 		wantErr bool
 	}{
 		{
 			desc:    "ok: create config directory",
-			home:    testOutputDir,
+			home: testOutputDir,
+			conf:    filepath.Join(testOutputDir, ".config"),
 			want:    filepath.Join(testOutputDir, ".config", appName),
 			wantErr: false,
 		},
 		{
 			desc:    "ok: config directory was existed",
-			home:    testOutputDir,
+			home: testOutputDir,
+			conf:    filepath.Join(testOutputDir, ".config"),
 			want:    filepath.Join(testOutputDir, ".config", appName),
 			wantErr: false,
 		},
@@ -96,10 +89,11 @@ func TestCreateConfigDir(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			recoverFunc := SetHomeWithRecoverFunc(tt.home)
-			defer recoverFunc()
-
-			got, err := CreateConfigDir()
+			a := App{
+				UserHomeDir: tt.home,
+				UserConfigDir: tt.conf,
+			}
+			got, err := a.CreateConfigDir()
 			assert.NoError(err)
 			assert.Equal(tt.want, got)
 		})
@@ -110,12 +104,14 @@ func TestConfigFile(t *testing.T) {
 	tests := []struct {
 		desc    string
 		home    string
+		conf    string
 		want    string
 		wantErr bool
 	}{
 		{
 			desc:    "ok: get default config file",
 			home:    "/home/testuser",
+			conf:    "/home/testuser/.config",
 			want:    filepath.Join("/home/testuser", ".config", appName, "config.json"),
 			wantErr: false,
 		},
@@ -124,11 +120,11 @@ func TestConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			recoverFunc := SetHomeWithRecoverFunc(tt.home)
-			defer recoverFunc()
-
-			got, err := ConfigFile()
-			assert.NoError(err)
+			a := App{
+				UserHomeDir: tt.home,
+				UserConfigDir: tt.conf,
+			}
+			got := a.ConfigFile()
 			assert.Equal(tt.want, got)
 		})
 	}
@@ -142,6 +138,7 @@ func TestCreateConfigFile(t *testing.T) {
 	tests := []struct {
 		desc    string
 		home    string
+		conf string
 		config  Config
 		want    string
 		wantErr bool
@@ -149,6 +146,7 @@ func TestCreateConfigFile(t *testing.T) {
 		{
 			desc: "ok: create config file",
 			home: filepath.Join(testOutputDir, "test_create_config_file_1"),
+			conf: filepath.Join(testOutputDir, "test_create_config_file_1", ".config"),
 			config: Config{
 				RelmaRoot: "sushi",
 			},
@@ -158,6 +156,7 @@ func TestCreateConfigFile(t *testing.T) {
 		{
 			desc: "ok: create config file",
 			home: filepath.Join(testOutputDir, "test_create_config_file_2"),
+			conf: filepath.Join(testOutputDir, "test_create_config_file_2", ".config"),
 			config: Config{
 				RelmaRoot: "sushi",
 			},
@@ -169,10 +168,11 @@ func TestCreateConfigFile(t *testing.T) {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
 
-			recoverFunc := SetHomeWithRecoverFunc(tt.home)
-			defer recoverFunc()
-
-			got, err := CreateConfigFile(tt.config)
+			a := App{
+				UserHomeDir: tt.home,
+				UserConfigDir: tt.conf,
+			}
+			got, err := a.CreateConfigFile(tt.config)
 			if tt.wantErr {
 				assert.Error(err)
 				return
