@@ -154,6 +154,57 @@ func TestCmdInstall(t *testing.T) {
 	}
 }
 
+func TestCmdInstall_NoErrorWhenReleasesHasAlreadyInstalled(t *testing.T) {
+	tests := []struct {
+		desc      string
+		app       App
+		param     *CmdInstallParam
+		want      Releases
+		wantCount int
+	}{
+		{
+			desc: "ok: installing tar gz file",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "alread_installed_test"),
+				},
+			},
+			param: &CmdInstallParam{
+				URL: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+			},
+			want: Releases{
+				{
+					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
+					Owner:         "jiro4989",
+					Repo:          "nimjson",
+					Version:       "v1.2.6",
+					AssetFileName: "nimjson_linux.tar.gz",
+					InstalledFiles: InstalledFiles{
+						{
+							Src:  filepath.Join("bin", "nimjson"),
+							Dest: "nimjson",
+						},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			assert.NoError(os.MkdirAll(tt.app.Config.BinDir(), os.ModePerm))
+			assert.NoError(os.MkdirAll(tt.app.Config.ReleasesDir(), os.ModePerm))
+
+			p := tt.app.Config.ReleasesFile()
+			os.Remove(p)
+
+			assert.NoError(tt.app.CmdInstall(tt.param))
+			assert.NoError(tt.app.CmdInstall(tt.param))
+		})
+	}
+}
+
 func TestParseURL(t *testing.T) {
 	tests := []struct {
 		desc    string
