@@ -2,21 +2,15 @@ name: test
 
 on:
   push:
-    paths-ignore:
-      - 'LICENSE'
-      - '*.md'
-      - '*.adoc'
-      - 'docs/*'
-      - '.gitignore'
-      - '.chglog/*'
+    branches:
+      - master
+    paths:
+      - '**.go'
+      - '.github/workflows/test.yml'
   pull_request:
-    paths-ignore:
-      - 'LICENSE'
-      - '*.md'
-      - '*.adoc'
-      - 'docs/*'
-      - '.gitignore'
-      - '.chglog/*'
+    paths:
+      - '**.go'
+      - '.github/workflows/test.yml'
 
 env:
   go-version: '1.16'

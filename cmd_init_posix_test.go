@@ -16,10 +16,11 @@ func TestCmdInit(t *testing.T) {
 	p := filepath.Join(testOutputDir, "test_cmd_init")
 	err := os.MkdirAll(p, os.ModePerm)
 	assert.NoError(err)
-	recoverFunc := SetHomeWithRecoverFunc(p)
-	defer recoverFunc()
 
-	app := App{}
+	app := App{
+		UserHomeDir: p,
+		UserConfigDir: filepath.Join(p, ".config"),
+	}
 	err = app.CmdInit()
 	assert.NoError(err)
 

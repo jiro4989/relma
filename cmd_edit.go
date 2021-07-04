@@ -6,10 +6,7 @@ import (
 )
 
 func (a *App) CmdEdit(p *CommandLineEditParam) error {
-	f, err := ConfigFile()
-	if err != nil {
-		return err
-	}
+	f := a.ConfigFile()
 
 	editor := os.Getenv("EDITOR")
 	if p.Editor != "" {

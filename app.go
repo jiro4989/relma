@@ -9,17 +9,38 @@ import (
 
 type App struct {
 	Config Config
+	UserHomeDir string
+	UserConfigDir string
 }
 
 func NewApp() (App, error) {
-	conf, err := ReadConfigFile()
+	var app App
+	if err := app.SetUserEnv(); err != nil {
+		return App{}, err
+	}
+
+	conf, err := app.ReadConfigFile()
 	if err != nil {
 		return App{}, err
 	}
-	app := App{
-		Config: conf,
-	}
+
+	app.Config = conf
 	return app, nil
+}
+
+func (a *App) SetUserEnv() error {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	a.UserHomeDir = home
+
+	conf, err := os.UserConfigDir()
+	if err != nil {
+		return err
+	}
+	a.UserConfigDir = conf
+	return nil
 }
 
 func (a *App) SaveReleases(rels Releases) error {
@@ -39,34 +60,24 @@ type Config struct {
 	RelmaRoot string
 }
 
-func DefaultConfig() (Config, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return Config{}, err
-	}
+func (a *App) DefaultConfig() Config {
+	home := a.UserHomeDir
 	c := Config{
 		RelmaRoot: filepath.Join(home, appName),
 	}
-	return c, nil
+	return c
 }
 
-func ConfigDir() (string, error) {
-	dir, err := os.UserConfigDir()
-	if err != nil {
-		return "", err
-	}
-
+func (a *App) ConfigDir() string {
+	dir := a.UserConfigDir
 	p := filepath.Join(dir, appName)
-	return p, nil
+	return p
 }
 
-func CreateConfigDir() (string, error) {
-	dir, err := ConfigDir()
-	if err != nil {
-		return "", err
-	}
+func (a *App) CreateConfigDir() (string, error) {
+	dir := a.ConfigDir()
 
-	_, err = os.Stat(dir)
+	_, err := os.Stat(dir)
 	if !os.IsNotExist(err) {
 		return dir, nil
 	}
@@ -78,21 +89,14 @@ func CreateConfigDir() (string, error) {
 	return dir, nil
 }
 
-func ConfigFile() (string, error) {
-	dir, err := ConfigDir()
-	if err != nil {
-		return "", err
-	}
-
+func (a *App) ConfigFile() string {
+	dir := a.ConfigDir()
 	p := filepath.Join(dir, "config.json")
-	return p, nil
+	return p
 }
 
-func ReadConfigFile() (Config, error) {
-	file, err := ConfigFile()
-	if err != nil {
-		return Config{}, err
-	}
+func (a *App) ReadConfigFile() (Config, error) {
+	file := a.ConfigFile()
 
 	b, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -107,11 +111,8 @@ func ReadConfigFile() (Config, error) {
 	return conf, nil
 }
 
-func CreateConfigFile(c Config) (string, error) {
-	file, err := ConfigFile()
-	if err != nil {
-		return "", err
-	}
+func (a *App) CreateConfigFile(c Config) (string, error) {
+	file := a.ConfigFile()
 
 	b, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {

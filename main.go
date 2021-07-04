@@ -159,6 +159,9 @@ func Main(args []string) error {
 		if err != nil {
 			return err
 		}
+	} else {
+		// ホームディレクトリの設定は必須
+		a.SetUserEnv()
 	}
 
 	switch clp.Command {
@@ -295,6 +298,8 @@ func Main(args []string) error {
 		if err != nil {
 			return err
 		}
+	default:
+		return fmt.Errorf("%s command was not supported", clp.Command)
 	}
 
 	return nil

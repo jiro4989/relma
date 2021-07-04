@@ -6,17 +6,14 @@ import (
 )
 
 func (a *App) CmdInit() error {
-	_, err := CreateConfigDir()
+	_, err := a.CreateConfigDir()
 	if err != nil {
 		return err
 	}
 
-	conf, err := DefaultConfig()
-	if err != nil {
-		return err
-	}
+	conf := a.DefaultConfig()
 
-	_, err = CreateConfigFile(conf)
+	_, err = a.CreateConfigFile(conf)
 	if err != nil {
 		return err
 	}
