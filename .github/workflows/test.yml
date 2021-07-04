@@ -17,11 +17,19 @@ env:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       matrix:
-        os: [windows, linux, darwin]
-        arch: [amd64]
+        include:
+          - os: windows
+            runs-on: windows-latest
+            opts: -cover -tags windows
+          - os: linux
+            runs-on: ubuntu-latest
+            opts: -cover
+          - os: darwin
+            runs-on: macOS-latest
+            opts: -cover
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v2
@@ -30,19 +38,8 @@ jobs:
       - run: go build
         env:
           GOOS: ${{ matrix.os }}
-          GOARCH: ${{ matrix.arch }}
-      - run: go test -cover
-        if: matrix.os == 'linux' && matrix.arch == 'amd64'
-
-  test-on-windows:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: ${{ env.go-version }}
-      - run: go build
-      - run: go test -cover -tags windows
+          GOARCH: amd64
+      - run: go test ${{ matrix.opts }}
 
   lint:
     runs-on: ubuntu-latest
