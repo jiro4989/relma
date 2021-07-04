@@ -298,6 +298,8 @@ func Main(args []string) error {
 		if err != nil {
 			return err
 		}
+	default:
+		return fmt.Errorf("%s command was not supported", clp.Command)
 	}
 
 	return nil
