@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - '**.go'
-      - '.github/workflows/test.yml'
+      - '.github/workflows/coverage.yml'
 
 env:
   go-version: '1.16'
