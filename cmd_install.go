@@ -54,6 +54,15 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 
 	dir := a.Config.ReleasesDir()
 	releasesDir := filepath.Join(dir, rel.Owner, rel.Repo, rel.Version)
+
+	// skip if releases directory has already existed
+	_, err = os.Stat(releasesDir)
+	if !os.IsNotExist(err) {
+		msg := fmt.Sprintf("skip: %s has already installed", rel.FormatVersion())
+		fmt.Println(msg)
+		return nil
+	}
+
 	if err := os.MkdirAll(releasesDir, os.ModePerm); err != nil {
 		return err
 	}
