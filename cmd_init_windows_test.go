@@ -13,15 +13,15 @@ import (
 func TestCmdInit(t *testing.T) {
 	assert := assert.New(t)
 
-	home := filepath.Join(testOutputDir, "test_cmd_init")
-	err := os.MkdirAll(home, os.ModePerm)
+	p := filepath.Join(testOutputDir, "test_cmd_init")
+	err := os.MkdirAll(p, os.ModePerm)
 	assert.NoError(err)
-	SetHome(home)
 
-	conf := filepath.Join(home, "AppData", "Roaming")
-	SetConfigDir(conf)
-
-	app := App{}
+	conf := filepath.Join(p, "AppData", "Roaming")
+	app := App{
+		UserHomeDir: p,
+		UserConfigDir: conf,
+	}
 	err = app.CmdInit()
 	assert.NoError(err)
 
@@ -30,7 +30,7 @@ func TestCmdInit(t *testing.T) {
 	assert.False(os.IsNotExist(err))
 
 	// application directory
-	appDir := filepath.Join(home, appName)
+	appDir := filepath.Join(p, appName)
 	_, err = os.Stat(appDir)
 	assert.False(os.IsNotExist(err))
 
