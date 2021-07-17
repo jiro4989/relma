@@ -35,7 +35,7 @@ func RemoveRelease(rels Releases, rel *Release) Releases {
 }
 
 func unset(s Releases, i int) Releases {
-	if i >= len(s) {
+	if len(s) <= i {
 		return s
 	}
 	return append(s[:i], s[i+1:]...)
