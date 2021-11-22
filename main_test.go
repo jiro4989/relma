@@ -43,6 +43,13 @@ func TestMainNormal(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			desc:    "normal: root",
+			home:    testDir,
+			confDir: testConfDir,
+			args:    []string{"root"},
+			wantErr: false,
+		},
+		{
 			desc:    "normal: update",
 			home:    testDir,
 			confDir: testConfDir,
