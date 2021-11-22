@@ -47,6 +47,10 @@ type CommandLineListParam struct {
 	List bool
 }
 
+type CommandLineRootParam struct {
+	Root bool
+}
+
 var (
 	version = "dev"
 )
@@ -68,6 +72,7 @@ commands:
   upgrade      upgrade installed GitHub Releases.
   uninstall    uninstall GitHub Releases.
   list         print installed GitHub Releases infomation.
+  root         print relma root directory.
 
 options:
   -h, --help    print this help
@@ -123,6 +128,12 @@ options:
 `
 
 	usageList = `usage: relma list [options]
+
+options:
+  -h, --help       print this help
+`
+
+	usageRoot = `usage: relma root [options]
 
 options:
   -h, --help       print this help
@@ -295,6 +306,23 @@ func Main(args []string) error {
 		}
 
 		err = a.CmdList(&clp)
+		if err != nil {
+			return err
+		}
+	case "root":
+		args := []string{clp.Command}
+		args = append(args, opts["<args>"].([]string)...)
+		opts, err := docopt.ParseArgs(usageRoot, args, "")
+		if err != nil {
+			return err
+		}
+		var clp CommandLineRootParam
+		err = opts.Bind(&clp)
+		if err != nil {
+			return err
+		}
+
+		err = a.CmdRoot(&clp)
 		if err != nil {
 			return err
 		}
