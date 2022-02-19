@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/jiro4989/relma/downloader"
 	"github.com/jiro4989/relma/thirdparty/github"
 )
 
@@ -14,6 +15,7 @@ type App struct {
 	UserHomeDir   string
 	UserConfigDir string
 	GitHubClient  github.GitHubClientInterface
+	Downloader    downloader.DownloaderInterface
 }
 
 func NewApp() (App, error) {
@@ -29,6 +31,7 @@ func NewApp() (App, error) {
 
 	app.Config = conf
 	app.GitHubClient = github.NewClient()
+	app.Downloader = downloader.NewDownloader()
 	return app, nil
 }
 
