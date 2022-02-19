@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/google/go-github/v32/github"
+	"github.com/jiro4989/relma/thirdparty/github"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,6 +26,10 @@ func TestCmdUpdate(t *testing.T) {
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "test_cmd_update"),
 				},
+				GitHubClient: &github.MockClient{
+					LatestTag: "v1.2.6",
+					Err:       nil,
+				},
 			},
 			param: &CmdUpdateParam{},
 			rel: Releases{
@@ -40,6 +45,19 @@ func TestCmdUpdate(t *testing.T) {
 				},
 			},
 			wantErr: false,
+		},
+		{
+			desc: "ng: raise error",
+			app: App{
+				Config: Config{
+					RelmaRoot: filepath.Join(testOutputDir, "test_cmd_update"),
+				},
+				GitHubClient: &github.MockClient{
+					Err: errors.New("error"),
+				},
+			},
+			param:   &CmdUpdateParam{},
+			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
@@ -79,34 +97,34 @@ func TestCmdUpdate(t *testing.T) {
 	}
 }
 
-func TestFetchLatestTag(t *testing.T) {
-	client := github.NewClient(nil)
-	tests := []struct {
-		desc    string
-		owner   string
-		repo    string
-		want    string
-		wantErr bool
-	}{
-		{
-			desc:    "ok: fetch latest tag",
-			owner:   "jiro4989",
-			repo:    "nimjson",
-			want:    "v1.2.8",
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.desc, func(t *testing.T) {
-			assert := assert.New(t)
-
-			got, err := fetchLatestTag(client, tt.owner, tt.repo)
-			if tt.wantErr {
-				assert.Error(err)
-				return
-			}
-			assert.NoError(err)
-			assert.Equal(tt.want, got)
-		})
-	}
-}
+// func TestFetchLatestTag(t *testing.T) {
+// 	client := github.NewClient(nil)
+// 	tests := []struct {
+// 		desc    string
+// 		owner   string
+// 		repo    string
+// 		want    string
+// 		wantErr bool
+// 	}{
+// 		{
+// 			desc:    "ok: fetch latest tag",
+// 			owner:   "jiro4989",
+// 			repo:    "nimjson",
+// 			want:    "v1.2.8",
+// 			wantErr: false,
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.desc, func(t *testing.T) {
+// 			assert := assert.New(t)
+//
+// 			got, err := fetchLatestTag(client, tt.owner, tt.repo)
+// 			if tt.wantErr {
+// 				assert.Error(err)
+// 				return
+// 			}
+// 			assert.NoError(err)
+// 			assert.Equal(tt.want, got)
+// 		})
+// 	}
+// }
