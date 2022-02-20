@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/jiro4989/relma/downloader"
+	"github.com/jiro4989/relma/external/downloader"
 	"github.com/jiro4989/relma/thirdparty/github"
 )
 
