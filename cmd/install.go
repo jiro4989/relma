@@ -20,6 +20,11 @@ func init() {
 	rootCmd.AddCommand(commandInstall)
 }
 
+type CommandLineInstallParam struct {
+	GitHubReleaseURL string `docopt:"<github_release_url>"`
+	File             string `docopt:"-f,--file"`
+}
+
 var commandLineInstallParam CmdInstallParam
 
 var commandInstall = &cobra.Command{

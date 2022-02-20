@@ -9,6 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type CommandLineUninstallParam struct {
+	OwnerRepo string `docopt:"<owner/repo>"`
+}
+
 func init() {
 	rootCmd.AddCommand(commandUninstall)
 }

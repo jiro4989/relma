@@ -24,6 +24,9 @@ func init() {
 	rootCmd.AddCommand(commandRoot)
 }
 
+type CommandLineRootParam struct {
+}
+
 var commandRoot = &cobra.Command{
 	Use:   "root",
 	Short: "print relma root directory",

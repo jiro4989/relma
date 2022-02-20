@@ -13,6 +13,10 @@ func init() {
 	rootCmd.AddCommand(commandEdit)
 }
 
+type CommandLineEditParam struct {
+	Editor string `docopt:"-e,--editor"`
+}
+
 var commandLineEditParam CommandLineEditParam
 
 var commandEdit = &cobra.Command{

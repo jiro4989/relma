@@ -7,6 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type CommandLineUpdateParam struct {
+	Releases []string `docopt:"<releases>"`
+}
+
 func init() {
 	rootCmd.AddCommand(commandUpdate)
 }

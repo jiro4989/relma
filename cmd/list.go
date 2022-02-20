@@ -22,6 +22,9 @@ var commandList = &cobra.Command{
 	},
 }
 
+type CommandLineListParam struct {
+}
+
 func (a *App) CmdList(p *CommandLineListParam) error {
 	rels, err := a.Config.ReadReleasesFile()
 	if err != nil {

@@ -9,6 +9,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+type CommandLineUpgradeParam struct {
+	Upgrade   bool
+	Yes       bool   `docopt:"-y,--yes"`
+	OwnerRepo string `docopt:"<owner/repo>"`
+}
+
 func init() {
 	commandUpgrade.Flags().BoolVarP(&commandLineUpgradeParam.Yes, "yes", "y", false, "yes")
 
