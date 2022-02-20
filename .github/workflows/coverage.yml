@@ -25,4 +25,4 @@ jobs:
                  github.com/onsi/ginkgo \
                  golang.org/x/tools/cmd/cover
       - run: go test -coverprofile=cover.out -covermode=count ./...
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2.1.0
