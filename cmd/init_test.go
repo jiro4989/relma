@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	testDir       = filepath.Join(".", "testdata")
+	testDir       = filepath.Join("..", "testdata")
 	testOutputDir = filepath.Join(testDir, "out")
 	nimjson1_2_6  string
 	monit         string
