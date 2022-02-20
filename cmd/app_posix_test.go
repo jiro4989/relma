@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/jiro4989/relma/releases"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -192,13 +193,13 @@ func TestReadReleasesFile(t *testing.T) {
 	tests := []struct {
 		desc    string
 		path    string
-		want    Releases
+		want    releases.Releases
 		wantErr bool
 	}{
 		{
 			desc: "ok: releases.json exists",
 			path: filepath.Join(testDir, "releases.json"),
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL: "https://example.com",
 				},

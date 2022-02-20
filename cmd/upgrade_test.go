@@ -6,11 +6,12 @@ import (
 	"testing"
 
 	"github.com/jiro4989/relma/external/downloader"
+	"github.com/jiro4989/relma/releases"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestCmdUpgrade(t *testing.T) {
-	validReleases := Releases{
+	validReleases := releases.Releases{
 		{
 			URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			Owner:         "Jiro4989",
@@ -19,7 +20,7 @@ func TestCmdUpgrade(t *testing.T) {
 			LatestVersion: "v1.2.8",
 		},
 	}
-	invalidReleases := Releases{
+	invalidReleases := releases.Releases{
 		{
 			URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			Owner:         "Jiro4989",
@@ -28,7 +29,7 @@ func TestCmdUpgrade(t *testing.T) {
 			LatestVersion: "v1.2.6",
 		},
 	}
-	invalidReleases2 := Releases{
+	invalidReleases2 := releases.Releases{
 		{
 			URL:           "https://gitlab.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			Owner:         "Jiro4989",
@@ -41,7 +42,7 @@ func TestCmdUpgrade(t *testing.T) {
 	tests := []struct {
 		desc    string
 		app     App
-		rels    Releases
+		rels    releases.Releases
 		param   *CmdUpgradeParam
 		wantErr bool
 		wantNil bool
@@ -147,21 +148,21 @@ func TestCmdUpgrade(t *testing.T) {
 func TestSearchReleaseOrDefault(t *testing.T) {
 	tests := []struct {
 		desc      string
-		rels      Releases
+		rels      releases.Releases
 		ownerRepo string
-		want      Releases
+		want      releases.Releases
 		wantErr   bool
 	}{
 		{
 			desc: "ok: default releases",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "textimg",
 				},
 			},
 			ownerRepo: "",
-			want: Releases{
+			want: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "textimg",
@@ -171,7 +172,7 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 		},
 		{
 			desc: "ok: found owner/repo",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "sushi",
@@ -182,7 +183,7 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 				},
 			},
 			ownerRepo: "JIRO4989/TEXTIMG",
-			want: Releases{
+			want: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "textimg",
@@ -192,7 +193,7 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 		},
 		{
 			desc: "ng: not found owner/repo",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "sushi",
@@ -208,7 +209,7 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 		},
 		{
 			desc: "ng: illegal owner/repo",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "jiro4989",
 					Repo:  "sushi",
@@ -231,7 +232,7 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 		},
 		{
 			desc:      "ng: releases are empty",
-			rels:      Releases{},
+			rels:      releases.Releases{},
 			ownerRepo: "jiro4989/textimg",
 			want:      nil,
 			wantErr:   true,
@@ -255,14 +256,14 @@ func TestSearchReleaseOrDefault(t *testing.T) {
 func TestSearchRelease(t *testing.T) {
 	tests := []struct {
 		desc      string
-		rels      Releases
+		rels      releases.Releases
 		ownerRepo string
-		want      Releases
+		want      releases.Releases
 		wantErr   bool
 	}{
 		{
 			desc: "ok: found releases",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "Jiro",
 					Repo:  "Test",
@@ -281,7 +282,7 @@ func TestSearchRelease(t *testing.T) {
 				},
 			},
 			ownerRepo: "JIRO4989/TEST",
-			want: Releases{
+			want: releases.Releases{
 				{
 					Owner: "Jiro4989",
 					Repo:  "Test",
@@ -291,14 +292,14 @@ func TestSearchRelease(t *testing.T) {
 		},
 		{
 			desc:      "ok: releases is empty",
-			rels:      Releases{},
+			rels:      releases.Releases{},
 			ownerRepo: "",
 			want:      nil,
 			wantErr:   false,
 		},
 		{
 			desc: "ng: ownerRepo is illegal",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "Jiro4989",
 					Repo:  "Test",
@@ -310,7 +311,7 @@ func TestSearchRelease(t *testing.T) {
 		},
 		{
 			desc: "ng: ownerRepo is empty",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner: "Jiro4989",
 					Repo:  "Test",
@@ -339,12 +340,12 @@ func TestSearchRelease(t *testing.T) {
 func TestUpgradableReleases(t *testing.T) {
 	tests := []struct {
 		desc string
-		rels Releases
-		want Releases
+		rels releases.Releases
+		want releases.Releases
 	}{
 		{
 			desc: "ok: found upgradable releases",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner:         "Jiro4989",
 					Repo:          "textimg",
@@ -358,7 +359,7 @@ func TestUpgradableReleases(t *testing.T) {
 					LatestVersion: "v0.1.0",
 				},
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					Owner:         "Jiro4989",
 					Repo:          "textimg",
@@ -369,7 +370,7 @@ func TestUpgradableReleases(t *testing.T) {
 		},
 		{
 			desc: "ok: not found upgradable releases",
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner:         "Jiro4989",
 					Repo:          "textimg",

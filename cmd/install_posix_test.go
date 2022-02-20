@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/jiro4989/relma/external/downloader"
+	"github.com/jiro4989/relma/releases"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestCmdInstall(t *testing.T) {
 		desc      string
 		app       App
 		param     *CmdInstallParam
-		want      Releases
+		want      releases.Releases
 		wantCount int
 		wantErr   bool
 	}{
@@ -37,14 +38,14 @@ func TestCmdInstall(t *testing.T) {
 			param: &CmdInstallParam{
 				URL: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 					Owner:         "jiro4989",
 					Repo:          "nimjson",
 					Version:       "v1.2.6",
 					AssetFileName: "nimjson_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
@@ -67,14 +68,14 @@ func TestCmdInstall(t *testing.T) {
 			param: &CmdInstallParam{
 				URL: "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/mvdan/sh/releases/download/v3.3.0/shfmt_v3.3.0_linux_amd64",
 					Owner:         "mvdan",
 					Repo:          "sh",
 					Version:       "v3.3.0",
 					AssetFileName: "shfmt_v3.3.0_linux_amd64",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  "shfmt_v3.3.0_linux_amd64",
 							Dest: "shfmt_v3.3.0_linux_amd64",
@@ -97,14 +98,14 @@ func TestCmdInstall(t *testing.T) {
 			param: &CmdInstallParam{
 				File: filepath.Join(testDir, "cmd_install_releases.json"),
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz",
 					Owner:         "jiro4989",
 					Repo:          "nimjson",
 					Version:       "v1.2.8",
 					AssetFileName: "nimjson_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
@@ -117,7 +118,7 @@ func TestCmdInstall(t *testing.T) {
 					Repo:          "monit",
 					Version:       "1.1.0",
 					AssetFileName: "monit_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "monit"),
 							Dest: "monit",
@@ -148,7 +149,7 @@ func TestCmdInstall(t *testing.T) {
 			b, err := ioutil.ReadFile(p)
 			assert.NoError(err)
 
-			var rels Releases
+			var rels releases.Releases
 			err = json.Unmarshal(b, &rels)
 			assert.NoError(err)
 			assert.Equal(len(tt.want), len(rels))
@@ -171,7 +172,7 @@ func TestCmdInstall_NoErrorWhenReleasesHasAlreadyInstalled(t *testing.T) {
 		desc      string
 		app       App
 		param     *CmdInstallParam
-		want      Releases
+		want      releases.Releases
 		wantCount int
 	}{
 		{
@@ -187,14 +188,14 @@ func TestCmdInstall_NoErrorWhenReleasesHasAlreadyInstalled(t *testing.T) {
 			param: &CmdInstallParam{
 				URL: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 					Owner:         "jiro4989",
 					Repo:          "nimjson",
 					Version:       "v1.2.6",
 					AssetFileName: "nimjson_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
@@ -224,13 +225,13 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		desc    string
 		url     string
-		want    *Release
+		want    *releases.Release
 		wantErr bool
 	}{
 		{
 			desc: "ok: parsing",
 			url:  "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Release{
+			want: &releases.Release{
 				URL:           "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
@@ -243,7 +244,7 @@ func TestParseURL(t *testing.T) {
 		{
 			desc: "ok: GITHUB.COM",
 			url:  "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Release{
+			want: &releases.Release{
 				URL:           "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
