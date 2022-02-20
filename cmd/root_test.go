@@ -11,7 +11,6 @@ func TestCmdRoot(t *testing.T) {
 	tests := []struct {
 		desc    string
 		app     App
-		param   CommandLineRootParam
 		wantErr bool
 	}{
 		{
@@ -27,7 +26,7 @@ func TestCmdRoot(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
-			assert.NoError(tt.app.CmdRoot(nil))
+			assert.NoError(tt.app.CmdRoot())
 		})
 	}
 }
