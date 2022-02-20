@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jiro4989/relma/prompt"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +57,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 	}
 
 	if !p.Yes {
-		if yes, err := PromptYesNo("upgrade? [yes/no]"); err != nil {
+		if yes, err := prompt.PromptYesNo("upgrade? [yes/no]"); err != nil {
 			return err
 		} else if !yes {
 			fmt.Println("upgrade was canceled")
