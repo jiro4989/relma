@@ -32,7 +32,9 @@ var commandUpgrade = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		commandLineUpgradeParam.OwnerRepo = args[0]
+		if 0 < len(args) {
+			commandLineUpgradeParam.OwnerRepo = args[0]
+		}
 		return a.CmdUpgrade(&commandLineUpgradeParam)
 	},
 }

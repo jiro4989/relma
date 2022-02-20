@@ -37,6 +37,9 @@ var commandInstall = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		if len(args) < 1 {
+			return errors.New("must be argument")
+		}
 		commandLineInstallParam.URL = args[0]
 		return a.CmdInstall(&commandLineInstallParam)
 	},
