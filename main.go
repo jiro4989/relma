@@ -9,6 +9,7 @@ var (
 )
 
 func main() {
+	cmd.Version = version
 	if err := cmd.Execute(); err != nil {
 		panic(err)
 	}

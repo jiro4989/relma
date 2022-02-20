@@ -6,10 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var Version = "dev"
+
 var rootCmd = &cobra.Command{
-	Use:   "r",
-	Short: "",
-	Long: ``,
+	Use:     "main",
+	Short:   "main",
+	Version: Version,
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }
