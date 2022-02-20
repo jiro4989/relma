@@ -1,14 +1,17 @@
+//go:build windows
 // +build windows
 
 package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/jiro4989/relma/downloader"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,6 +29,9 @@ func TestCmdInstall(t *testing.T) {
 			app: App{
 				Config: Config{
 					RelmaRoot: testOutputDir,
+				},
+				Downloader: &downloader.MockDownloader{
+					Body: nimjson1_2_6,
 				},
 			},
 			param: &CmdInstallParam{
@@ -53,6 +59,9 @@ func TestCmdInstall(t *testing.T) {
 			app: App{
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "cmd_install_test"),
+				},
+				Downloader: &downloader.MockDownloader{
+					Bodies: []string{nimjson1_2_6, monit},
 				},
 			},
 			param: &CmdInstallParam{
@@ -220,6 +229,7 @@ func TestParseURL(t *testing.T) {
 func TestDownloadFile(t *testing.T) {
 	tests := []struct {
 		desc     string
+		app      *App
 		url      string
 		destDir  string
 		destFile string
@@ -227,7 +237,12 @@ func TestDownloadFile(t *testing.T) {
 		wantErr  bool
 	}{
 		{
-			desc:     "ok: download file",
+			desc: "ok: download file",
+			app: &App{
+				Downloader: &downloader.MockDownloader{
+					Body: "testdata",
+				},
+			},
 			url:      "https://github.com/jiro4989",
 			destDir:  testOutputDir,
 			destFile: "out.html",
@@ -235,7 +250,13 @@ func TestDownloadFile(t *testing.T) {
 			wantErr:  false,
 		},
 		{
-			desc:     "ng: empty url",
+			desc: "ng: Download returns error",
+			app: &App{
+				Downloader: &downloader.MockDownloader{
+					Body: "testdata",
+					Err:  errors.New("error"),
+				},
+			},
 			url:      "",
 			destDir:  testOutputDir,
 			destFile: "out.html",
@@ -243,7 +264,40 @@ func TestDownloadFile(t *testing.T) {
 			wantErr:  true,
 		},
 		{
-			desc:     "ng: not exist directory",
+			desc: "ng: empty url",
+			app: &App{
+				Downloader: &downloader.MockDownloader{
+					Body: "testdata",
+					Err:  errors.New("error"),
+				},
+			},
+			url:      "",
+			destDir:  testOutputDir,
+			destFile: "out.html",
+			want:     "",
+			wantErr:  true,
+		},
+		{
+			desc: "ng: not exist directory",
+			app: &App{
+				Downloader: &downloader.MockDownloader{
+					Body: "testdata",
+				},
+			},
+			url:      "https://github.com/jiro4989",
+			destDir:  "foobar",
+			destFile: "out.html",
+			want:     "",
+			wantErr:  true,
+		},
+		{
+			desc: "ng: read error",
+			app: &App{
+				Downloader: &downloader.MockDownloader{
+					Body:    "testdata",
+					ReadErr: errors.New("error"),
+				},
+			},
 			url:      "https://github.com/jiro4989",
 			destDir:  "foobar",
 			destFile: "out.html",
@@ -254,7 +308,7 @@ func TestDownloadFile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {
 			assert := assert.New(t)
-			got, err := downloadFile(tt.url, tt.destDir, tt.destFile)
+			got, err := tt.app.downloadFile(tt.url, tt.destDir, tt.destFile)
 			if tt.wantErr {
 				assert.Error(err)
 				return

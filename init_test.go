@@ -9,7 +9,21 @@ import (
 var (
 	testDir       = filepath.Join(".", "testdata")
 	testOutputDir = filepath.Join(testDir, "out")
+	nimjson1_2_6  string
+	monit         string
+	binaryFile    string
 )
+
+func init() {
+	b, _ := os.ReadFile(testDir + "/nimjson_linux.tar.gz")
+	nimjson1_2_6 = string(b)
+
+	b, _ = os.ReadFile(testDir + "/monit_linux.tar.gz")
+	monit = string(b)
+
+	b, _ = os.ReadFile(testDir + "/bin")
+	binaryFile = string(b)
+}
 
 func TestMain(m *testing.M) {
 	testBefore()

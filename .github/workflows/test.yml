@@ -39,7 +39,7 @@ jobs:
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: amd64
-      - run: go test ${{ matrix.opts }}
+      - run: go test ${{ matrix.opts }} ./...
 
   lint:
     runs-on: ubuntu-latest

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -67,7 +66,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 		return err
 	}
 
-	assetFile, err := downloadFile(rel.URL, releasesDir, rel.AssetFileName)
+	assetFile, err := a.downloadFile(rel.URL, releasesDir, rel.AssetFileName)
 	if err != nil {
 		return err
 	}
@@ -198,8 +197,8 @@ func parseURL(s string) (*Release, error) {
 	return p, nil
 }
 
-func downloadFile(url, destDir, destFile string) (string, error) {
-	resp, err := http.Get(url)
+func (a *App) downloadFile(url, destDir, destFile string) (string, error) {
+	resp, err := a.Downloader.Download(url)
 	if err != nil {
 		return "", err
 	}
