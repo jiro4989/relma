@@ -6,12 +6,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Version = "dev"
+var version = "dev"
 
 var rootCmd = &cobra.Command{
 	Use:     "main",
 	Short:   "relma manages GitHub Releases versioning",
-	Version: Version,
+	Version: version,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},

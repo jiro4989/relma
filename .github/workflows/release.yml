@@ -9,8 +9,8 @@ env:
   app: relma
   package_desc: 'relma manages GitHub Releases versioning.'
   release_files: README.* LICENSE
-  goversion: '1.14'
-  build_opts: '-ldflags="-s -w -extldflags \"-static\" -X \"main.version=relma $(git describe --tags) (rev - $(git rev-parse HEAD))\""'
+  goversion: '1.16'
+  build_opts: '-ldflags="-s -w -extldflags \"-static\" -X \"github.com/jiro4989/relma/cmd.version=relma $(git describe --tags) (rev - $(git rev-parse HEAD))\""'
   maintainer: jiro
 
 jobs:
