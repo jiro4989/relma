@@ -7,6 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var testDir = filepath.Join("..", "/testdata")
+
 func TestIsArchiveFile(t *testing.T) {
 	tests := []struct {
 		desc string
