@@ -118,7 +118,7 @@ Run below:
 
 [source,bash]
 ----
-go get -u github.com/jiro4989/relma
+go install github.com/jiro4989/relma@latest
 ----
 
 Or, you can download and install from https://github.com/jiro4989/relma/releases[GitHub Releases].

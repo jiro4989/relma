@@ -129,7 +129,7 @@ Goコンパイラがインストールされているなら、以下のコマン
 
 [source,bash]
 ----
-go get -u github.com/jiro4989/relma
+go install github.com/jiro4989/relma@latest
 ----
 
 また、実行可能ファイルを https://github.com/jiro4989/relma/releases[GitHub Releases] からダウンロードできます。
