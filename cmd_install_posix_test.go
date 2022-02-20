@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jiro4989/relma/downloader"
+	"github.com/jiro4989/relma/external/downloader"
 	"github.com/stretchr/testify/assert"
 )
 

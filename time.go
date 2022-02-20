@@ -5,5 +5,5 @@ import (
 )
 
 func Sleep() {
-	time.Sleep(1*time.Second)
+	time.Sleep(1 * time.Second)
 }

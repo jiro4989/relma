@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/jiro4989/relma/thirdparty/github"
+	"github.com/jiro4989/relma/external/github"
 	"github.com/stretchr/testify/assert"
 )
 

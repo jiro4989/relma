@@ -1,3 +1,4 @@
+//go:build !windows
 // +build !windows
 
 package main
@@ -18,7 +19,7 @@ func TestCmdInit(t *testing.T) {
 	assert.NoError(err)
 
 	app := App{
-		UserHomeDir: p,
+		UserHomeDir:   p,
 		UserConfigDir: filepath.Join(p, ".config"),
 	}
 	err = app.CmdInit()

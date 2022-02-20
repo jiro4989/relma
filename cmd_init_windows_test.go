@@ -1,3 +1,4 @@
+//go:build windows
 // +build windows
 
 package main
@@ -19,7 +20,7 @@ func TestCmdInit(t *testing.T) {
 
 	conf := filepath.Join(p, "AppData", "Roaming")
 	app := App{
-		UserHomeDir: p,
+		UserHomeDir:   p,
 		UserConfigDir: conf,
 	}
 	err = app.CmdInit()
