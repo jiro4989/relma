@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jiro4989/relma/filetype"
 	"github.com/mholt/archiver/v3"
 	"github.com/spf13/cobra"
 )
@@ -103,7 +104,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 		return err
 	}
 
-	if ok, err := IsArchiveFile(assetFile); err != nil {
+	if ok, err := filetype.IsArchiveFile(assetFile); err != nil {
 		return err
 	} else if !ok {
 		// Download and create symlink if assetFile is not archive file and is
@@ -118,7 +119,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 			return err
 		}
 
-		if ok, err := IsExecutableFile(fi, assetFile); err != nil {
+		if ok, err := filetype.IsExecutableFile(fi, assetFile); err != nil {
 			return err
 		} else if !ok {
 			err = errors.New("github_releases_url file must be executable file or archive file")
@@ -322,7 +323,7 @@ func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, 
 }
 
 func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
-	isExec, err := IsExecutableFile(f, src)
+	isExec, err := filetype.IsExecutableFile(f, src)
 	if err != nil {
 		return nil, err
 	}
