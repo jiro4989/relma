@@ -1,18 +1,18 @@
-//go:build !windows
-// +build !windows
+//go:build windows
+// +build windows
 
-package main
+package cmd
 
 import (
 	"os"
 )
 
 func SetHome(path string) {
-	os.Setenv("HOME", path)
+	os.Setenv("USERPROFILE", path)
 }
 
 func SetHomeWithRecoverFunc(path string) func() {
-	const key = "HOME"
+	const key = "USERPROFILE"
 	orgHome := os.Getenv(key)
 	os.Setenv(key, path)
 	return func() {
@@ -21,5 +21,5 @@ func SetHomeWithRecoverFunc(path string) func() {
 }
 
 func SetConfigDir(path string) {
-	// nothing to do
+	os.Setenv("AppData", path)
 }

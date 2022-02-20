@@ -5,7 +5,30 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(commandUninstall)
+}
+
+var commandLineUninstallParam CommandLineUninstallParam
+
+var commandUninstall = &cobra.Command{
+	Use:   "uninstall",
+	Short: "uninstall GitHub Releases",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		a, err := NewApp()
+		if err != nil {
+			return err
+		}
+		c := CmdUninstallParam{
+			OwnerRepo: args[0],
+		}
+		return a.CmdUninstall(&c)
+	},
+}
 
 type CmdUninstallParam struct {
 	OwnerRepo string

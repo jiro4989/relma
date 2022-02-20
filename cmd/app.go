@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"encoding/json"
@@ -8,6 +8,10 @@ import (
 
 	"github.com/jiro4989/relma/external/downloader"
 	"github.com/jiro4989/relma/external/github"
+)
+
+const (
+	appName = "relma"
 )
 
 type App struct {

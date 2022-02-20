@@ -4,7 +4,30 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	commandUpgrade.Flags().BoolVarP(&commandLineUpgradeParam.Yes, "yes", "y", false, "yes")
+
+	rootCmd.AddCommand(commandUpgrade)
+}
+
+var commandLineUpgradeParam CmdUpgradeParam
+
+var commandUpgrade = &cobra.Command{
+	Use:   "upgrade",
+	Short: "upgrade installed GitHub Releases",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		a, err := NewApp()
+		if err != nil {
+			return err
+		}
+		commandLineUpgradeParam.OwnerRepo = args[0]
+		return a.CmdUpgrade(&commandLineUpgradeParam)
+	},
+}
 
 type CmdUpgradeParam struct {
 	OwnerRepo string

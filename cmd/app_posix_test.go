@@ -4,7 +4,7 @@
 //
 // ファイルパス以外に違いがないため windows テストは実施しない。
 
-package main
+package cmd
 
 import (
 	"os"

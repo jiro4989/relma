@@ -3,7 +3,30 @@ package cmd
 import (
 	"errors"
 	"fmt"
+
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	rootCmd.AddCommand(commandUpdate)
+}
+
+var commandLineUpdateParam CommandLineUpdateParam
+
+var commandUpdate = &cobra.Command{
+	Use:   "update",
+	Short: "update installed version infomation",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		a, err := NewApp()
+		if err != nil {
+			return err
+		}
+		c := CmdUpdateParam{
+			Releases: args,
+		}
+		return a.CmdUpdate(&c)
+	},
+}
 
 type CmdUpdateParam struct {
 	Releases []string

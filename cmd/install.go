@@ -11,7 +11,29 @@ import (
 	"strings"
 
 	"github.com/mholt/archiver/v3"
+	"github.com/spf13/cobra"
 )
+
+func init() {
+	commandInstall.Flags().StringVarP(&commandLineInstallParam.File, "file", "f", "", "install with releases.json")
+
+	rootCmd.AddCommand(commandInstall)
+}
+
+var commandLineInstallParam CmdInstallParam
+
+var commandInstall = &cobra.Command{
+	Use:   "install",
+	Short: "install GitHub Releases",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		a, err := NewApp()
+		if err != nil {
+			return err
+		}
+		commandLineInstallParam.URL = args[0]
+		return a.CmdInstall(&commandLineInstallParam)
+	},
+}
 
 type CmdInstallParam struct {
 	URL  string
