@@ -141,13 +141,13 @@ func TestParseURL(t *testing.T) {
 	tests := []struct {
 		desc    string
 		url     string
-		want    *Release
+		want    *releases.Release
 		wantErr bool
 	}{
 		{
 			desc: "ok: parsing",
 			url:  "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Release{
+			want: &releases.Release{
 				URL:           "https://github.com/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
@@ -160,7 +160,7 @@ func TestParseURL(t *testing.T) {
 		{
 			desc: "ok: GITHUB.COM",
 			url:  "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
-			want: &Release{
+			want: &releases.Release{
 				URL:           "https://GITHUB.COM/itchyny/mmv/releases/download/v0.1.2/mmv_v0.1.2_linux_amd64.tar.gz",
 				Owner:         "itchyny",
 				Repo:          "mmv",
