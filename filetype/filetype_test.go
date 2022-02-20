@@ -1,4 +1,4 @@
-package cmd
+package filetype
 
 import (
 	"path/filepath"

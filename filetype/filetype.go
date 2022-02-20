@@ -1,11 +1,11 @@
-package cmd
+package filetype
 
 import (
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/h2non/filetype"
+	ft "github.com/h2non/filetype"
 )
 
 // IsExecutableFile returns true if `f` is executable.
@@ -25,7 +25,7 @@ func IsExecutableFile(f os.FileInfo, path string) (bool, error) {
 		return true, nil
 	}
 
-	typ, err := filetype.MatchFile(path)
+	typ, err := ft.MatchFile(path)
 	if err != nil {
 		return false, err
 	}
@@ -39,7 +39,7 @@ func IsExecutableFile(f os.FileInfo, path string) (bool, error) {
 
 // IsArchiveFile returns true if `f` is archive file (zip or gz).
 func IsArchiveFile(path string) (bool, error) {
-	typ, err := filetype.MatchFile(path)
+	typ, err := ft.MatchFile(path)
 	if err != nil {
 		return false, err
 	}
