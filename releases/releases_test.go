@@ -1,4 +1,4 @@
-package cmd
+package releases
 
 import (
 	"testing"
