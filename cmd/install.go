@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/jiro4989/relma/filetype"
+	"github.com/jiro4989/relma/lock"
 	"github.com/jiro4989/relma/releases"
 	"github.com/mholt/archiver/v3"
 	"github.com/spf13/cobra"
@@ -39,12 +40,14 @@ var commandInstall = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		a, err := NewApp()
-		if err != nil {
-			return err
-		}
-		commandLineInstallParam.URL = args[0]
-		return a.CmdInstall(&commandLineInstallParam)
+		return lock.TransactionLock(func() error {
+			a, err := NewApp()
+			if err != nil {
+				return err
+			}
+			commandLineInstallParam.URL = args[0]
+			return a.CmdInstall(&commandLineInstallParam)
+		})
 	},
 }
 

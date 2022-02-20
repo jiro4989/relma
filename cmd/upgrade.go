@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jiro4989/relma/lock"
 	"github.com/jiro4989/relma/prompt"
 	"github.com/jiro4989/relma/releases"
 	"github.com/spf13/cobra"
@@ -28,14 +29,16 @@ var commandUpgrade = &cobra.Command{
 	Use:   "upgrade",
 	Short: "upgrade installed GitHub Releases",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		a, err := NewApp()
-		if err != nil {
-			return err
-		}
-		if 0 < len(args) {
-			commandLineUpgradeParam.OwnerRepo = args[0]
-		}
-		return a.CmdUpgrade(&commandLineUpgradeParam)
+		return lock.TransactionLock(func() error {
+			a, err := NewApp()
+			if err != nil {
+				return err
+			}
+			if 0 < len(args) {
+				commandLineUpgradeParam.OwnerRepo = args[0]
+			}
+			return a.CmdUpgrade(&commandLineUpgradeParam)
+		})
 	},
 }
 
