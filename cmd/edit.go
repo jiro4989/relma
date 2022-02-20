@@ -16,8 +16,8 @@ func init() {
 var commandLineEditParam CommandLineEditParam
 
 var commandEdit = &cobra.Command{
-	Use:   "list",
-	Short: "print installed GitHub Releases infomation",
+	Use:   "edit",
+	Short: "edit config file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		a, err := NewApp()
 		if err != nil {
