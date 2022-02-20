@@ -8,7 +8,7 @@ import (
 )
 
 type CommandLineUpdateParam struct {
-	Releases []string `docopt:"<releases>"`
+	Releases []string
 }
 
 func init() {

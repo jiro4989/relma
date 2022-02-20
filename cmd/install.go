@@ -23,8 +23,8 @@ func init() {
 }
 
 type CommandLineInstallParam struct {
-	GitHubReleaseURL string `docopt:"<github_release_url>"`
-	File             string `docopt:"-f,--file"`
+	GitHubReleaseURL string
+	File             string
 }
 
 var commandLineInstallParam CmdInstallParam

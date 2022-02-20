@@ -12,8 +12,8 @@ import (
 
 type CommandLineUpgradeParam struct {
 	Upgrade   bool
-	Yes       bool   `docopt:"-y,--yes"`
-	OwnerRepo string `docopt:"<owner/repo>"`
+	Yes       bool
+	OwnerRepo string
 }
 
 func init() {

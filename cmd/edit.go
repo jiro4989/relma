@@ -14,7 +14,7 @@ func init() {
 }
 
 type CommandLineEditParam struct {
-	Editor string `docopt:"-e,--editor"`
+	Editor string
 }
 
 var commandLineEditParam CommandLineEditParam

@@ -11,7 +11,7 @@ import (
 )
 
 type CommandLineUninstallParam struct {
-	OwnerRepo string `docopt:"<owner/repo>"`
+	OwnerRepo string
 }
 
 func init() {
