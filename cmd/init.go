@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jiro4989/relma/logger"
 	"github.com/spf13/cobra"
 )
+
+var Error = logger.Error
 
 func init() {
 	rootCmd.AddCommand(commandInit)
