@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/jiro4989/relma/external/downloader"
+	"github.com/jiro4989/relma/releases"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +21,7 @@ func TestCmdInstall(t *testing.T) {
 		desc      string
 		app       App
 		param     *CmdInstallParam
-		want      Releases
+		want      releases.Releases
 		wantCount int
 		wantErr   bool
 	}{
@@ -37,14 +38,14 @@ func TestCmdInstall(t *testing.T) {
 			param: &CmdInstallParam{
 				URL: "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.6/nimjson_linux.tar.gz",
 					Owner:         "jiro4989",
 					Repo:          "nimjson",
 					Version:       "v1.2.6",
 					AssetFileName: "nimjson_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
@@ -67,14 +68,14 @@ func TestCmdInstall(t *testing.T) {
 			param: &CmdInstallParam{
 				File: filepath.Join(testDir, "cmd_install_releases.json"),
 			},
-			want: Releases{
+			want: releases.Releases{
 				{
 					URL:           "https://github.com/jiro4989/nimjson/releases/download/v1.2.8/nimjson_linux.tar.gz",
 					Owner:         "jiro4989",
 					Repo:          "nimjson",
 					Version:       "v1.2.8",
 					AssetFileName: "nimjson_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "nimjson"),
 							Dest: "nimjson",
@@ -87,7 +88,7 @@ func TestCmdInstall(t *testing.T) {
 					Repo:          "monit",
 					Version:       "1.1.0",
 					AssetFileName: "monit_linux.tar.gz",
-					InstalledFiles: InstalledFiles{
+					InstalledFiles: releases.InstalledFiles{
 						{
 							Src:  filepath.Join("bin", "monit"),
 							Dest: "monit",
@@ -118,7 +119,7 @@ func TestCmdInstall(t *testing.T) {
 			b, err := ioutil.ReadFile(p)
 			assert.NoError(err)
 
-			var rels Releases
+			var rels releases.Releases
 			err = json.Unmarshal(b, &rels)
 			assert.NoError(err)
 			assert.Equal(len(tt.want), len(rels))
