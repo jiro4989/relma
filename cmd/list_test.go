@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/jiro4989/relma/releases"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -14,8 +15,7 @@ func TestCmdList(t *testing.T) {
 	tests := []struct {
 		desc    string
 		app     App
-		rels    Releases
-		param   CommandLineListParam
+		rels    releases.Releases
 		wantErr bool
 	}{
 		{
@@ -25,7 +25,7 @@ func TestCmdList(t *testing.T) {
 					RelmaRoot: filepath.Join(testOutputDir, "test_cmd_list_1"),
 				},
 			},
-			rels: Releases{
+			rels: releases.Releases{
 				{
 					Owner:   "jiro4989",
 					Repo:    "nimjson",
@@ -49,7 +49,7 @@ func TestCmdList(t *testing.T) {
 			err = ioutil.WriteFile(f, b, os.ModePerm)
 			assert.NoError(err)
 
-			err = tt.app.CmdList(nil)
+			err = tt.app.CmdList()
 			if tt.wantErr {
 				assert.Error(err)
 				return
