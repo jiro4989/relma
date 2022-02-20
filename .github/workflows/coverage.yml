@@ -1,6 +1,12 @@
 name: coverage
 
 on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'LICENSE'
+      - 'README*'
   pull_request:
     paths:
       - '**.go'
