@@ -15,23 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	nimjson1_2_6 string
-)
-
 func TestCmdInstall(t *testing.T) {
-	b, err := os.ReadFile(testDir + "/nimjson_linux.tar.gz")
-	assert.NoError(t, err)
-	nimjson1_2_6 = string(b)
-
-	b, err = os.ReadFile(testDir + "/monit_linux.tar.gz")
-	assert.NoError(t, err)
-	monit := string(b)
-
-	b, err = os.ReadFile(testDir + "/bin")
-	assert.NoError(t, err)
-	binaryFile := string(b)
-
 	tests := []struct {
 		desc      string
 		app       App
