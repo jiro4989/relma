@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/jiro4989/relma/logger"
 	"github.com/spf13/cobra"
@@ -59,4 +60,8 @@ func (a *App) CmdInit() error {
 	fmt.Println("initialize successful")
 
 	return nil
+}
+
+func Sleep() {
+	time.Sleep(1 * time.Second)
 }
