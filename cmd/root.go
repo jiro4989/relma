@@ -10,7 +10,7 @@ var Version = "dev"
 
 var rootCmd = &cobra.Command{
 	Use:     "main",
-	Short:   "main",
+	Short:   "relma manages GitHub Releases versioning",
 	Version: Version,
 	Run: func(cmd *cobra.Command, args []string) {
 	},
