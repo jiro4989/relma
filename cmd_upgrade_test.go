@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/jiro4989/relma/downloader"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,6 +52,9 @@ func TestCmdUpgrade(t *testing.T) {
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_1"),
 				},
+				Downloader: &downloader.MockDownloader{
+					Body: nimjson1_2_6,
+				},
 			},
 			rels: validReleases,
 			param: &CmdUpgradeParam{
@@ -63,6 +67,9 @@ func TestCmdUpgrade(t *testing.T) {
 			app: App{
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_2"),
+				},
+				Downloader: &downloader.MockDownloader{
+					Body: nimjson1_2_6,
 				},
 			},
 			rels: validReleases,
@@ -78,6 +85,9 @@ func TestCmdUpgrade(t *testing.T) {
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_3"),
 				},
+				Downloader: &downloader.MockDownloader{
+					Body: nimjson1_2_6,
+				},
 			},
 			rels: invalidReleases,
 			param: &CmdUpgradeParam{
@@ -91,6 +101,9 @@ func TestCmdUpgrade(t *testing.T) {
 			app: App{
 				Config: Config{
 					RelmaRoot: filepath.Join(testOutputDir, "cmd_upgrade_4"),
+				},
+				Downloader: &downloader.MockDownloader{
+					Body: nimjson1_2_6,
 				},
 			},
 			rels: invalidReleases2,
