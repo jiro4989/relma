@@ -1,4 +1,6 @@
+//go:build !windows
 // +build !windows
+
 //
 // ファイルパス以外に違いがないため windows テストは実施しない。
 
@@ -74,14 +76,14 @@ func TestCreateConfigDir(t *testing.T) {
 	}{
 		{
 			desc:    "ok: create config directory",
-			home: testOutputDir,
+			home:    testOutputDir,
 			conf:    filepath.Join(testOutputDir, ".config"),
 			want:    filepath.Join(testOutputDir, ".config", appName),
 			wantErr: false,
 		},
 		{
 			desc:    "ok: config directory was existed",
-			home: testOutputDir,
+			home:    testOutputDir,
 			conf:    filepath.Join(testOutputDir, ".config"),
 			want:    filepath.Join(testOutputDir, ".config", appName),
 			wantErr: false,
@@ -92,7 +94,7 @@ func TestCreateConfigDir(t *testing.T) {
 			assert := assert.New(t)
 
 			a := App{
-				UserHomeDir: tt.home,
+				UserHomeDir:   tt.home,
 				UserConfigDir: tt.conf,
 			}
 			got, err := a.CreateConfigDir()
@@ -123,7 +125,7 @@ func TestConfigFile(t *testing.T) {
 			assert := assert.New(t)
 
 			a := App{
-				UserHomeDir: tt.home,
+				UserHomeDir:   tt.home,
 				UserConfigDir: tt.conf,
 			}
 			got := a.ConfigFile()
@@ -140,7 +142,7 @@ func TestCreateConfigFile(t *testing.T) {
 	tests := []struct {
 		desc    string
 		home    string
-		conf string
+		conf    string
 		config  Config
 		want    string
 		wantErr bool
@@ -171,7 +173,7 @@ func TestCreateConfigFile(t *testing.T) {
 			assert := assert.New(t)
 
 			a := App{
-				UserHomeDir: tt.home,
+				UserHomeDir:   tt.home,
 				UserConfigDir: tt.conf,
 			}
 			got, err := a.CreateConfigFile(tt.config)
