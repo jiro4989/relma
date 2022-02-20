@@ -66,4 +66,5 @@ func TestTransactionLock(t *testing.T) {
 	_, err = os.Stat(lockDir)
 	assert.False(os.IsNotExist(err), "ok: a lock directory was existed")
 	assert.NoError(Unlock(), "ok: successful unlock")
+	assert.NoError(Unlock(), "ok: no error")
 }

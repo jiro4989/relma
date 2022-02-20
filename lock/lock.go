@@ -19,6 +19,10 @@ func unlock(dir string) error {
 }
 
 func Unlock() error {
+	_, err := os.Stat(lockDir)
+	if os.IsNotExist(err) {
+		return nil
+	}
 	return unlock(lockDir)
 }
 
