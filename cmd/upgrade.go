@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/jiro4989/relma/prompt"
+	"github.com/jiro4989/relma/releases"
 	"github.com/spf13/cobra"
 )
 
@@ -50,7 +51,7 @@ func (a *App) CmdUpgrade(p *CmdUpgradeParam) error {
 	return a.cmdUpgrade(rels, p)
 }
 
-func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
+func (a *App) cmdUpgrade(rels releases.Releases, p *CmdUpgradeParam) error {
 	rels, err := searchReleaseOrDefault(rels, p.OwnerRepo)
 	if err != nil {
 		return err
@@ -85,7 +86,7 @@ func (a *App) cmdUpgrade(rels Releases, p *CmdUpgradeParam) error {
 	return nil
 }
 
-func searchReleaseOrDefault(rels Releases, ownerRepo string) (Releases, error) {
+func searchReleaseOrDefault(rels releases.Releases, ownerRepo string) (releases.Releases, error) {
 	if len(rels) < 1 {
 		return nil, errors.New("installed releases don't exist")
 	}
@@ -105,8 +106,8 @@ func searchReleaseOrDefault(rels Releases, ownerRepo string) (Releases, error) {
 	return rels, nil
 }
 
-func searchRelease(rels Releases, ownerRepo string) (Releases, error) {
-	var retRels Releases
+func searchRelease(rels releases.Releases, ownerRepo string) (releases.Releases, error) {
+	var retRels releases.Releases
 	for _, rel := range rels {
 		if ok, err := rel.EqualRepo(ownerRepo); err != nil {
 			return nil, err
@@ -119,8 +120,8 @@ func searchRelease(rels Releases, ownerRepo string) (Releases, error) {
 	return nil, nil
 }
 
-func upgradableReleases(rels Releases) Releases {
-	var upgradables Releases
+func upgradableReleases(rels releases.Releases) releases.Releases {
+	var upgradables releases.Releases
 	for _, rel := range rels {
 		if rel.Version == rel.LatestVersion {
 			continue

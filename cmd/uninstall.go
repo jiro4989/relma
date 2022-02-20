@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/jiro4989/relma/releases"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +55,7 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 		return err
 	}
 
-	rels = RemoveRelease(rels, rel)
+	rels = releases.RemoveRelease(rels, rel)
 	err = a.SaveReleases(rels)
 	if err != nil {
 		return err
@@ -65,8 +66,8 @@ func (a *App) CmdUninstall(p *CmdUninstallParam) error {
 	return nil
 }
 
-func uninstallableRelease(rels Releases, ownerRepo string) (*Release, error) {
-	var rel *Release
+func uninstallableRelease(rels releases.Releases, ownerRepo string) (*releases.Release, error) {
+	var rel *releases.Release
 	for _, r := range rels {
 		if ok, err := r.EqualRepo(ownerRepo); err != nil {
 			return nil, err
@@ -82,7 +83,7 @@ func uninstallableRelease(rels Releases, ownerRepo string) (*Release, error) {
 	return rel, nil
 }
 
-func (a *App) uninstallRelease(rel *Release, p *CmdUninstallParam) ([]string, error) {
+func (a *App) uninstallRelease(rel *releases.Release, p *CmdUninstallParam) ([]string, error) {
 	var removedFiles []string
 	releaseDir := filepath.Join(a.Config.ReleasesDir(), rel.Owner, rel.Repo)
 	err := os.RemoveAll(releaseDir)

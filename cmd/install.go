@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/jiro4989/relma/filetype"
+	"github.com/jiro4989/relma/releases"
 	"github.com/mholt/archiver/v3"
 	"github.com/spf13/cobra"
 )
@@ -138,7 +139,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 		if err != nil {
 			return err
 		}
-		rel.InstalledFiles = InstalledFiles{*ff}
+		rel.InstalledFiles = releases.InstalledFiles{*ff}
 		rel.InstalledFiles.FixPath(filepath.Dir(assetFile), binDir)
 
 		rels, err := a.Config.ReadReleasesFile()
@@ -190,7 +191,7 @@ func (a *App) CmdInstall(p *CmdInstallParam) error {
 	return nil
 }
 
-func parseURL(s string) (*Release, error) {
+func parseURL(s string) (*releases.Release, error) {
 	u, err := url.Parse(s)
 	if err != nil {
 		return nil, err
@@ -213,7 +214,7 @@ func parseURL(s string) (*Release, error) {
 		return nil, errors.New("illegal install URL")
 	}
 
-	p := &Release{
+	p := &releases.Release{
 		URL:           s,
 		Owner:         owner,
 		Repo:          repo,
@@ -247,7 +248,7 @@ func (a *App) downloadFile(url, destDir, destFile string) (string, error) {
 	return destPath, nil
 }
 
-func installFiles(srcDir, destDir string) (InstalledFiles, error) {
+func installFiles(srcDir, destDir string) (releases.InstalledFiles, error) {
 	df, err := os.Stat(destDir)
 	if os.IsNotExist(err) {
 		return nil, err
@@ -292,13 +293,13 @@ func installFiles(srcDir, destDir string) (InstalledFiles, error) {
 	return ifs, nil
 }
 
-func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, error) {
+func linkExecutableFilesToDest(srcDir, destDir string) (releases.InstalledFiles, string, error) {
 	files, err := ioutil.ReadDir(srcDir)
 	if err != nil {
 		return nil, "", err
 	}
 
-	var ifs InstalledFiles
+	var ifs releases.InstalledFiles
 	var binDir string
 	for _, f := range files {
 		name := f.Name()
@@ -322,7 +323,7 @@ func linkExecutableFilesToDest(srcDir, destDir string) (InstalledFiles, string, 
 	return ifs, binDir, nil
 }
 
-func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, error) {
+func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*releases.InstalledFile, error) {
 	isExec, err := filetype.IsExecutableFile(f, src)
 	if err != nil {
 		return nil, err
@@ -343,14 +344,14 @@ func linkExecutableFileToDest(f os.FileInfo, src, dest string) (*InstalledFile, 
 	if err := os.Symlink(src, dest); err != nil {
 		return nil, err
 	}
-	ff := InstalledFile{
+	ff := releases.InstalledFile{
 		Src:  src,
 		Dest: dest,
 	}
 	return &ff, nil
 }
 
-func existsRepo(rels Releases, rel Release) (bool, int) {
+func existsRepo(rels releases.Releases, rel releases.Release) (bool, int) {
 	for i, r := range rels {
 		if !r.EqualRelease(&rel) {
 			continue

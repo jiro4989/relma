@@ -8,6 +8,7 @@ import (
 
 	"github.com/jiro4989/relma/external/downloader"
 	"github.com/jiro4989/relma/external/github"
+	"github.com/jiro4989/relma/releases"
 )
 
 const (
@@ -54,7 +55,7 @@ func (a *App) SetUserEnv() error {
 	return nil
 }
 
-func (a *App) SaveReleases(rels Releases) error {
+func (a *App) SaveReleases(rels releases.Releases) error {
 	b, err := json.MarshalIndent(&rels, "", "  ")
 	if err != nil {
 		return err
@@ -148,12 +149,12 @@ func (c *Config) BinDir() string {
 	return filepath.Join(c.RelmaRoot, "bin")
 }
 
-func (c *Config) ReadReleasesFile() (Releases, error) {
+func (c *Config) ReadReleasesFile() (releases.Releases, error) {
 	return ReadReleasesFile(c.ReleasesFile())
 }
 
-func ReadReleasesFile(path string) (Releases, error) {
-	var rels Releases
+func ReadReleasesFile(path string) (releases.Releases, error) {
+	var rels releases.Releases
 	_, err := os.Stat(path)
 	if !os.IsNotExist(err) {
 		b, err := ioutil.ReadFile(path)
