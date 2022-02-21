@@ -128,6 +128,11 @@ func searchRelease(rels releases.Releases, ownerRepo string) (releases.Releases,
 func upgradableReleases(rels releases.Releases) releases.Releases {
 	var upgradables releases.Releases
 	for _, rel := range rels {
+		if rel.Locked {
+			fmt.Println(rel.FormatSimpleInformation() + " -> locked")
+			continue
+		}
+
 		if rel.Version == rel.LatestVersion {
 			continue
 		}
