@@ -62,7 +62,7 @@ func (a *App) cmdUpgrade(rels releases.Releases, p *CmdUpgradeParam) error {
 		return err
 	}
 
-	targets := upgradableReleases(rels)
+	targets := rels.UpgradableReleases()
 	if len(targets) < 1 {
 		fmt.Println("no upgradable releases")
 		return nil
@@ -123,21 +123,4 @@ func searchRelease(rels releases.Releases, ownerRepo string) (releases.Releases,
 		return retRels, nil
 	}
 	return nil, nil
-}
-
-func upgradableReleases(rels releases.Releases) releases.Releases {
-	var upgradables releases.Releases
-	for _, rel := range rels {
-		if rel.Locked {
-			fmt.Println(rel.FormatSimpleInformation() + " -> locked")
-			continue
-		}
-
-		if rel.Version == rel.LatestVersion {
-			continue
-		}
-		upgradables = append(upgradables, rel)
-		fmt.Println(rel.FormatVersion() + " -> " + rel.LatestVersion)
-	}
-	return upgradables
 }

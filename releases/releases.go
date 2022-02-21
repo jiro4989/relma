@@ -88,6 +88,26 @@ func (r Releases) Lock(ownerRepo string, lock bool) error {
 	return nil
 }
 
+// UpgradableReleases はアップグレード可能なリリースを返す。
+//
+// 新規Releasesを返却するため、副作用はない。
+func (r Releases) UpgradableReleases() Releases {
+	var upgradables Releases
+	for _, rel := range r {
+		if rel.Locked {
+			fmt.Println(rel.FormatSimpleInformation() + " -> locked")
+			continue
+		}
+
+		if rel.Version == rel.LatestVersion {
+			continue
+		}
+		upgradables = append(upgradables, rel)
+		fmt.Println(rel.FormatVersion() + " -> " + rel.LatestVersion)
+	}
+	return upgradables
+}
+
 func (files InstalledFiles) FixPath(srcDir, destDir string) {
 	for i := 0; i < len(files); i++ {
 		file := &files[i]
