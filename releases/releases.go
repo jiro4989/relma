@@ -14,6 +14,7 @@ type Release struct {
 	LatestVersion  string
 	AssetFileName  string
 	InstalledFiles InstalledFiles
+	Locked         bool
 }
 
 type Releases []Release
@@ -63,6 +64,28 @@ func (r *Release) EqualRepo(ownerRepo string) (bool, error) {
 func (r *Release) EqualRelease(r2 *Release) bool {
 	ok := strings.EqualFold(r.Owner, r2.Owner) && strings.EqualFold(r.Repo, r2.Repo)
 	return ok
+}
+
+// Lock は特定のリリースをバージョンロックする。
+// 副作用を伴う。
+func (r Releases) Lock(ownerRepo string, lock bool) error {
+	found := false
+	for i := 0; i < len(r); i++ {
+		rel := &r[i] // for override 'Locked'
+		if ok, err := rel.EqualRepo(ownerRepo); err != nil {
+			return err
+		} else if !ok {
+			continue
+		}
+
+		rel.Locked = lock
+		found = true
+		break
+	}
+	if !found {
+		return fmt.Errorf("'%s' was not found. see your releases with 'relma list'", ownerRepo)
+	}
+	return nil
 }
 
 func (files InstalledFiles) FixPath(srcDir, destDir string) {
