@@ -281,3 +281,102 @@ func TestRelease_EqualRelease(t *testing.T) {
 		})
 	}
 }
+
+func TestRelease_Lock(t *testing.T) {
+	tests := []struct {
+		desc      string
+		r         Releases
+		ownerRepo string
+		lock      bool
+		want      Releases
+		wantErr   bool
+	}{
+		{
+			desc: "ok: lock is true when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/nimjson",
+			lock:      true,
+			want: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: true,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: lock is false when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: true,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi2",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/nimjson",
+			lock:      false,
+			want: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi2",
+					Locked: false,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: lock is false when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/sushi",
+			lock:      true,
+			want:      Releases{},
+			wantErr:   true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			err := tt.r.Lock(tt.ownerRepo, tt.lock)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.Equal(tt.want, tt.r)
+			assert.NoError(err)
+		})
+	}
+}
