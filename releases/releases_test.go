@@ -281,3 +281,187 @@ func TestRelease_EqualRelease(t *testing.T) {
 		})
 	}
 }
+
+func TestRelease_Lock(t *testing.T) {
+	tests := []struct {
+		desc      string
+		r         Releases
+		ownerRepo string
+		lock      bool
+		want      Releases
+		wantErr   bool
+	}{
+		{
+			desc: "ok: lock is true when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/nimjson",
+			lock:      true,
+			want: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: true,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: lock is false when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: true,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi2",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/nimjson",
+			lock:      false,
+			want: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+				{
+					Owner:  "jiro4989",
+					Repo:   "sushi2",
+					Locked: false,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			desc: "ok: lock is false when matched release owner/repo",
+			r: Releases{
+				{
+					Owner:  "jiro4989",
+					Repo:   "nimjson",
+					Locked: false,
+				},
+			},
+			ownerRepo: "jiro4989/sushi",
+			lock:      true,
+			want:      Releases{},
+			wantErr:   true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			err := tt.r.Lock(tt.ownerRepo, tt.lock)
+			if tt.wantErr {
+				assert.Error(err)
+				return
+			}
+			assert.Equal(tt.want, tt.r)
+			assert.NoError(err)
+		})
+	}
+}
+
+func TestReleases_UpgradableReleases(t *testing.T) {
+	tests := []struct {
+		desc string
+		rels Releases
+		want Releases
+	}{
+		{
+			desc: "ok: found upgradable releases",
+			rels: Releases{
+				{
+					Owner:         "Jiro4989",
+					Repo:          "textimg",
+					Version:       "v1.0.0",
+					LatestVersion: "v1.1.0",
+					Locked:        false,
+				},
+				{
+					Owner:         "Jiro4989",
+					Repo:          "monit",
+					Version:       "v0.1.0",
+					LatestVersion: "v0.1.0",
+					Locked:        false,
+				},
+			},
+			want: Releases{
+				{
+					Owner:         "Jiro4989",
+					Repo:          "textimg",
+					Version:       "v1.0.0",
+					LatestVersion: "v1.1.0",
+					Locked:        false,
+				},
+			},
+		},
+		{
+			desc: "ok: releases were locked",
+			rels: Releases{
+				{
+					Owner:         "Jiro4989",
+					Repo:          "textimg",
+					Version:       "v1.0.0",
+					LatestVersion: "v1.1.0",
+					Locked:        true,
+				},
+				{
+					Owner:         "Jiro4989",
+					Repo:          "monit",
+					Version:       "v0.1.0",
+					LatestVersion: "v0.1.0",
+					Locked:        false,
+				},
+			},
+			want: nil,
+		},
+		{
+			desc: "ok: not found upgradable releases",
+			rels: Releases{
+				{
+					Owner:         "Jiro4989",
+					Repo:          "textimg",
+					Version:       "v1.0.0",
+					LatestVersion: "v1.0.0",
+					Locked:        false,
+				},
+				{
+					Owner:         "Jiro4989",
+					Repo:          "monit",
+					Version:       "v0.1.0",
+					LatestVersion: "v0.1.0",
+					Locked:        false,
+				},
+			},
+			want: nil,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.desc, func(t *testing.T) {
+			assert := assert.New(t)
+
+			got := tt.rels.UpgradableReleases()
+			assert.Equal(tt.want, got)
+		})
+	}
+}
