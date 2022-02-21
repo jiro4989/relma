@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/jiro4989/relma/lock"
 	"github.com/spf13/cobra"
 )
 
@@ -21,14 +22,16 @@ var commandUpdate = &cobra.Command{
 	Use:   "update",
 	Short: "update installed version infomation",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		a, err := NewApp()
-		if err != nil {
-			return err
-		}
-		c := CmdUpdateParam{
-			Releases: args,
-		}
-		return a.CmdUpdate(&c)
+		return lock.TransactionLock(func() error {
+			a, err := NewApp()
+			if err != nil {
+				return err
+			}
+			c := CmdUpdateParam{
+				Releases: args,
+			}
+			return a.CmdUpdate(&c)
+		})
 	},
 }
 
