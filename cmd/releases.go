@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jiro4989/relma/lock"
+	"github.com/jiro4989/relma/releases"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +38,8 @@ var commandReleasesLock = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			return a.cmdReleasesLockUnlock(args[0], true, "lock")
+			_, err = a.cmdReleasesLockUnlock(args[0], true, "lock")
+			return err
 		})
 	},
 }
@@ -57,27 +59,28 @@ var commandReleasesUnlock = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			return a.cmdReleasesLockUnlock(args[0], false, "unlock")
+			_, err = a.cmdReleasesLockUnlock(args[0], false, "unlock")
+			return err
 		})
 	},
 }
 
-func (a *App) cmdReleasesLockUnlock(ownerRepo string, lock bool, ops string) error {
+func (a *App) cmdReleasesLockUnlock(ownerRepo string, lock bool, ops string) (releases.Releases, error) {
 	rels, err := a.Config.ReadReleasesFile()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := rels.Lock(ownerRepo, lock); err != nil {
-		return err
+		return nil, err
 	}
 
 	if err := a.SaveReleases(rels); err != nil {
-		return err
+		return nil, err
 	}
 
 	msg := fmt.Sprintf("%sed '%s'", ops, ownerRepo)
 	fmt.Println(msg)
 
-	return nil
+	return rels, nil
 }
