@@ -27,7 +27,7 @@ func init() {
 
 var commandRoot = &cobra.Command{
 	Use:   "root",
-	Short: "print relma root directory",
+	Short: "Print relma root directory",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		a, err := NewApp()
 		if err != nil {

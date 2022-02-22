@@ -27,7 +27,7 @@ var commandLineUpgradeParam CmdUpgradeParam
 
 var commandUpgrade = &cobra.Command{
 	Use:   "upgrade",
-	Short: "upgrade installed GitHub Releases",
+	Short: "Upgrade installed GitHub Releases",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return lock.TransactionLock(func() error {
 			a, err := NewApp()

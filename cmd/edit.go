@@ -21,7 +21,7 @@ var commandLineEditParam CommandLineEditParam
 
 var commandEdit = &cobra.Command{
 	Use:   "edit",
-	Short: "edit config file",
+	Short: "Edit config file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		a, err := NewApp()
 		if err != nil {
