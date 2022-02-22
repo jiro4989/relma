@@ -17,7 +17,7 @@ func init() {
 
 var commandInit = &cobra.Command{
 	Use:   "init",
-	Short: "print installed GitHub Releases infomation",
+	Short: "Setup relma environment",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		a, err := NewApp()
 		if err != nil {

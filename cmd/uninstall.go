@@ -22,7 +22,7 @@ var commandLineUninstallParam CommandLineUninstallParam
 
 var commandUninstall = &cobra.Command{
 	Use:   "uninstall",
-	Short: "uninstall GitHub Releases",
+	Short: "Uninstall GitHub Releases",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		a, err := NewApp()
 		if err != nil {

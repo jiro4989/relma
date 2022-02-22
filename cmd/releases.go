@@ -17,7 +17,7 @@ func init() {
 
 var commandReleases = &cobra.Command{
 	Use:   "releases",
-	Short: "lock or unlock releases",
+	Short: "Lock or unlock releases",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
@@ -25,7 +25,7 @@ var commandReleases = &cobra.Command{
 
 var commandReleasesLock = &cobra.Command{
 	Use:   "lock",
-	Short: "lock specific version",
+	Short: "Lock specific version",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("requires a <owner/repo>")
@@ -46,7 +46,7 @@ var commandReleasesLock = &cobra.Command{
 
 var commandReleasesUnlock = &cobra.Command{
 	Use:   "unlock",
-	Short: "unlock specific version",
+	Short: "Unlock specific version",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("requires a <owner/repo>")

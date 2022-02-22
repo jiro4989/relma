@@ -20,7 +20,7 @@ var commandLineUpdateParam CommandLineUpdateParam
 
 var commandUpdate = &cobra.Command{
 	Use:   "update",
-	Short: "update installed version infomation",
+	Short: "Update installed version infomation",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return lock.TransactionLock(func() error {
 			a, err := NewApp()

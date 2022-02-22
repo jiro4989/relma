@@ -32,7 +32,7 @@ var commandLineInstallParam CmdInstallParam
 
 var commandInstall = &cobra.Command{
 	Use:   "install",
-	Short: "install GitHub Releases",
+	Short: "Install GitHub Releases",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("requires a github_releases_url")

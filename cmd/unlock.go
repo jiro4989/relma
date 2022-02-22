@@ -13,7 +13,7 @@ func init() {
 
 var commandUnlock = &cobra.Command{
 	Use:   "unlock",
-	Short: "unlock a lock file",
+	Short: "Unlock a lock file",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := lock.Unlock(); err != nil {
 			return err
