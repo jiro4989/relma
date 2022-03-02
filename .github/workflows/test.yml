@@ -35,7 +35,7 @@ jobs:
             runs-on: macOS-latest
             opts: -cover
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v2
         with:
           go-version: ${{ env.go-version }}
@@ -48,7 +48,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: golangci/golangci-lint-action@v2
         with:
           version: v1.31
