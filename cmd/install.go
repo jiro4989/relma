@@ -34,8 +34,8 @@ var commandInstall = &cobra.Command{
 	Use:   "install",
 	Short: "Install GitHub Releases",
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) < 1 {
-			return errors.New("requires a github_releases_url")
+		if len(args) < 1 && commandLineInstallParam.File == "" {
+			return errors.New("requires a github_releases_url or releases file")
 		}
 		return nil
 	},
@@ -45,7 +45,9 @@ var commandInstall = &cobra.Command{
 			if err != nil {
 				return err
 			}
-			commandLineInstallParam.URL = args[0]
+			if 0 < len(args) {
+				commandLineInstallParam.URL = args[0]
+			}
 			return a.CmdInstall(&commandLineInstallParam)
 		})
 	},
