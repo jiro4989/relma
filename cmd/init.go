@@ -30,6 +30,7 @@ var commandInit = &cobra.Command{
 func (a *App) CmdInit() error {
 	_, err := a.CreateConfigDir()
 	if err != nil {
+		logger.Error(err)
 		return err
 	}
 
@@ -37,6 +38,7 @@ func (a *App) CmdInit() error {
 
 	_, err = a.CreateConfigFile(conf)
 	if err != nil {
+		logger.Error(err)
 		return err
 	}
 
@@ -53,6 +55,7 @@ func (a *App) CmdInit() error {
 
 		err = os.MkdirAll(path, os.ModePerm)
 		if err != nil {
+			logger.Error(err)
 			return err
 		}
 	}
