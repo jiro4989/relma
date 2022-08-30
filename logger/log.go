@@ -1,8 +1,10 @@
 package logger
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 var (
@@ -10,5 +12,10 @@ var (
 )
 
 func Error(msgs ...interface{}) {
-	errorLogger.Println(msgs...)
+	var sb strings.Builder
+	for _, msg := range msgs {
+		sb.WriteString(fmt.Sprintf("%v", msg))
+	}
+	s := sb.String()
+	errorLogger.Output(2, s)
 }
