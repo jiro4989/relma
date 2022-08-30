@@ -8,6 +8,7 @@ import (
 
 	"github.com/jiro4989/relma/external/downloader"
 	"github.com/jiro4989/relma/external/github"
+	"github.com/jiro4989/relma/logger"
 	"github.com/jiro4989/relma/releases"
 )
 
@@ -26,11 +27,13 @@ type App struct {
 func NewApp() (App, error) {
 	var app App
 	if err := app.SetUserEnv(); err != nil {
+		logger.Error(err)
 		return App{}, err
 	}
 
 	conf, err := app.ReadConfigFile()
 	if err != nil {
+		logger.Error(err)
 		return App{}, err
 	}
 

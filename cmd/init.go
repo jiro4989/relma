@@ -19,8 +19,11 @@ var commandInit = &cobra.Command{
 	Use:   "init",
 	Short: "Setup relma environment",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		a, err := NewApp()
-		if err != nil {
+		// init での初期化で初めて設定ファイルを作成するため
+		// init 処理では NewApp 関数は呼び出さない
+		var a App
+		if err := a.SetUserEnv(); err != nil {
+			logger.Error(err)
 			return err
 		}
 		return a.CmdInit()
@@ -30,6 +33,7 @@ var commandInit = &cobra.Command{
 func (a *App) CmdInit() error {
 	_, err := a.CreateConfigDir()
 	if err != nil {
+		logger.Error(err)
 		return err
 	}
 
@@ -37,6 +41,7 @@ func (a *App) CmdInit() error {
 
 	_, err = a.CreateConfigFile(conf)
 	if err != nil {
+		logger.Error(err)
 		return err
 	}
 
@@ -53,6 +58,7 @@ func (a *App) CmdInit() error {
 
 		err = os.MkdirAll(path, os.ModePerm)
 		if err != nil {
+			logger.Error(err)
 			return err
 		}
 	}
