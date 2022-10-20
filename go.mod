@@ -1,6 +1,6 @@
 module github.com/jiro4989/relma
 
-go 1.16
+go 1.19
 
 require (
 	github.com/golang/snappy v0.0.3 // indirect

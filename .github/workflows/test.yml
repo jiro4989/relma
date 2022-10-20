@@ -18,7 +18,7 @@ name: test
       - '.github/workflows/test.yml'
 
 env:
-  go-version: '1.16'
+  go-version: '1.19'
 
 jobs:
   test:

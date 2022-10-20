@@ -15,7 +15,7 @@ on:
       - '.github/workflows/coverage.yml'
 
 env:
-  go-version: '1.16'
+  go-version: '1.19'
 
 jobs:
   coverage:
