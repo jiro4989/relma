@@ -7,7 +7,7 @@ require (
 	github.com/h2non/filetype v1.1.3
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mholt/archiver/v3 v3.5.1
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.2
 )
 
@@ -18,7 +18,7 @@ require (
 	github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/klauspost/compress v1.11.4 // indirect
 	github.com/klauspost/pgzip v1.2.5 // indirect
 	github.com/kr/pretty v0.2.0 // indirect
