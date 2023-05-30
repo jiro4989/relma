@@ -8,7 +8,7 @@ require (
 	github.com/manifoldco/promptui v0.9.0
 	github.com/mholt/archiver/v3 v3.5.1
 	github.com/spf13/cobra v1.7.0
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 )
 
 require (
