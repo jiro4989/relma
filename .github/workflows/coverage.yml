@@ -27,4 +27,4 @@ jobs:
         with:
           go-version: ${{ env.go-version }}
       - run: go test -coverprofile=cover.out -covermode=count ./...
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
