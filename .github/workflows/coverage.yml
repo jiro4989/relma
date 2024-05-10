@@ -22,15 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.go-version }}
-      - name: Install dependencies
-        run: |
-          GO111MODULE=off go get \
-                 github.com/onsi/gomega \
-                 github.com/onsi/ginkgo \
-                 golang.org/x/tools/cmd/cover
       - run: go test -coverprofile=cover.out -covermode=count ./...
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
