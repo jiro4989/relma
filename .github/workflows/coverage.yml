@@ -23,7 +23,7 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: ${{ env.go-version }}
       - run: go test -coverprofile=cover.out -covermode=count ./...
