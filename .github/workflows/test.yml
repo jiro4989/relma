@@ -36,7 +36,7 @@ jobs:
             runs-on: macOS-latest
             opts: -cover
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version: ${{ env.go-version }}
